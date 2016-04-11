@@ -19,8 +19,10 @@
         String output = input.substring(0, 1).toUpperCase() + input.substring(1);
         return output;
     }
+
+    public static List filters = new ArrayList();
 %>
-<% List filters = new ArrayList();
+<%
 
     DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
 %>
@@ -91,34 +93,44 @@
 
                 if (wardNumberParameter != null) {
                     wardQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
-                    filters.add(wardNumberParameter);
+
+                    ClickStack click = new ClickStack("wardNumber",wardNumberParameter);
+                    filters.add(click);
                 }
 
                 if (statusParameter != null){
                     wardQuery.put("Status",statusParameter);
-                    filters.add(statusParameter);
+
+                    ClickStack click = new ClickStack("status",wardNumberParameter);
+                    filters.add(click);
                 }
 
                 if (workTypeIDParameter != null){
                     wardQuery.put("Work Type ID",Integer.parseInt(workTypeIDParameter));
-                    filters.add(workTypeIDParameter);
+
+                    ClickStack click = new ClickStack("workTypeID",workTypeIDParameter);
+                    filters.add(click);
                 }
 
                 if (contractorIDParameter != null){
                     wardQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
-                    filters.add(contractorIDParameter);
+
+                    ClickStack click = new ClickStack("contractorID",contractorIDParameter);
+                    filters.add(click);
                 }
 
                 if (sourceOfIncomeIDParameter != null){
                     wardQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
-                    filters.add(sourceOfIncomeIDParameter);
+
+                    ClickStack click = new ClickStack("sourceOfIncomeID",sourceOfIncomeIDParameter);
+                    filters.add(click);
                 }
 
                 Iterator filtersIter = filters.iterator();
 
-                while (filtersIter.hasNext()){
-                    String call = filtersIter.next().toString();
-                    System.out.println(call);
+                //while (filtersIter.hasNext()){
+                 //   ClickStack call = (ClickStack) filtersIter.next();
+                   // System.out.println(call.parameter);
                 }
 
                 DBCursor cursor = smartcity.find(wardQuery);
