@@ -7,15 +7,23 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.*"
-         import="java.util.Arrays"
          import="java.lang.Integer"
 %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Iterator" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.text.DecimalFormat" %>
 
 <%-- Functions required are defined here --%>
+<%!
+    public static String capitalizeFirstLetter (String input){
+        String output = input.substring(0, 1).toUpperCase() + input.substring(1);
+        return output;
+    }
+%>
+<% List filters = new ArrayList();
 
+    DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
+%>
 
 <html>
 <head>
@@ -73,8 +81,6 @@
 
                 DBCollection smartcity = db.getCollection("allworks");
 
-                List filters = new ArrayList();
-
                 String wardNumberParameter = request.getParameter("wardNumber");
                 String statusParameter = request.getParameter("status");
                 String workTypeIDParameter = request.getParameter("workTypeID");
@@ -127,8 +133,11 @@
                     String workType = workObject.get("Work Type").toString();
                     String sourceOfIncome = workObject.get("Source of Income").toString();
                     String contractor = workObject.get("Contractor").toString();
-                    String amountSanctioned = workObject.get("Amount Sanctioned").toString();
-                    String status = workObject.get("Status").toString();
+                    String amountSanctionedString = workObject.get("Amount Sanctioned").toString();
+                    //Converting string to integer with commas
+                    String amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
+
+                    String status = capitalizeFirstLetter(workObject.get("Status").toString());
 
                     //Values for backend
                     String workID = workObject.get("Work ID").toString();
