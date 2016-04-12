@@ -51,6 +51,7 @@
     String workTypeIDParameter = request.getParameter("workTypeID");
     String contractorIDParameter = request.getParameter("contractorID");
     String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
+    String languageParameter = request.getParameter("language");
 
     BasicDBObject wardQuery = new BasicDBObject();
 
@@ -143,19 +144,22 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px;"><a href="allworks_k.html" target="_blank">ಕನ್ನಡ</a> | <a
-            href="allworks.html" target="_blank">English</a></div>
+    <div class="pull-right" style="margin-top:40px;"><a href="index.jsp?language=kannada">ಕನ್ನಡ</a> | <a
+            href="index.jsp">English</a></div>
 
     <h4>Number of works : <%=numberOfWorksDisplayed%></h4>
 
+    <% if (languageParameter != null){
+        newLink = newLink + "&language=kannada&";
+    }
+        newLink = newLink.replaceAll("&&","&");
+    %>
     <%Iterator filtersApplied = filters.iterator();
 
         while (filtersApplied.hasNext()){
             ClickStack click = (ClickStack) filtersApplied.next();
             String dismissalLink = "index.jsp?"+newLink.replace(click.parameter+"="+click.parameterValue,"");
             dismissalLink = dismissalLink.substring(0,dismissalLink.lastIndexOf("&"));
-            System.out.println(dismissalLink);
-            System.out.println(newLink);
             %>
         <span class="label label-default" style="font-size: 1em; color: inherit"><%=click.parameter%> : <%=click.parameterValue%> <a href=<%=dismissalLink%>> <i class="fa fa-trash-o" aria-hidden="true"></i></a></span>
             <%
@@ -194,6 +198,10 @@
 
                     String wardNumber = workObject.get("Ward Number").toString();
                     String workDescriptionEnglish = workObject.get("Work Description English").toString();
+                    String workDescriptionKannada = workObject.get("Work Description Kannada").toString();
+
+                    String workDescriptionFinal = null;
+
                     String workOrderDate = workObject.get("Work Order Date").toString();
                     String workCompletionDate = workObject.get("Work Completion Date").toString();
                     String workType = workObject.get("Work Type").toString();
@@ -220,11 +228,23 @@
                         statusColor = "#f04124";
                     }
 
+                    if (languageParameter == null || languageParameter.equals("english")){
+                        if (workDescriptionEnglish.length()>2){
+                            workDescriptionFinal = workDescriptionEnglish;
+                        }
+                        else{
+                            workDescriptionFinal = workDescriptionKannada;
+                        }
+                    }
+
+                    else if (languageParameter.equals("kannada")){
+                        workDescriptionFinal = workDescriptionKannada;
+                    }
         %>
         <tr>
             <td style="text-align: center; padding-left: 0.2em"><a href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%></a>
             </td>
-            <td style="padding: 1.5em"><a href="index.jsp?<%=newLink%>workID=<%=workID%>"><%=workDescriptionEnglish%></a>
+            <td style="padding: 1.5em"><a href="index.jsp?<%=newLink%>workID=<%=workID%>"><%=workDescriptionFinal%></a>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
