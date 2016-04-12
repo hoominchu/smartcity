@@ -12,6 +12,7 @@
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.util.stream.Collectors" %>
 
 <%-- Functions required are defined here --%>
 <%!
@@ -20,11 +21,102 @@
         return output;
     }
 
-    public static List filters = new ArrayList();
+    public class ClickStack {
+        String parameter;
+        String parameterValue;
+        //String parameterPresentable;
+        //String parameterValuePresentable;
+
+        ClickStack(String p, String pV) {
+            this.parameter = p;
+            this.parameterValue = pV;
+            //this.parameterPresentable = pP;
+            //this.parameterValuePresentable = pVP;
+        }
+    }
+
+    ArrayList filters = new ArrayList();
 %>
 <%
-
     DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
+
+    Mongo mongo = new Mongo();
+
+    DB db = mongo.getDB("smartcitydb");
+
+    DBCollection smartcity = db.getCollection("allworks");
+
+    String wardNumberParameter = request.getParameter("wardNumber");
+    String statusParameter = request.getParameter("status");
+    String workTypeIDParameter = request.getParameter("workTypeID");
+    String contractorIDParameter = request.getParameter("contractorID");
+    String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
+
+    BasicDBObject wardQuery = new BasicDBObject();
+
+    filters.clear();
+    filters = (ArrayList) filters.stream().distinct().collect(Collectors.toList());
+
+    if (wardNumberParameter != null) {
+        wardQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
+
+        ClickStack click = new ClickStack("wardNumber",wardNumberParameter);
+        if (!(filters.contains(click))) {
+            filters.add(click);
+        }
+    }
+
+    if (statusParameter != null){
+        wardQuery.put("Status",statusParameter);
+
+        ClickStack click = new ClickStack("status",statusParameter);
+        if (!(filters.contains(click))) {
+            filters.add(click);
+        }
+    }
+
+    if (workTypeIDParameter != null){
+        wardQuery.put("Work Type ID",Integer.parseInt(workTypeIDParameter));
+
+        ClickStack click = new ClickStack("workTypeID",workTypeIDParameter);
+        if (!(filters.contains(click))) {
+            filters.add(click);
+        }
+    }
+
+    if (contractorIDParameter != null){
+        wardQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
+
+        ClickStack click = new ClickStack("contractorID",contractorIDParameter);
+        if (!(filters.contains(click))) {
+            filters.add(click);
+        }
+    }
+
+    if (sourceOfIncomeIDParameter != null){
+        wardQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
+
+        ClickStack click = new ClickStack("sourceOfIncomeID",sourceOfIncomeIDParameter);
+        if (!(filters.contains(click))) {
+            filters.add(click);
+        }
+    }
+
+    Iterator filtersIter = filters.iterator();
+    String newLink = "";
+
+    while (filtersIter.hasNext()){
+        ClickStack call = (ClickStack) filtersIter.next();
+
+        newLink = newLink + call.parameter + "=" + call.parameterValue + "&";
+    }
+
+    DBCursor cursor = smartcity.find(wardQuery);
+    int numberOfWorksDisplayed = cursor.count();
+
+
+    //String baseLink = linkGen(filters);
+    //System.out.println(baseLink);
 %>
 
 <html>
@@ -37,6 +129,8 @@
     <script src="commonfiles/jquery.min.js"></script>
     <script src="commonfiles/bootstrap.min.js"></script>
     <script src="commonfiles/addons.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 </head>
 <body>
 
@@ -44,13 +138,31 @@
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
 
-    <h2 style="text-align:center; display:inline-block;"><a href="../allworks/allworks.html">Hubballi Dharwad Smart
+    <h2 style="text-align:center; display:inline-block;"><a href="index.jsp">Hubballi Dharwad Smart
         Cities Project</a></h2>
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
     <div class="pull-right" style="margin-top:40px;"><a href="allworks_k.html" target="_blank">ಕನ್ನಡ</a> | <a
             href="allworks.html" target="_blank">English</a></div>
+
+    <h4>Number of works : <%=numberOfWorksDisplayed%></h4>
+
+    <%Iterator filtersApplied = filters.iterator();
+
+        while (filtersApplied.hasNext()){
+            ClickStack click = (ClickStack) filtersApplied.next();
+            String dismissalLink = "index.jsp?"+newLink.replace(click.parameter+"="+click.parameterValue,"");
+            dismissalLink = dismissalLink.substring(0,dismissalLink.lastIndexOf("&"));
+            System.out.println(dismissalLink);
+            System.out.println(newLink);
+            %>
+        <span class="label label-default" style="font-size: 1em; color: inherit"><%=click.parameter%> : <%=click.parameterValue%> <a href=<%=dismissalLink%>> <i class="fa fa-trash-o" aria-hidden="true"></i></a></span>
+            <%
+        }
+
+        %>
+
 
     <table class="table-striped table-responsive sortable" id="myTable" style="margin-top:2em; width: 100%; table-layout: fixed">
 
@@ -77,64 +189,6 @@
 
             try {
 
-                Mongo mongo = new Mongo();
-
-                DB db = mongo.getDB("smartcitydb");
-
-                DBCollection smartcity = db.getCollection("allworks");
-
-                String wardNumberParameter = request.getParameter("wardNumber");
-                String statusParameter = request.getParameter("status");
-                String workTypeIDParameter = request.getParameter("workTypeID");
-                String contractorIDParameter = request.getParameter("contractorID");
-                String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
-
-                BasicDBObject wardQuery = new BasicDBObject();
-
-                if (wardNumberParameter != null) {
-                    wardQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
-
-                    ClickStack click = new ClickStack("wardNumber",wardNumberParameter);
-                    filters.add(click);
-                }
-
-                if (statusParameter != null){
-                    wardQuery.put("Status",statusParameter);
-
-                    ClickStack click = new ClickStack("status",wardNumberParameter);
-                    filters.add(click);
-                }
-
-                if (workTypeIDParameter != null){
-                    wardQuery.put("Work Type ID",Integer.parseInt(workTypeIDParameter));
-
-                    ClickStack click = new ClickStack("workTypeID",workTypeIDParameter);
-                    filters.add(click);
-                }
-
-                if (contractorIDParameter != null){
-                    wardQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
-
-                    ClickStack click = new ClickStack("contractorID",contractorIDParameter);
-                    filters.add(click);
-                }
-
-                if (sourceOfIncomeIDParameter != null){
-                    wardQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
-
-                    ClickStack click = new ClickStack("sourceOfIncomeID",sourceOfIncomeIDParameter);
-                    filters.add(click);
-                }
-
-                Iterator filtersIter = filters.iterator();
-
-                //while (filtersIter.hasNext()){
-                 //   ClickStack call = (ClickStack) filtersIter.next();
-                   // System.out.println(call.parameter);
-                }
-
-                DBCursor cursor = smartcity.find(wardQuery);
-
                 while (cursor.hasNext()) {
                     DBObject workObject = cursor.next();
 
@@ -149,33 +203,42 @@
                     //Converting string to integer with commas
                     String amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
-                    String status = capitalizeFirstLetter(workObject.get("Status").toString());
+                    String status = workObject.get("Status").toString();
+                    String statusFirstLetterCapital = capitalizeFirstLetter(status);
 
                     //Values for backend
                     String workID = workObject.get("Work ID").toString();
                     String workTypeID = workObject.get("Work Type ID").toString();
                     String contractorID = workObject.get("Contractor ID").toString();
                     String sourceOfIncomeID = workObject.get("Source of Income ID").toString();
+                    String statusColor = null;
+
+                    if (status.equals("completed")){
+                        statusColor = "#43ac6a";
+                    }
+                    else if (status.equals("inprogress")){
+                        statusColor = "#f04124";
+                    }
 
         %>
         <tr>
             <td style="text-align: center; padding-left: 0.2em"><a href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%></a>
             </td>
-            <td style="padding: 1.5em"><a href="index.jsp?workID=<%=workID%>"><%=workDescriptionEnglish%></a>
+            <td style="padding: 1.5em"><a href="index.jsp?<%=newLink%>workID=<%=workID%>"><%=workDescriptionEnglish%></a>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
             <td style="text-align: center"><%=workCompletionDate%>
             </td>
-            <td style="text-align: center"><a href="index.jsp?workTypeID=<%=workTypeID%>"><%=workType%></a>
+            <td style="text-align: center"><a href="index.jsp?<%=newLink%>workTypeID=<%=workTypeID%>"><%=workType%></a>
             </td>
-            <td style="text-align: center"><a href="index.jsp?sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%></a>
+            <td style="text-align: center"><a href="index.jsp?<%=newLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%></a>
             </td>
-            <td style="text-align: center"><a href="index.jsp?contractorID=<%=contractorID%>"><%=contractor%></a>
+            <td style="text-align: center"><a href="index.jsp?<%=newLink%>contractorID=<%=contractorID%>"><%=contractor%></a>
             </td>
             <td style="text-align: center"><%=amountSanctioned%>
             </td>
-            <td style="text-align: center; padding-right: 0.2em"><a href="index.jsp?status=<%=status%>"><%=status%></a>
+            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>;"><a href="index.jsp?<%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%></a>
             </td>
         </tr>
 
