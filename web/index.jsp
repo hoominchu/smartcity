@@ -53,7 +53,11 @@
     String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
     String languageParameter = request.getParameter("language");
 
+    String jumbotronParameter = request.getParameter("jumbotron");
+
     BasicDBObject wardQuery = new BasicDBObject();
+
+    String baseLink = "index.jsp?";
 
     filters.clear();
     filters = (ArrayList) filters.stream().distinct().collect(Collectors.toList());
@@ -115,9 +119,6 @@
     DBCursor cursor = smartcity.find(wardQuery);
     int numberOfWorksDisplayed = cursor.count();
 
-
-    //String baseLink = linkGen(filters);
-    //System.out.println(baseLink);
 %>
 
 <html>
@@ -130,8 +131,17 @@
     <script src="commonfiles/jquery.min.js"></script>
     <script src="commonfiles/bootstrap.min.js"></script>
     <script src="commonfiles/addons.js"></script>
+    <script src="commonfiles/maps.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script>
+        var src = 'http://hack4hd.org/data/HD-ward-boundaries.kml';
+    </script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+
 </head>
 <body>
 
@@ -146,6 +156,30 @@
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
     <div class="pull-right" style="margin-top:40px;"><a href="index.jsp?language=kannada">ಕನ್ನಡ</a> | <a
             href="index.jsp">English</a></div>
+
+    <div class="btn-group btn-group-justified">
+        <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
+        <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Ward expenditure</a>
+        <a href="<%=baseLink%><%=newLink%>&jumbotron=topcontractors&" class="btn btn-default">Top Contractors</a>
+    </div>
+
+    <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
+        <% if (jumbotronParameter != null && jumbotronParameter.equals("map")){
+            System.out.println(jumbotronParameter);
+        %>
+        <div id="map" style="width:100%; height: 100%; position: relative"></div>
+        <%
+        }
+            else if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")){ %>
+            <div id="wardExpensesChart" style="width:100%; height:100%;"></div>
+        <%
+        }
+        else if (jumbotronParameter != null && jumbotronParameter.equals("topContractors")){ %>
+        <div id="topContractorsChart" style="width:100%; height:100%;"></div>
+        <%
+            }
+        %>
+    </div>
 
     <h4>Number of works : <%=numberOfWorksDisplayed%></h4>
 
@@ -244,7 +278,7 @@
         <tr>
             <td style="text-align: center; padding-left: 0.2em"><a href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%></a>
             </td>
-            <td style="padding: 1.5em"><a href="index.jsp?<%=newLink%>workID=<%=workID%>"><%=workDescriptionFinal%></a>
+            <td style="padding: 1.5em"><a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>"><%=workDescriptionFinal%></a>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
@@ -271,7 +305,94 @@
 
         </tbody>
     </table>
+    <a href="#" class="scrollup">Go to top</a>
 </div>
 
+<script>
+    function initMap() {
+        var mapDiv = document.getElementById('map');
+        var map = new google.maps.Map(mapDiv, {
+            center:new google.maps.LatLng(15.3935685,75.08009570000002),
+            zoom:15,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+        });
+        var ctaLayer = new google.maps.KmlLayer({
+            url: 'http://hack4hd.org/data/HD-ward-boundaries.kml',
+            map: map
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>
+
+<script>
+    $(function () {
+        $('#wardExpensesChart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Monthly Average Rainfall'
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com'
+            },
+            xAxis: {
+                categories: [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (mm)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Tokyo',
+                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+            }, {
+                name: 'New York',
+                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+            }, {
+                name: 'London',
+                data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+            }, {
+                name: 'Berlin',
+                data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+            }]
+        });
+    });
+</script>
 </body>
 </html>
