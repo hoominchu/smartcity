@@ -286,19 +286,10 @@
             </a>
             </td>
             <td style="padding: 1.5em">
-                <%
-                    BasicDBObject doWorkDetailsExist = new BasicDBObject();
-                    doWorkDetailsExist.put("Work ID", Integer.parseInt(workID));
-                    int numOfWorkDetails = workDetailsCollection.find(doWorkDetailsExist).count();
 
-                    if (numOfWorkDetails>0){
-                %>
                 <a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>">
-                    <%}%>
-                    <%=workDescriptionFinal%>
-                    <% if (numOfWorkDetails>0){%>
+
                 </a>
-                <%}%>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
