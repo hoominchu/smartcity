@@ -21,12 +21,10 @@
     System.out.println(workIDParameter);
 
     BasicDBObject workIDQuery = new BasicDBObject();
+    //BasicDBObject workDetailsObject = new BasicDBObject();
 
     workIDQuery.put("Work ID", Integer.parseInt(workIDParameter));
 
-    DBCursor cursor = workDetailsCollection.find(workIDQuery);
-
-    System.out.println(cursor.count());
 %>
 <html>
 <head>
@@ -75,32 +73,36 @@
 
         <%
             //WorkResults wr = mymethod(request);
+            DBCursor workDetailsCursor = workDetailsCollection.find(workIDQuery);
+            System.out.println(workDetailsCursor.count());
 
             try {
+                while (workDetailsCursor.hasNext()) {
+                    DBObject workDetailsObject = workDetailsCursor.next();
 
-                while (cursor.hasNext()) {
-                    DBObject workObject = cursor.next();
+                    String stepNumber = workDetailsObject.get("Step").toString();
+                    String workStep = workDetailsObject.get("Work Details").toString();
+                    String measurement = workDetailsObject.get("Measurement").toString();
+                    String unit = workDetailsObject.get("Measurement Unit").toString();
+                    String rate = workDetailsObject.get("Rate").toString();
 
-
-                    String workStep = workObject.get("Work Details").toString();
-                    String measurement = workObject.get("Measurement").toString();
-                    String unit = workObject.get("Measurement Unit").toString();
-                    String rate = workObject.get("Rate").toString();
-
-                    //Double totalAmount = (Double.parseDouble(workObject.get("Measurement"))) * (Double.parseDouble(workObject.get("Rate")));
-                    //String totalAmountString = totalAmount.toString();
+                    Double totalAmount = (Double.parseDouble(measurement)) * (Double.parseDouble(rate));
+                    String totalAmountString = totalAmount.toString();
 
         %>
         <tr>
-            <td><%=workStep%>
+            <td style="text-align: center"><%=stepNumber%>
             </td>
-            <td><%=measurement%>
+            <td style="padding: 1.2em"><%=workStep%>
             </td>
-            <td><%=unit%>
+            <td style="text-align: center"><%=measurement%>
             </td>
-            <td><%=rate%>
+            <td style="text-align: center"><%=unit%>
             </td>
-
+            <td style="text-align: center"><%=rate%>
+            </td>
+            <td style="text-align: center"><%=totalAmountString%>
+            </td>
 
         </tr>
         <%

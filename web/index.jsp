@@ -45,6 +45,7 @@
     DB db = mongo.getDB("smartcitydb");
 
     DBCollection smartcity = db.getCollection("allworks");
+    DBCollection corporatorsCollection = db.getCollection("corporatorsC");
 
     String wardNumberParameter = request.getParameter("wardNumber");
     String statusParameter = request.getParameter("status");
@@ -121,6 +122,10 @@
 
 %>
 
+<%!
+
+%>
+
 <html>
 <head>
     <title>HDMC Smart City Project</title>
@@ -164,7 +169,7 @@
     </div>
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
-        <% if (jumbotronParameter != null && jumbotronParameter.equals("map")){
+        <% if (jumbotronParameter == null || jumbotronParameter.equals("map")){
             System.out.println(jumbotronParameter);
         %>
         <div id="map" style="width:100%; height: 100%; position: relative"></div>
