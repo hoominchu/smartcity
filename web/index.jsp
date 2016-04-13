@@ -16,7 +16,7 @@
 
 <%-- Functions required are defined here --%>
 <%!
-    public static String capitalizeFirstLetter (String input){
+    public static String capitalizeFirstLetter(String input) {
         String output = input.substring(0, 1).toUpperCase() + input.substring(1);
         return output;
     }
@@ -44,8 +44,9 @@
 
     DB db = mongo.getDB("smartcitydb");
 
-    DBCollection smartcity = db.getCollection("allworks");
+    DBCollection allworks = db.getCollection("allworks");
     DBCollection corporatorsCollection = db.getCollection("corporatorsC");
+    DBCollection workDetailsCollection = db.getCollection("workdetails");
 
     String wardNumberParameter = request.getParameter("wardNumber");
     String statusParameter = request.getParameter("status");
@@ -56,7 +57,7 @@
 
     String jumbotronParameter = request.getParameter("jumbotron");
 
-    BasicDBObject wardQuery = new BasicDBObject();
+    BasicDBObject myQuery = new BasicDBObject();
 
     String baseLink = "index.jsp?";
 
@@ -64,45 +65,45 @@
     filters = (ArrayList) filters.stream().distinct().collect(Collectors.toList());
 
     if (wardNumberParameter != null) {
-        wardQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
+        myQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
 
-        ClickStack click = new ClickStack("wardNumber",wardNumberParameter);
+        ClickStack click = new ClickStack("wardNumber", wardNumberParameter);
         if (!(filters.contains(click))) {
             filters.add(click);
         }
     }
 
-    if (statusParameter != null){
-        wardQuery.put("Status",statusParameter);
+    if (statusParameter != null) {
+        myQuery.put("Status", statusParameter);
 
-        ClickStack click = new ClickStack("status",statusParameter);
+        ClickStack click = new ClickStack("status", statusParameter);
         if (!(filters.contains(click))) {
             filters.add(click);
         }
     }
 
-    if (workTypeIDParameter != null){
-        wardQuery.put("Work Type ID",Integer.parseInt(workTypeIDParameter));
+    if (workTypeIDParameter != null) {
+        myQuery.put("Work Type ID", Integer.parseInt(workTypeIDParameter));
 
-        ClickStack click = new ClickStack("workTypeID",workTypeIDParameter);
+        ClickStack click = new ClickStack("workTypeID", workTypeIDParameter);
         if (!(filters.contains(click))) {
             filters.add(click);
         }
     }
 
-    if (contractorIDParameter != null){
-        wardQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
+    if (contractorIDParameter != null) {
+        myQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
 
-        ClickStack click = new ClickStack("contractorID",contractorIDParameter);
+        ClickStack click = new ClickStack("contractorID", contractorIDParameter);
         if (!(filters.contains(click))) {
             filters.add(click);
         }
     }
 
-    if (sourceOfIncomeIDParameter != null){
-        wardQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
+    if (sourceOfIncomeIDParameter != null) {
+        myQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
 
-        ClickStack click = new ClickStack("sourceOfIncomeID",sourceOfIncomeIDParameter);
+        ClickStack click = new ClickStack("sourceOfIncomeID", sourceOfIncomeIDParameter);
         if (!(filters.contains(click))) {
             filters.add(click);
         }
@@ -111,13 +112,13 @@
     Iterator filtersIter = filters.iterator();
     String newLink = "";
 
-    while (filtersIter.hasNext()){
+    while (filtersIter.hasNext()) {
         ClickStack call = (ClickStack) filtersIter.next();
 
         newLink = newLink + call.parameter + "=" + call.parameterValue + "&";
     }
 
-    DBCursor cursor = smartcity.find(wardQuery);
+    DBCursor cursor = allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
 %>
@@ -169,45 +170,48 @@
     </div>
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
-        <% if (jumbotronParameter == null || jumbotronParameter.equals("map")){
+        <% if (jumbotronParameter == null || jumbotronParameter.equals("map")) {
             System.out.println(jumbotronParameter);
         %>
         <div id="map" style="width:100%; height: 100%; position: relative"></div>
         <%
-        }
-            else if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")){ %>
-            <div id="wardExpensesChart" style="width:100%; height:100%;"></div>
+        } else if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")) { %>
+        <div id="wardExpensesChart" style="width:100%; height:100%;"></div>
         <%
-        }
-        else if (jumbotronParameter != null && jumbotronParameter.equals("topContractors")){ %>
+        } else if (jumbotronParameter != null && jumbotronParameter.equals("topContractors")) { %>
         <div id="topContractorsChart" style="width:100%; height:100%;"></div>
         <%
             }
         %>
     </div>
 
-    <h4>Number of works : <%=numberOfWorksDisplayed%></h4>
+    <h4>Number of works : <%=numberOfWorksDisplayed%>
+    </h4>
 
-    <% if (languageParameter != null){
+    <% if (languageParameter != null) {
         newLink = newLink + "&language=kannada&";
     }
-        newLink = newLink.replaceAll("&&","&");
+        newLink = newLink.replaceAll("&&", "&");
     %>
-    <%Iterator filtersApplied = filters.iterator();
+    <%
+        Iterator filtersApplied = filters.iterator();
 
-        while (filtersApplied.hasNext()){
+        while (filtersApplied.hasNext()) {
             ClickStack click = (ClickStack) filtersApplied.next();
-            String dismissalLink = "index.jsp?"+newLink.replace(click.parameter+"="+click.parameterValue,"");
-            dismissalLink = dismissalLink.substring(0,dismissalLink.lastIndexOf("&"));
-            %>
-        <span class="label label-default" style="font-size: 1em; color: inherit"><%=click.parameter%> : <%=click.parameterValue%> <a href=<%=dismissalLink%>> <i class="fa fa-trash-o" aria-hidden="true"></i></a></span>
-            <%
+            String dismissalLink = "index.jsp?" + newLink.replace(click.parameter + "=" + click.parameterValue, "");
+            dismissalLink = dismissalLink.substring(0, dismissalLink.lastIndexOf("&"));
+    %>
+    <span class="label label-default"
+          style="font-size: 1em; color: inherit"><%=click.parameter%> : <%=click.parameterValue%> <a
+            href=<%=dismissalLink%>> <i class="fa fa-trash-o" aria-hidden="true"></i></a></span>
+    <%
         }
 
-        %>
+    %>
 
 
-    <table class="table-striped table-responsive sortable" id="myTable" style="margin-top:2em; width: 100%; table-layout: fixed">
+    <table class="table-striped table-responsive sortable" id="myTable"
+           style="margin-top:2em; width: 100%; table-layout: fixed">
 
         <thead>
 
@@ -228,7 +232,7 @@
         <tbody>
 
         <%
-//WorkResults wr = mymethod(request);
+            //WorkResults wr = mymethod(request);
 
             try {
 
@@ -260,44 +264,62 @@
                     String sourceOfIncomeID = workObject.get("Source of Income ID").toString();
                     String statusColor = null;
 
-                    if (status.equals("completed")){
+                    if (status.equals("completed")) {
                         statusColor = "#43ac6a";
-                    }
-                    else if (status.equals("inprogress")){
+                    } else if (status.equals("inprogress")) {
                         statusColor = "#f04124";
                     }
 
-                    if (languageParameter == null || languageParameter.equals("english")){
-                        if (workDescriptionEnglish.length()>2){
+                    if (languageParameter == null || languageParameter.equals("english")) {
+                        if (workDescriptionEnglish.length() > 2) {
                             workDescriptionFinal = workDescriptionEnglish;
-                        }
-                        else{
+                        } else {
                             workDescriptionFinal = workDescriptionKannada;
                         }
-                    }
-
-                    else if (languageParameter.equals("kannada")){
+                    } else if (languageParameter.equals("kannada")) {
                         workDescriptionFinal = workDescriptionKannada;
                     }
         %>
         <tr>
-            <td style="text-align: center; padding-left: 0.2em"><a href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%></a>
+            <td style="text-align: center; padding-left: 0.2em"><a
+                    href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%>
+            </a>
             </td>
-            <td style="padding: 1.5em"><a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>"><%=workDescriptionFinal%></a>
+            <td style="padding: 1.5em">
+                <%
+                    BasicDBObject doWorkDetailsExist = new BasicDBObject();
+                    doWorkDetailsExist.put("Work ID", Integer.parseInt(workID));
+                    int numOfWorkDetails = workDetailsCollection.find(doWorkDetailsExist).count();
+
+                    if (numOfWorkDetails>0){
+                %>
+                <a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>">
+                    <%}%>
+                    <%=workDescriptionFinal%>
+                    <% if (numOfWorkDetails>0){%>
+                </a>
+                <%}%>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
             <td style="text-align: center"><%=workCompletionDate%>
             </td>
-            <td style="text-align: center"><a href="index.jsp?<%=newLink%>workTypeID=<%=workTypeID%>"><%=workType%></a>
+            <td style="text-align: center"><a href="index.jsp?<%=newLink%>workTypeID=<%=workTypeID%>"><%=workType%>
+            </a>
             </td>
-            <td style="text-align: center"><a href="index.jsp?<%=newLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%></a>
+            <td style="text-align: center"><a
+                    href="index.jsp?<%=newLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
+            </a>
             </td>
-            <td style="text-align: center"><a href="index.jsp?<%=newLink%>contractorID=<%=contractorID%>"><%=contractor%></a>
+            <td style="text-align: center"><a
+                    href="index.jsp?<%=newLink%>contractorID=<%=contractorID%>"><%=contractor%>
+            </a>
             </td>
             <td style="text-align: center"><%=amountSanctioned%>
             </td>
-            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>;"><a href="index.jsp?<%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%></a>
+            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>;"><a
+                    href="index.jsp?<%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%>
+            </a>
             </td>
         </tr>
 
@@ -317,9 +339,9 @@
     function initMap() {
         var mapDiv = document.getElementById('map');
         var map = new google.maps.Map(mapDiv, {
-            center:new google.maps.LatLng(15.3935685,75.08009570000002),
-            zoom:15,
-            mapTypeId:google.maps.MapTypeId.ROADMAP
+            center: new google.maps.LatLng(15.3935685, 75.08009570000002),
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         });
         var ctaLayer = new google.maps.KmlLayer({
             url: 'http://hack4hd.org/data/HD-ward-boundaries.kml',

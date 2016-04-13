@@ -9,6 +9,7 @@
          import="com.mongodb.*"
          import="java.lang.Integer"
 %>
+<%@ page import="java.math.BigDecimal" %>
 
 <%
     Mongo mongo = new Mongo();
@@ -87,7 +88,8 @@
                     String rate = workDetailsObject.get("Rate").toString();
 
                     Double totalAmount = (Double.parseDouble(measurement)) * (Double.parseDouble(rate));
-                    String totalAmountString = totalAmount.toString();
+                    Double truncatedTotal = new BigDecimal(totalAmount).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+                    String totalAmountString = truncatedTotal.toString();
 
         %>
         <tr>
@@ -114,6 +116,6 @@
         %>
         </tbody>
     </table>
-    </div>
+</div>
 </body>
 </html>
