@@ -289,7 +289,10 @@
 
                 <a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>">
 
+                    <%=workDescriptionFinal%>
+
                 </a>
+               
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
