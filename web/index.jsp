@@ -8,11 +8,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.*"
          import="java.lang.Integer"
+         import="static java.util.Arrays.asList"
+         import="org.bson.*"
+         import="java.io.Serializable"
+         import="java.util.List"
 %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ page import="java.lang.reflect.Array" %>
+<%@ page import="com.mongodb.client.AggregateIterable" %>
 
 <%-- Functions required are defined here --%>
 <%!
@@ -24,29 +30,43 @@
     public class ClickStack {
         String parameter;
         String parameterValue;
-        //String parameterPresentable;
-        //String parameterValuePresentable;
+        String parameterPresentable;
+        String parameterValuePresentable;
 
-        ClickStack(String p, String pV) {
+        ClickStack(String p, String pV, String pP, String queryKey) {
             this.parameter = p;
             this.parameterValue = pV;
-            //this.parameterPresentable = pP;
-            //this.parameterValuePresentable = pVP;
+            this.parameterPresentable = pP;
+
+            BasicDBObject parameterValuePresentableObject = new BasicDBObject();
+            boolean isNumeric = pV.matches("[0-9]+");
+            if(isNumeric) {
+                parameterValuePresentableObject.put(queryKey, Integer.parseInt(pV));
+            }
+            else if (!isNumeric){
+                parameterValuePresentableObject.put(queryKey,pV);
+            }
+            DBCursor cursor = allworks.find(parameterValuePresentableObject);
+
+            while (cursor.hasNext()) {
+                DBObject object = cursor.next();
+                this.parameterValuePresentable = object.get(pP).toString();
+                break;
+            }
         }
     }
 
     ArrayList filters = new ArrayList();
+
+    static Mongo mongo = new Mongo();
+    static DB db = mongo.getDB("smartcitydb");
+
+    static DBCollection allworks = db.getCollection("allworks");
+    static DBCollection corporatorsCollection = db.getCollection("corporatorsC");
+    static DBCollection workDetailsCollection = db.getCollection("workdetails");
 %>
 <%
     DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
-
-    Mongo mongo = new Mongo();
-
-    DB db = mongo.getDB("smartcitydb");
-
-    DBCollection allworks = db.getCollection("allworks");
-    DBCollection corporatorsCollection = db.getCollection("corporatorsC");
-    DBCollection workDetailsCollection = db.getCollection("workdetails");
 
     String wardNumberParameter = request.getParameter("wardNumber");
     String statusParameter = request.getParameter("status");
@@ -67,7 +87,7 @@
     if (wardNumberParameter != null) {
         myQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
 
-        ClickStack click = new ClickStack("wardNumber", wardNumberParameter);
+        ClickStack click = new ClickStack("wardNumber", wardNumberParameter, "Ward Number", "Ward Number");
         if (!(filters.contains(click))) {
             filters.add(click);
         }
@@ -76,7 +96,7 @@
     if (statusParameter != null) {
         myQuery.put("Status", statusParameter);
 
-        ClickStack click = new ClickStack("status", statusParameter);
+        ClickStack click = new ClickStack("status", statusParameter, "Status", "Status");
         if (!(filters.contains(click))) {
             filters.add(click);
         }
@@ -85,7 +105,7 @@
     if (workTypeIDParameter != null) {
         myQuery.put("Work Type ID", Integer.parseInt(workTypeIDParameter));
 
-        ClickStack click = new ClickStack("workTypeID", workTypeIDParameter);
+        ClickStack click = new ClickStack("workTypeID", workTypeIDParameter, "Work Type", "Work Type ID");
         if (!(filters.contains(click))) {
             filters.add(click);
         }
@@ -94,7 +114,7 @@
     if (contractorIDParameter != null) {
         myQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
 
-        ClickStack click = new ClickStack("contractorID", contractorIDParameter);
+        ClickStack click = new ClickStack("contractorID", contractorIDParameter, "Contractor", "Contractor ID");
         if (!(filters.contains(click))) {
             filters.add(click);
         }
@@ -103,7 +123,7 @@
     if (sourceOfIncomeIDParameter != null) {
         myQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
 
-        ClickStack click = new ClickStack("sourceOfIncomeID", sourceOfIncomeIDParameter);
+        ClickStack click = new ClickStack("sourceOfIncomeID", sourceOfIncomeIDParameter, "Source of Income", "Source of Income ID");
         if (!(filters.contains(click))) {
             filters.add(click);
         }
@@ -120,10 +140,6 @@
 
     DBCursor cursor = allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
-
-%>
-
-<%!
 
 %>
 
@@ -147,6 +163,12 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
+    <style>
+        .fa{
+            color: white;
+            margin: 2px;
+        }
+    </style>
 
 </head>
 <body>
@@ -160,8 +182,8 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px;"><a href="index.jsp?language=kannada">ಕನ್ನಡ</a> | <a
-            href="index.jsp">English</a></div>
+    <div class="pull-right" style="margin-top:40px;"><a href="<%=baseLink%>language=kannada">ಕನ್ನಡ</a> | <a
+            href="<%=baseLink%>">English</a></div>
 
     <div class="btn-group btn-group-justified">
         <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
@@ -171,7 +193,6 @@
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
         <% if (jumbotronParameter == null || jumbotronParameter.equals("map")) {
-            System.out.println(jumbotronParameter);
         %>
         <div id="map" style="width:100%; height: 100%; position: relative"></div>
         <%
@@ -200,10 +221,11 @@
             ClickStack click = (ClickStack) filtersApplied.next();
             String dismissalLink = "index.jsp?" + newLink.replace(click.parameter + "=" + click.parameterValue, "");
             dismissalLink = dismissalLink.substring(0, dismissalLink.lastIndexOf("&"));
+
     %>
-    <span class="label label-default"
-          style="font-size: 1em; color: inherit"><%=click.parameter%> : <%=click.parameterValue%> <a
-            href=<%=dismissalLink%>> <i class="fa fa-trash-o" aria-hidden="true"></i></a></span>
+    <span class="label label-primary"
+          style="font-size: 1.1em;"><%=click.parameterPresentable%> : <%=click.parameterValuePresentable%> <a
+            href=<%=dismissalLink%>> <i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
     <%
         }
 
@@ -292,7 +314,7 @@
                     <%=workDescriptionFinal%>
 
                 </a>
-               
+
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
@@ -311,7 +333,7 @@
             </td>
             <td style="text-align: center"><%=amountSanctioned%>
             </td>
-            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>;"><a
+            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
                     href="index.jsp?<%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%>
             </a>
             </td>
