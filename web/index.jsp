@@ -359,7 +359,7 @@
             zoom: 15,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
-        var ctaLayer = new google.maps.KmlLayer({
+        var wardBoundariesLayer = new google.maps.KmlLayer({
             url: 'http://hack4hd.org/data/HD-ward-boundaries.kml',
             map: map
         });
@@ -437,5 +437,6 @@
         });
     });
 </script>
+<div class="panel-footer" style="text-align: center">&#169 HDMC</div>
 </body>
 </html>
