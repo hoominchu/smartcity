@@ -188,7 +188,7 @@
     <div class="btn-group btn-group-justified">
         <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Ward expenditure</a>
-        <a href="<%=baseLink%><%=newLink%>&jumbotron=topcontractors&" class="btn btn-default">Top Contractors</a>
+        <a href="<%=baseLink%><%=newLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
     </div>
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
