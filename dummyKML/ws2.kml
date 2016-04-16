@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>Water Supply</name>
+		<Placemark>
+			<name>Water Supply 2</name>
+			<styleUrl>#line-0BA9CC-3-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.9954653,15.4642277,0.0 74.9971175,15.461725300000001,0.0 74.9978042,15.459284900000002,0.0 74.99892,15.459657199999999,0.0 75.0008941,15.460753299999999,0.0 74.9996495,15.464124300000002,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Water Supply 2</name>
+			<styleUrl>#line-0BA9CC-3-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.99469280000001,15.462138899999998,0.0 74.9966884,15.4623871,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Water Supply 3</name>
+			<styleUrl>#line-0BA9CC-3-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.9944782,15.4615599,0.0 74.9970102,15.461849400000002,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Water Supply 4</name>
+			<styleUrl>#line-0BA9CC-3-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.994328,15.460960099999998,0.0 74.9972463,15.4612497,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Water Supply 5</name>
+			<styleUrl>#line-0BA9CC-3-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.9958944,15.461146300000001,0.0 74.9962807,15.458375000000002,0.0 74.9974394,15.45883,0.0 74.9978042,15.459284900000002,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Style id='line-0BA9CC-3-nodesc-normal'>
+			<LineStyle>
+				<color>ffCCA90B</color>
+				<width>3</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='line-0BA9CC-3-nodesc-highlight'>
+			<LineStyle>
+				<color>ffCCA90B</color>
+				<width>5.0</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='line-0BA9CC-3-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-0BA9CC-3-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-0BA9CC-3-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

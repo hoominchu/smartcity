@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>Road</name>
+		<Placemark>
+			<name>College road</name>
+			<description><![CDATA[Work ID: 24578]]></description>
+			<styleUrl>#line-000000-4</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0076962,15.458933399999998,0.0 75.00567910000001,15.457857900000002,0.0 75.0040913,15.4571341,0.0 75.002718,15.4568032,0.0 75.0013661,15.4564723,0.0 74.9999928,15.455955199999998,0.0 74.9980402,15.4552934,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Road work 1</name>
+			<description><![CDATA[Work ID: 78787]]></description>
+			<styleUrl>#line-000000-5</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.9970692,15.4618339,0.0 74.9972785,15.4612859,0.0 74.9974447,15.4607068,0.0 74.9977666,15.459316000000001,0.0 74.998641,15.4595848,0.0 74.9991667,15.459802000000002,0.0 74.9996442,15.460045,0.0 75.000878,15.4607275,0.0 75.0005668,15.461715,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Style id='line-000000-4-normal'>
+			<LineStyle>
+				<color>ff000000</color>
+				<width>4</width>
+			</LineStyle>
+		</Style>
+		<Style id='line-000000-4-highlight'>
+			<LineStyle>
+				<color>ff000000</color>
+				<width>6.0</width>
+			</LineStyle>
+		</Style>
+		<StyleMap id='line-000000-4'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-000000-4-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-000000-4-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+		<Style id='line-000000-5-normal'>
+			<LineStyle>
+				<color>ff000000</color>
+				<width>5</width>
+			</LineStyle>
+		</Style>
+		<Style id='line-000000-5-highlight'>
+			<LineStyle>
+				<color>ff000000</color>
+				<width>8.0</width>
+			</LineStyle>
+		</Style>
+		<StyleMap id='line-000000-5'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-000000-5-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-000000-5-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

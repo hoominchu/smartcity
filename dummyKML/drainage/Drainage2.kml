@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>Drainage</name>
+		<Placemark>
+			<name>Drainage 2</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.01108650000002,15.450474499999999,0.0 75.0136614,15.451798200000002,0.0 75.0147557,15.451818799999998,0.0 75.0160217,15.452046299999997,0.0 75.0170517,15.4521704,0.0 75.0180602,15.4525427,0.0 75.0185966,15.4528323,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 2</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0111508,15.4522945,0.0 75.0117731,15.4507847,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 2</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0116444,15.4523979,0.0 75.0121593,15.4509916,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Style id='line-795046-4-nodesc-normal'>
+			<LineStyle>
+				<color>ff465079</color>
+				<width>4</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='line-795046-4-nodesc-highlight'>
+			<LineStyle>
+				<color>ff465079</color>
+				<width>6.0</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='line-795046-4-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-795046-4-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-795046-4-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>
