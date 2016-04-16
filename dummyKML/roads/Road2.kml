@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>Road</name>
+		<Placemark>
+			<name>Road 2</name>
+			<styleUrl>#line-000000-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>74.9978685,15.4553141,0.0 74.9973965,15.4555002,0.0 74.9931264,15.455934499999998,0.0 74.9877834,15.457051300000002,0.0 74.9863672,15.457258200000002,0.0 74.9848223,15.457527,0.0 74.9834704,15.4577959,0.0 74.9828482,15.458106100000002,0.0 74.981668,15.459326300000003,0.0 74.9810672,15.459802000000002,0.0 74.9793077,15.4610842,0.0 74.9783206,15.462263,0.0 74.9779129,15.4636073,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Style id='line-000000-4-nodesc-normal'>
+			<LineStyle>
+				<color>ff000000</color>
+				<width>4</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='line-000000-4-nodesc-highlight'>
+			<LineStyle>
+				<color>ff000000</color>
+				<width>6.0</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='line-000000-4-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-000000-4-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-000000-4-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

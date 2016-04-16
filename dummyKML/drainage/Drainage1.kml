@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>Drainage</name>
+		<Placemark>
+			<name>Drainage 1</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0153029,15.4663578,0.0 75.0162148,15.465706400000002,0.0 75.0165474,15.4656547,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 2</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0150776,15.46612,0.0 75.0161183,15.4653858,0.0 75.0164402,15.465241100000002,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 3</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0148737,15.465851200000001,0.0 75.0163436,15.4648998,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 4</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0147021,15.4656133,0.0 75.0160539,15.4647137,0.0 75.0163114,15.464610300000002,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 5</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0150883,15.4663268,0.0 75.0143588,15.466544,0.0 75.0131249,15.466823200000002,0.0 75.0128353,15.4662338,0.0 75.0132322,15.466016599999998,0.0 75.0136721,15.4655927,0.0 75.0142193,15.4652101,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 6</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0132322,15.466016599999998,0.0 75.0136828,15.4666887,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Drainage 7</name>
+			<styleUrl>#line-795046-4-nodesc</styleUrl>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>75.0136721,15.4655927,0.0 75.0143588,15.466544,0.0</coordinates>
+			</LineString>
+		</Placemark>
+		<Style id='line-795046-4-nodesc-normal'>
+			<LineStyle>
+				<color>ff465079</color>
+				<width>4</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='line-795046-4-nodesc-highlight'>
+			<LineStyle>
+				<color>ff465079</color>
+				<width>6.0</width>
+			</LineStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='line-795046-4-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#line-795046-4-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#line-795046-4-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>

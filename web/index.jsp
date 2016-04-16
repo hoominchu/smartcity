@@ -10,8 +10,7 @@
          import="java.lang.Integer"
          import="static java.util.Arrays.asList"
          import="org.bson.*"
-         import="java.io.Serializable"
-         import="java.util.List"
+         import="smartcity.*"
 %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.*" %>
@@ -22,48 +21,9 @@
 
 <%-- Functions required are defined here --%>
 <%!
-    public static String capitalizeFirstLetter(String input) {
-        String output = input.substring(0, 1).toUpperCase() + input.substring(1);
-        return output;
-    }
-
-    public class ClickStack {
-        String parameter;
-        String parameterValue;
-        String parameterPresentable;
-        String parameterValuePresentable;
-
-        ClickStack(String p, String pV, String pP, String queryKey) {
-            this.parameter = p;
-            this.parameterValue = pV;
-            this.parameterPresentable = pP;
-
-            BasicDBObject parameterValuePresentableObject = new BasicDBObject();
-            boolean isNumeric = pV.matches("[0-9]+");
-            if(isNumeric) {
-                parameterValuePresentableObject.put(queryKey, Integer.parseInt(pV));
-            }
-            else if (!isNumeric){
-                parameterValuePresentableObject.put(queryKey,pV);
-            }
-            DBCursor cursor = allworks.find(parameterValuePresentableObject);
-
-            while (cursor.hasNext()) {
-                DBObject object = cursor.next();
-                this.parameterValuePresentable = object.get(pP).toString();
-                break;
-            }
-        }
-    }
-
     ArrayList filters = new ArrayList();
 
-    static Mongo mongo = new Mongo();
-    static DB db = mongo.getDB("smartcitydb");
-
-    static DBCollection allworks = db.getCollection("allworks");
-    static DBCollection corporatorsCollection = db.getCollection("corporatorsC");
-    static DBCollection workDetailsCollection = db.getCollection("workdetails");
+    Database database = new Database();
 %>
 <%
     DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
@@ -129,16 +89,16 @@
         }
     }
 
-    Iterator filtersIter = filters.iterator();
+    Iterator filtersIterator = filters.iterator();
     String newLink = "";
 
-    while (filtersIter.hasNext()) {
-        ClickStack call = (ClickStack) filtersIter.next();
+    while (filtersIterator.hasNext()) {
+        ClickStack call = (ClickStack) filtersIterator.next();
 
         newLink = newLink + call.parameter + "=" + call.parameterValue + "&";
     }
 
-    DBCursor cursor = allworks.find(myQuery);
+    DBCursor cursor = database.allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
 %>
@@ -186,6 +146,7 @@
             href="<%=baseLink%>">English</a></div>
 
     <div class="btn-group btn-group-justified">
+        <a href="<%=baseLink%><%=newLink%>&jumbotron=info&" class="btn btn-default">Info</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Ward expenditure</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=topcontractors&" class="btn btn-default">Top Contractors</a>
@@ -221,16 +182,13 @@
             ClickStack click = (ClickStack) filtersApplied.next();
             String dismissalLink = "index.jsp?" + newLink.replace(click.parameter + "=" + click.parameterValue, "");
             dismissalLink = dismissalLink.substring(0, dismissalLink.lastIndexOf("&"));
-
     %>
     <span class="label label-primary"
           style="font-size: 1.1em;"><%=click.parameterPresentable%> : <%=click.parameterValuePresentable%> <a
             href=<%=dismissalLink%>> <i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
     <%
         }
-
     %>
-
 
     <table class="table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
@@ -277,7 +235,7 @@
                     String amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
                     String status = workObject.get("Status").toString();
-                    String statusFirstLetterCapital = capitalizeFirstLetter(status);
+                    String statusFirstLetterCapital = functionsGeneral.capitalizeFirstLetter(status);
 
                     //Values for backend
                     String workID = workObject.get("Work ID").toString();

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns='http://www.opengis.net/kml/2.2'>
+	<Document>
+		<name>Garden</name>
+		<Placemark>
+			<name>Garden 1</name>
+			<styleUrl>#poly-009D57-0-235-nodesc</styleUrl>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<tessellate>1</tessellate>
+						<coordinates>75.0084472,15.459440100000002,0.0 75.0098956,15.4601949,0.0 75.0099707,15.460319,0.0 75.0091767,15.460515499999998,0.0 75.0084472,15.459440100000002,0.0</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+		<Style id='poly-009D57-0-235-nodesc-normal'>
+			<LineStyle>
+				<color>ff579D00</color>
+				<width>0</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>EB579D00</color>
+				<fill>1</fill>
+				<outline>1</outline>
+			</PolyStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id='poly-009D57-0-235-nodesc-highlight'>
+			<LineStyle>
+				<color>ff579D00</color>
+				<width>0.0</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>EB579D00</color>
+				<fill>1</fill>
+				<outline>1</outline>
+			</PolyStyle>
+			<BalloonStyle>
+				<text><![CDATA[<h3>$[name]</h3>]]></text>
+			</BalloonStyle>
+		</Style>
+		<StyleMap id='poly-009D57-0-235-nodesc'>
+			<Pair>
+				<key>normal</key>
+				<styleUrl>#poly-009D57-0-235-nodesc-normal</styleUrl>
+			</Pair>
+			<Pair>
+				<key>highlight</key>
+				<styleUrl>#poly-009D57-0-235-nodesc-highlight</styleUrl>
+			</Pair>
+		</StyleMap>
+	</Document>
+</kml>
