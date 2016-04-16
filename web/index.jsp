@@ -6,12 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
-
          import="com.mongodb.*"
          import="java.lang.Integer"
          import="static java.util.Arrays.asList"
          import="org.bson.*"
-         import="smartcity.*"
+         import="java.io.Serializable"
+         import="java.util.List"
 %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.*" %>
@@ -22,186 +22,49 @@
 
 <%-- Functions required are defined here --%>
 <%!
+    public static String capitalizeFirstLetter(String input) {
+        String output = input.substring(0, 1).toUpperCase() + input.substring(1);
+        return output;
+    }
+
+    public class ClickStack {
+        String parameter;
+        String parameterValue;
+        String parameterPresentable;
+        String parameterValuePresentable;
+
+        ClickStack(String p, String pV, String pP, String queryKey) {
+            this.parameter = p;
+            this.parameterValue = pV;
+            this.parameterPresentable = pP;
+
+            BasicDBObject parameterValuePresentableObject = new BasicDBObject();
+            boolean isNumeric = pV.matches("[0-9]+");
+            if(isNumeric) {
+                parameterValuePresentableObject.put(queryKey, Integer.parseInt(pV));
+            }
+            else if (!isNumeric){
+                parameterValuePresentableObject.put(queryKey,pV);
+            }
+            DBCursor cursor = allworks.find(parameterValuePresentableObject);
+
+            while (cursor.hasNext()) {
+                DBObject object = cursor.next();
+                this.parameterValuePresentable = object.get(pP).toString();
+                break;
+            }
+        }
+    }
 
     ArrayList filters = new ArrayList();
 
-    Database database = new Database();
+    static Mongo mongo = new Mongo();
+    static DB db = mongo.getDB("smartcitydb");
 
+    static DBCollection allworks = db.getCollection("allworks");
+    static DBCollection corporatorsCollection = db.getCollection("corporatorsC");
+    static DBCollection workDetailsCollection = db.getCollection("workdetails");
 %>
-
-
-<html>
-<head>
-    <title>HDMC Smart City Project</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="commonfiles/sorttable.js"></script>
-    <link rel="stylesheet" href="commonfiles/bootstrap.css">
-    <script src="commonfiles/jquery.min.js"></script>
-    <script src="commonfiles/bootstrap.min.js"></script>
-    <script src="commonfiles/addons.js"></script>
-</head>
-<body>
-
-<div class="container">
-    <img src="images/hdmc-logo.png" width="140em" height="140em"
-         style="display:inline-block; margin-right:1em; margin-left:7em;">
-
-    <h2 style="text-align:center; display:inline-block;"><a href="../allworks/allworks.html">Hubballi Dharwad Smart
-        Cities Project</a></h2>
-
-    <img src="images/smartcitylogo.jpg" width="150em" height="150em"
-         style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px;"><a href="allworks_k.html" target="_blank">ಕನ್ನಡ</a> | <a
-            href="allworks.html" target="_blank">English</a></div>
-
-    <table class="table-striped table-responsive sortable" id="myTable" style="margin-top:2em">
-
-        <thead>
-
-        <tr>
-
-            <th>Ward</th>
-            <th>Work Description</th>
-            <th>Work Order Date</th>
-            <th>Work Completion Date</th>
-            <th>Work Type</th>
-            <th>Source of Income</th>
-            <th>Contractor</th>
-            <th>Amount Sanctioned</th>
-            <th>Status</th>
-
-        </tr>
-        </thead>
-        <tbody>
-
-        <%
-
-            try {
-
-                Mongo mongo = new Mongo();
-
-                DB db = mongo.getDB("mydb");
-
-                DBCollection smartcity = db.getCollection("smartcity");
-
-                //BasicDBObject wardQuery = setQuery("Ward Number", 3);
-
-                String parameter = request.getParameter("wardNumber");
-
-                System.out.println(parameter);
-
-                DBCursor cursor = smartcity.find();
-
-                while (cursor.hasNext()) {
-                    DBObject workObject = cursor.next();
-
-                    String wardNumber = workObject.get("Ward Number").toString();
-                    String workDescriptionEnglish = (String) workObject.get("Work Description English");
-                    String workOrderDate = (String) workObject.get("Work Order Date");
-                    String workCompletionDate = (String) workObject.get("Work Completion Date");
-                    String workType = (String) workObject.get("Capital");
-                    String sourceOfIncome = (String) workObject.get("Source of Income");
-                    String contractor = (String) workObject.get("Contractor");
-                    String amountSanctioned = workObject.get("Amount Sanctioned").toString();
-                    String status = (String) workObject.get("Status");
-
-                    //System.out.println(workObject.get("Amount Sanctioned"));
-        %>
-        <tr>
-            <td><a href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%></a>
-            </td>
-            <td><%=workDescriptionEnglish%>
-            </td>
-            <td><%=workOrderDate%>
-            </td>
-            <td><%=workCompletionDate%>
-            </td>
-            <td><%=workType%>
-            </td>
-            <td><%=sourceOfIncome%>
-            </td>
-            <td><%=contractor%>
-            </td>
-            <td><%=amountSanctioned%>
-            </td>
-            <td><%=status%>
-            </td>
-        </tr>
-
-        <%
-                }
-            } catch (Exception e) {
-                System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            }
-        %>
-
-        </tbody>
-    </table>
-</div>
-
-</body>
-
-<html>
-  <head>
-    <title>HDMC Smart City Project</title>
-
-    <meta charset="utf-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script src="commonfiles/sorttable.js"></script>
-
-    <link rel="stylesheet" href="commonfiles/bootstrap.css">
-
-    <script src="commonfiles/jquery.min.js"></script>
-
-    <script src="commonfiles/bootstrap.min.js"></script>
-
-    <script src="commonfiles/addons.js"></script>
-  </head>
-  <body>
-
-  <div class="container">
-    <img src="images/hdmc-logo.png" width="140em" height="140em" style="display:inline-block; margin-right:1em; margin-left:7em;">
-
-    <h2 style="text-align:center; display:inline-block;"><a href="../allworks/allworks.html">Hubballi Dharwad Smart Cities Project</a></h2>
-
-    <img src="images/smartcitylogo.jpg" width="150em" height="150em" style="display:inline-block; margin-left:1em; margin-top:1.2em;"><div class="pull-right" style="margin-top:40px;"><a href="allworks_k.html" target="_blank">ಕನ್ನಡ</a> | <a href="allworks.html" target="_blank">English</a></div>
-
-  <%
-
-
-    try{
-
-    Mongo mongo = new Mongo();
-
-    DB db = mongo.getDB("mydb");
-
-    DBCollection smartcity = db.getCollection("smartcity");
-
-    BasicDBObject wardQuery = new BasicDBObject();
-
-    wardQuery.put("Ward Number",14);
-
-    DBCursor cursor = smartcity.find(wardQuery);
-
-    while (cursor.hasNext()){
-    DBObject object = cursor.next();
-    %>
-    <p><%=object%></p>
-
-    <%
-    }
-      }catch(Exception e){
-      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-      }
-  %>
-
-  </div>
-
-  </body>
-
 <%
     DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
 
@@ -266,16 +129,16 @@
         }
     }
 
-    Iterator filtersIterator = filters.iterator();
+    Iterator filtersIter = filters.iterator();
     String newLink = "";
 
-    while (filtersIterator.hasNext()) {
-        ClickStack call = (ClickStack) filtersIterator.next();
+    while (filtersIter.hasNext()) {
+        ClickStack call = (ClickStack) filtersIter.next();
 
         newLink = newLink + call.parameter + "=" + call.parameterValue + "&";
     }
 
-    DBCursor cursor = database.allworks.find(myQuery);
+    DBCursor cursor = allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
 %>
@@ -323,7 +186,6 @@
             href="<%=baseLink%>">English</a></div>
 
     <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%><%=newLink%>&jumbotron=info&" class="btn btn-default">Info</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Ward expenditure</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
@@ -359,13 +221,16 @@
             ClickStack click = (ClickStack) filtersApplied.next();
             String dismissalLink = "index.jsp?" + newLink.replace(click.parameter + "=" + click.parameterValue, "");
             dismissalLink = dismissalLink.substring(0, dismissalLink.lastIndexOf("&"));
+
     %>
     <span class="label label-primary"
           style="font-size: 1.1em;"><%=click.parameterPresentable%> : <%=click.parameterValuePresentable%> <a
             href=<%=dismissalLink%>> <i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
     <%
         }
+
     %>
+
 
     <table class="table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
@@ -412,7 +277,7 @@
                     String amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
                     String status = workObject.get("Status").toString();
-                    String statusFirstLetterCapital = functionsGeneral.capitalizeFirstLetter(status);
+                    String statusFirstLetterCapital = capitalizeFirstLetter(status);
 
                     //Values for backend
                     String workID = workObject.get("Work ID").toString();
@@ -571,5 +436,4 @@
 </script>
 <div class="panel-footer" style="text-align: center">&#169 HDMC</div>
 </body>
-
 </html>
