@@ -8,62 +8,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.*"
          import="java.lang.Integer"
-         import="static java.util.Arrays.asList"
-         import="org.bson.*"
-         import="java.io.Serializable"
-         import="java.util.List"
+         import="smartcity.*"
 %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.stream.Collectors" %>
-<%@ page import="java.lang.reflect.Array" %>
-<%@ page import="com.mongodb.client.AggregateIterable" %>
 
 <%-- Functions required are defined here --%>
 <%!
-    public static String capitalizeFirstLetter(String input) {
-        String output = input.substring(0, 1).toUpperCase() + input.substring(1);
-        return output;
-    }
-
-    public class ClickStack {
-        String parameter;
-        String parameterValue;
-        String parameterPresentable;
-        String parameterValuePresentable;
-
-        ClickStack(String p, String pV, String pP, String queryKey) {
-            this.parameter = p;
-            this.parameterValue = pV;
-            this.parameterPresentable = pP;
-
-            BasicDBObject parameterValuePresentableObject = new BasicDBObject();
-            boolean isNumeric = pV.matches("[0-9]+");
-            if(isNumeric) {
-                parameterValuePresentableObject.put(queryKey, Integer.parseInt(pV));
-            }
-            else if (!isNumeric){
-                parameterValuePresentableObject.put(queryKey,pV);
-            }
-            DBCursor cursor = allworks.find(parameterValuePresentableObject);
-
-            while (cursor.hasNext()) {
-                DBObject object = cursor.next();
-                this.parameterValuePresentable = object.get(pP).toString();
-                break;
-            }
-        }
-    }
-
     ArrayList filters = new ArrayList();
-
-    static Mongo mongo = new Mongo();
-    static DB db = mongo.getDB("smartcitydb");
-
-    static DBCollection allworks = db.getCollection("allworks");
-    static DBCollection corporatorsCollection = db.getCollection("corporatorsC");
-    static DBCollection workDetailsCollection = db.getCollection("workdetails");
 %>
 <%
     DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
@@ -82,7 +36,7 @@
     String baseLink = "index.jsp?";
 
     filters.clear();
-    filters = (ArrayList) filters.stream().distinct().collect(Collectors.toList());
+    //filters = (ArrayList) filters.stream().distinct().collect(Collectors.toList());
 
     if (wardNumberParameter != null) {
         myQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
@@ -138,7 +92,7 @@
         newLink = newLink + call.parameter + "=" + call.parameterValue + "&";
     }
 
-    DBCursor cursor = allworks.find(myQuery);
+    DBCursor cursor = Database.allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
 %>
@@ -187,7 +141,7 @@
 
     <div class="btn-group btn-group-justified">
         <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
-        <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Ward expenditure</a>
+        <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
         <a href="<%=baseLink%><%=newLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
     </div>
 
@@ -236,9 +190,7 @@
            style="margin-top:2em; width: 100%; table-layout: fixed">
 
         <thead>
-
         <tr>
-
             <th style="width: 3%; padding: 2px; text-align: center">Ward</th>
             <th style="width: 40%; padding: 2px; text-align: center">Work Description</th>
             <th style="width: 6%; padding: 2px; text-align: center">Work Order Date</th>
@@ -248,16 +200,12 @@
             <th style="width: 13%; padding: 2px; text-align: center">Contractor</th>
             <th style="width: 7%; padding: 2px; text-align: center">Amount Sanctioned</th>
             <th style="width: 5%; padding: 2px; text-align: center">Status</th>
-
         </tr>
         </thead>
         <tbody>
-
         <%
             //WorkResults wr = mymethod(request);
-
             try {
-
                 while (cursor.hasNext()) {
                     DBObject workObject = cursor.next();
 
@@ -277,7 +225,7 @@
                     String amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
                     String status = workObject.get("Status").toString();
-                    String statusFirstLetterCapital = capitalizeFirstLetter(status);
+                    String statusFirstLetterCapital = functionsGeneral.capitalizeFirstLetter(status);
 
                     //Values for backend
                     String workID = workObject.get("Work ID").toString();
@@ -285,6 +233,7 @@
                     String contractorID = workObject.get("Contractor ID").toString();
                     String sourceOfIncomeID = workObject.get("Source of Income ID").toString();
                     String statusColor = null;
+                    String kml = workObject.get("kml").toString();
 
                     if (status.equals("completed")) {
                         statusColor = "#43ac6a";
@@ -304,53 +253,46 @@
         %>
         <tr>
             <td style="text-align: center; padding-left: 0.2em"><a
-                    href="index.jsp?wardNumber=<%=wardNumber%>"><%=wardNumber%>
+                    href="<%=baseLink%><%=newLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%>
             </a>
             </td>
             <td style="padding: 1.5em">
-
-                <a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>">
-
+                <a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>&jumbotron=map">
                     <%=workDescriptionFinal%>
-
                 </a>
-
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
             <td style="text-align: center"><%=workCompletionDate%>
             </td>
-            <td style="text-align: center"><a href="index.jsp?<%=newLink%>workTypeID=<%=workTypeID%>"><%=workType%>
+            <td style="text-align: center"><a href="<%=baseLink%><%=newLink%>workTypeID=<%=workTypeID%>"><%=workType%>
             </a>
             </td>
             <td style="text-align: center"><a
-                    href="index.jsp?<%=newLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
+                    href="<%=baseLink%><%=newLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
             </a>
             </td>
             <td style="text-align: center"><a
-                    href="index.jsp?<%=newLink%>contractorID=<%=contractorID%>"><%=contractor%>
+                    href="<%=baseLink%><%=newLink%>contractorID=<%=contractorID%>"><%=contractor%>
             </a>
             </td>
             <td style="text-align: center"><%=amountSanctioned%>
             </td>
             <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
-                    href="index.jsp?<%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%>
+                    href="<%=baseLink%><%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%>
             </a>
             </td>
         </tr>
-
         <%
                 }
             } catch (Exception e) {
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
             }
         %>
-
         </tbody>
     </table>
     <a href="#" class="scrollup">Go to top</a>
 </div>
-
 <script>
     function initMap() {
         var mapDiv = document.getElementById('map');
@@ -434,6 +376,6 @@
         });
     });
 </script>
-<div class="panel-footer" style="text-align: center">&#169 HDMC</div>
+<div class="panel-footer" style="text-align: center">All the data presented here has been provided by Hubli-Dharwad Municipal Corporation</div>
 </body>
 </html>

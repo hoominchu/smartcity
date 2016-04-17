@@ -19,8 +19,6 @@ public class ClickStack {
         this.parameterValue = pV;
         this.parameterPresentable = pP;
 
-        Database database = new Database();
-
         BasicDBObject parameterValuePresentableObject = new BasicDBObject();
         boolean isNumeric = pV.matches("[0-9]+");
         if(isNumeric) {
@@ -29,7 +27,7 @@ public class ClickStack {
         else if (!isNumeric){
             parameterValuePresentableObject.put(queryKey,pV);
         }
-        DBCursor cursor = database.allworks.find(parameterValuePresentableObject);
+        DBCursor cursor = Database.allworks.find(parameterValuePresentableObject);
 
         while (cursor.hasNext()) {
             DBObject object = cursor.next();

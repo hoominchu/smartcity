@@ -8,17 +8,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.*"
          import="java.lang.Integer"
+         import="smartcity.*"
 %>
 <%@ page import="java.math.BigDecimal" %>
+<%@ page import="java.io.File" %>
+<%@ page import="java.io.PrintWriter" %>
 
 <%
-    Mongo mongo = new Mongo();
-
-    DB db = mongo.getDB("smartcitydb");
-
-    DBCollection workDetailsCollection = db.getCollection("workdetails");
-
     String workIDParameter = request.getParameter("workID");
+    String jumbotronParameter = request.getParameter("jumbotron");
     System.out.println(workIDParameter);
 
     BasicDBObject workIDQuery = new BasicDBObject();
@@ -54,6 +52,15 @@
     <div class="pull-right" style="margin-top:40px;"><a href="index.jsp?language=kannada">ಕನ್ನಡ</a> | <a
             href="index.jsp">English</a></div>
 
+    <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
+        <% if (jumbotronParameter == null || jumbotronParameter.equals("map")) {
+        %>
+        <div id="map" style="width:100%; height: 100%; position: relative"></div>
+        <%
+        }
+        %>
+    </div>
+
     <table class="table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
 
@@ -74,7 +81,7 @@
 
         <%
             //WorkResults wr = mymethod(request);
-            DBCursor workDetailsCursor = workDetailsCollection.find(workIDQuery);
+            DBCursor workDetailsCursor = Database.workDetailsCollection.find(workIDQuery);
             System.out.println(workDetailsCursor.count());
 
             try {
@@ -90,7 +97,10 @@
                     Double totalAmount = (Double.parseDouble(measurement)) * (Double.parseDouble(rate));
                     Double truncatedTotal = new BigDecimal(totalAmount).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
                     String totalAmountString = truncatedTotal.toString();
+                    String kmlString = workDetailsObject.get("kml").toString();
 
+                    PrintWriter kmlFile = new PrintWriter("workKML.kml", "UTF-8");
+                    kmlFile.print(kmlString);
         %>
         <tr>
             <td style="text-align: center"><%=stepNumber%>
@@ -117,5 +127,22 @@
         </tbody>
     </table>
 </div>
+<script>
+    function initMap() {
+        var mapDiv = document.getElementById('map');
+        var map = new google.maps.Map(mapDiv, {
+            center: new google.maps.LatLng(15.3935685, 75.08009570000002),
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+        var workKML = new google.maps.KmlLayer({
+            url: workKML,
+            map: map
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>
+<div class="panel-footer" style="text-align: center">All the data presented here has been provided by Hubli-Dharwad Municipal Corporation</div>
 </body>
 </html>
