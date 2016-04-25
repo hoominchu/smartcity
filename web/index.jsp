@@ -7,94 +7,27 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.*"
-         import="java.lang.Integer"
          import="smartcity.*"
-%>
-<%@ page import="java.text.NumberFormat" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.DecimalFormat" %>
-<%@ page import="java.util.stream.Collectors" %>
-
-<%-- Functions required are defined here --%>
-<%!
-    ArrayList filters = new ArrayList();
-%>
+         import="java.util.*"
+         import="smartcity.Filter"
+         %>
 <%
-    DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
-
-    String wardNumberParameter = request.getParameter("wardNumber");
-    String statusParameter = request.getParameter("status");
-    String workTypeIDParameter = request.getParameter("workTypeID");
-    String contractorIDParameter = request.getParameter("contractorID");
-    String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
     String languageParameter = request.getParameter("language");
-
     String jumbotronParameter = request.getParameter("jumbotron");
 
-    BasicDBObject myQuery = new BasicDBObject();
+    BasicDBObject myQuery = smartcity.Filter.generateFiltersHashset(request);
 
     String baseLink = "index.jsp?";
-
-    filters.clear();
-    //filters = (ArrayList) filters.stream().distinct().collect(Collectors.toList());
-
-    if (wardNumberParameter != null) {
-        myQuery.put("Ward Number", Integer.parseInt(wardNumberParameter));
-
-        ClickStack click = new ClickStack("wardNumber", wardNumberParameter, "Ward Number", "Ward Number");
-        if (!(filters.contains(click))) {
-            filters.add(click);
-        }
-    }
-
-    if (statusParameter != null) {
-        myQuery.put("Status", statusParameter);
-
-        ClickStack click = new ClickStack("status", statusParameter, "Status", "Status");
-        if (!(filters.contains(click))) {
-            filters.add(click);
-        }
-    }
-
-    if (workTypeIDParameter != null) {
-        myQuery.put("Work Type ID", Integer.parseInt(workTypeIDParameter));
-
-        ClickStack click = new ClickStack("workTypeID", workTypeIDParameter, "Work Type", "Work Type ID");
-        if (!(filters.contains(click))) {
-            filters.add(click);
-        }
-    }
-
-    if (contractorIDParameter != null) {
-        myQuery.put("Contractor ID", Integer.parseInt(contractorIDParameter));
-
-        ClickStack click = new ClickStack("contractorID", contractorIDParameter, "Contractor", "Contractor ID");
-        if (!(filters.contains(click))) {
-            filters.add(click);
-        }
-    }
-
-    if (sourceOfIncomeIDParameter != null) {
-        myQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
-
-        ClickStack click = new ClickStack("sourceOfIncomeID", sourceOfIncomeIDParameter, "Source of Income", "Source of Income ID");
-        if (!(filters.contains(click))) {
-            filters.add(click);
-        }
-    }
-
-    Iterator filtersIter = filters.iterator();
-    String newLink = "";
-
-    while (filtersIter.hasNext()) {
-        ClickStack call = (ClickStack) filtersIter.next();
-
-        newLink = newLink + call.parameter + "=" + call.parameterValue + "&";
-    }
+    String dynamicLink = General.genLink();
 
     DBCursor cursor = Database.allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
+    Work[] works = Work.createWorkObjects(myQuery);
+
+    Ward.createAllWardObjects();
+    String k = Ward.getAllWardNumbersString();
+    System.out.println("sdfwerferf"+k);
 %>
 
 <html>
@@ -118,7 +51,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
     <style>
-        .fa{
+        .fa {
             color: white;
             margin: 2px;
         }
@@ -140,9 +73,9 @@
             href="<%=baseLink%>">English</a></div>
 
     <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%><%=newLink%>&jumbotron=map&" class="btn btn-default">Map</a>
-        <a href="<%=baseLink%><%=newLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
-        <a href="<%=baseLink%><%=newLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
+        <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=map&" class="btn btn-default">Map</a>
+        <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
+        <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
     </div>
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
@@ -164,28 +97,24 @@
     </h4>
 
     <% if (languageParameter != null) {
-        newLink = newLink + "&language=kannada&";
+        dynamicLink = dynamicLink + "&language=kannada&";
     }
-        newLink = newLink.replaceAll("&&", "&");
+        dynamicLink = dynamicLink.replaceAll("&&", "&");
     %>
     <%
-        Iterator filtersApplied = filters.iterator();
+        Iterator filtersApplied = smartcity.Filter.FILTERS.iterator();
 
         while (filtersApplied.hasNext()) {
-            ClickStack click = (ClickStack) filtersApplied.next();
-            String dismissalLink = "index.jsp?" + newLink.replace(click.parameter + "=" + click.parameterValue, "");
+            Filter click = (Filter) filtersApplied.next();
+            String dismissalLink = "index.jsp?" + dynamicLink.replace(click.parameter + "=" + click.parameterValue, "");
             dismissalLink = dismissalLink.substring(0, dismissalLink.lastIndexOf("&"));
-
     %>
     <span class="label label-primary"
           style="font-size: 1.1em;"><%=click.parameterPresentable%> : <%=click.parameterValuePresentable%> <a
             href=<%=dismissalLink%>> <i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
     <%
         }
-
     %>
-
-
     <table class="table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
 
@@ -205,81 +134,68 @@
         <tbody>
         <%
             //WorkResults wr = mymethod(request);
+            int numberOfWorksQueried = works.length;
             try {
-                while (cursor.hasNext()) {
-                    DBObject workObject = cursor.next();
+                for (int i = 0; i < numberOfWorksQueried; i++) {
 
-                    String wardNumber = workObject.get("Ward Number").toString();
-                    String workDescriptionEnglish = workObject.get("Work Description English").toString();
-                    String workDescriptionKannada = workObject.get("Work Description Kannada").toString();
-
+                    int wardNumber = works[i].wardNumber;
+                    String workDescriptionEnglish = works[i].workDescriptionEnglish;
+                    String workDescriptionKannada = works[i].workDescriptionKannada;
                     String workDescriptionFinal = null;
+                    String workOrderDate = works[i].workOrderDate;
+                    String workCompletionDate = works[i].workCompletionDate;
+                    String workType = works[i].workType;
+                    String sourceOfIncome = works[i].sourceOfIncome;
+                    String contractor = works[i].contractor;
+                    String amountSanctionedString = works[i].amountSanctionedString;
 
-                    String workOrderDate = workObject.get("Work Order Date").toString();
-                    String workCompletionDate = workObject.get("Work Completion Date").toString();
-                    String workType = workObject.get("Work Type").toString();
-                    String sourceOfIncome = workObject.get("Source of Income").toString();
-                    String contractor = workObject.get("Contractor").toString();
-                    String amountSanctionedString = workObject.get("Amount Sanctioned").toString();
                     //Converting string to integer with commas
-                    String amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
-
-                    String status = workObject.get("Status").toString();
-                    String statusFirstLetterCapital = functionsGeneral.capitalizeFirstLetter(status);
+                    String amountSanctioned = works[i].amountSanctioned;
+                    String status = works[i].statusfirstLetterCapital;
+                    String statusFirstLetterSmall = works[i].statusFirstLetterSmall;
 
                     //Values for backend
-                    String workID = workObject.get("Work ID").toString();
-                    String workTypeID = workObject.get("Work Type ID").toString();
-                    String contractorID = workObject.get("Contractor ID").toString();
-                    String sourceOfIncomeID = workObject.get("Source of Income ID").toString();
-                    String statusColor = null;
-                    String kml = workObject.get("kml").toString();
+                    String workID = works[i].workID;
+                    String workTypeID = works[i].workTypeID;
+                    String contractorID = works[i].contractorID;
+                    String sourceOfIncomeID = works[i].sourceOfIncomeID;
+                    String statusColor = works[i].statusColor;
 
-                    if (status.equals("completed")) {
-                        statusColor = "#43ac6a";
-                    } else if (status.equals("inprogress")) {
-                        statusColor = "#f04124";
-                    }
-
-                    if (languageParameter == null || languageParameter.equals("english")) {
-                        if (workDescriptionEnglish.length() > 2) {
-                            workDescriptionFinal = workDescriptionEnglish;
-                        } else {
-                            workDescriptionFinal = workDescriptionKannada;
-                        }
-                    } else if (languageParameter.equals("kannada")) {
-                        workDescriptionFinal = workDescriptionKannada;
-                    }
+                    workDescriptionFinal = General.setWorkDescriptionFinal(languageParameter, workDescriptionEnglish, workDescriptionKannada);
         %>
         <tr>
             <td style="text-align: center; padding-left: 0.2em"><a
-                    href="<%=baseLink%><%=newLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%>
+                    href="<%=baseLink%><%=dynamicLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%>
             </a>
             </td>
             <td style="padding: 1.5em">
-                <a href="workDetails.jsp?<%=newLink%>workID=<%=workID%>&jumbotron=map">
+                <% if (works[i].doWorkDetailsExist) { %>
+                <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=map">
                     <%=workDescriptionFinal%>
                 </a>
+                <% } else if (!works[i].doWorkDetailsExist) { %>
+                <%=workDescriptionFinal%>
+                <% } %>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
             <td style="text-align: center"><%=workCompletionDate%>
             </td>
-            <td style="text-align: center"><a href="<%=baseLink%><%=newLink%>workTypeID=<%=workTypeID%>"><%=workType%>
+            <td style="text-align: center"><a href="<%=baseLink%><%=dynamicLink%>workTypeID=<%=workTypeID%>"><%=workType%>
             </a>
             </td>
             <td style="text-align: center"><a
-                    href="<%=baseLink%><%=newLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
+                    href="<%=baseLink%><%=dynamicLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
             </a>
             </td>
             <td style="text-align: center"><a
-                    href="<%=baseLink%><%=newLink%>contractorID=<%=contractorID%>"><%=contractor%>
+                    href="<%=baseLink%><%=dynamicLink%>contractorID=<%=contractorID%>"><%=contractor%>
             </a>
             </td>
             <td style="text-align: center"><%=amountSanctioned%>
             </td>
             <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
-                    href="<%=baseLink%><%=newLink%>status=<%=status%>"><%=statusFirstLetterCapital%>
+                    href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>
             </a>
             </td>
         </tr>
@@ -369,13 +285,18 @@
             },
             series: [{
                 name: 'Total contract amount',
-                data: [{y:624197513,contractor:['Minchu']}, 180091022, 178307438, 153011951, 134586003, 83979001, 83031613, 83025637, 79303738, 71000000, 70264941, 70120595, 64403738, 62642758, 61423680, 60324168, 55923789, 48166603, 48165952, 45887340, 45387874, 42830870, 39446338, 39417223, 39128766, 38286832, 37685327, 36800709, 33787553, 33334231, 33281000, 33125002, 30933279, 30337130, 29855066, 29728187, 29426000, 28877191, 27906898, 27838258, 26622934, 25515329, 25151343, 22968817, 22668989, 21491218, 21173939, 21143181, 20861053, 20600000],
+                data: [{
+                    y: 624197513,
+                    contractor: ['Minchu']
+                }, 180091022, 178307438, 153011951, 134586003, 83979001, 83031613, 83025637, 79303738, 71000000, 70264941, 70120595, 64403738, 62642758, 61423680, 60324168, 55923789, 48166603, 48165952, 45887340, 45387874, 42830870, 39446338, 39417223, 39128766, 38286832, 37685327, 36800709, 33787553, 33334231, 33281000, 33125002, 30933279, 30337130, 29855066, 29728187, 29426000, 28877191, 27906898, 27838258, 26622934, 25515329, 25151343, 22968817, 22668989, 21491218, 21173939, 21143181, 20861053, 20600000],
                 visible: true
 
             }]
         });
     });
 </script>
-<div class="panel-footer" style="text-align: center">All the data presented here has been provided by Hubli-Dharwad Municipal Corporation</div>
+<div class="panel-footer" style="text-align: center">All the data presented here has been provided by Hubli-Dharwad
+    Municipal Corporation
+</div>
 </body>
 </html>
