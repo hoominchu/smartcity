@@ -1,5 +1,5 @@
 from pymongo import MongoClient 
-import glob
+import glob, os
 
 client = MongoClient()
 

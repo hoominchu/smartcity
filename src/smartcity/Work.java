@@ -53,7 +53,7 @@ public class Work {
         this.contractor = workObject.get("Contractor").toString();
         this.amountSanctionedString = workObject.get("Amount Sanctioned").toString();
         //Converting string to integer with commas
-        this.amountSanctioned = IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
+        this.amountSanctioned = amountSanctionedString; //IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
         this.statusFirstLetterSmall = workObject.get("Status").toString();
         this.statusfirstLetterCapital = General.capitalizeFirstLetter(this.statusFirstLetterSmall);
@@ -78,7 +78,11 @@ public class Work {
             }
         }
      catch (Exception e) {
+         e.printStackTrace();
+         System.out.println(this.statusFirstLetterSmall);
+         System.out.println(this.workTypeID);
         System.err.println(e.getClass().getName() + " : " + e.getMessage());
+         System.err.println("here");
     }
     }
 
