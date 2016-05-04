@@ -18,7 +18,8 @@ public class Ward {
     public int amountSpent;
     public String kml;
 
-    public static Ward[] allwards = new Ward[110];
+    public static Ward[] allwards = new Ward[(int) Database.wardmaster.count()];
+    public static int physicalWards = 67;
 
     /**
      * Constructor method for class Ward
@@ -26,12 +27,8 @@ public class Ward {
     public Ward(DBObject object) {
         super();
         try {
-            //if ((int) object.get("ID")<66){
-              //  this.corporator = object.get("Corporator Name English").toString();
-            //}
             this.wardNumber = (int) object.get("ID");
 
-            //this.population = (int) object.get("Population_2011");
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + " : " + e.getMessage());
             e.printStackTrace();
@@ -47,7 +44,7 @@ public class Ward {
         for (int i = 0; i < allwards.length; i++) {
             allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
         }
-        allWardNumbersString = allWardNumbersString.substring(0,allWardNumbersString.length()-1);
+        allWardNumbersString = allWardNumbersString.substring(0, allWardNumbersString.length() - 1);
         return allWardNumbersString;
     }
 
@@ -56,11 +53,47 @@ public class Ward {
      */  //Edit
     public static String getAllWardsAmountSpent() {
 
-        String allWardCompletedWorks = "";
+        String allWardsAmountSpent = "";
         for (int i = 0; i < allwards.length; i++) {
-            allWardCompletedWorks = allWardCompletedWorks + allwards[i].amountSpent + ",";
+            allWardsAmountSpent = allWardsAmountSpent + allwards[i].amountSpent + ",";
         }
-        return allWardCompletedWorks;
+        return allWardsAmountSpent;
+    }
+
+    /**
+     * Returns the string of all the ward numbers. This is for the chart.
+     */  //Edit
+    public static String getAllWardsTotalWorks() {
+
+        String allWardsTotalWorks = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsTotalWorks = allWardsTotalWorks + allwards[i].totalWorks + ",";
+        }
+        return allWardsTotalWorks;
+    }
+
+    /**
+     * Returns the string of all the ward numbers. This is for the chart.
+     */  //Edit
+    public static String getAllWardsCompletedWorks() {
+
+        String allWardsCompletedWorks = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsCompletedWorks = allWardsCompletedWorks + allwards[i].completedWorks + ",";
+        }
+        return allWardsCompletedWorks;
+    }
+
+    /**
+     * Returns the string of all the ward numbers. This is for the chart.
+     */  //Edit
+    public static String getAllWardsInprogressWorks() {
+
+        String allWardsInprogressWorks = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsInprogressWorks = allWardsInprogressWorks + allwards[i].inprogressWorks + ",";
+        }
+        return allWardsInprogressWorks;
     }
 
 
@@ -80,35 +113,66 @@ public class Ward {
             allwards[i] = new Ward(wardDBObject);
             i++;
         }
+        cursor.close();
 
 
-/*
-        //Counts all the works (in progress, completed and total) and ward-wise expenditure and stores them in the object.
-        Work[] allworks = Work.createWorkObjects(new BasicDBObject());
+        //Setting up fields for physical wards as there are some extra wards used for departments for which parameters like population, corporator are irrelevant.
 
-        System.out.println(allworks.length);
+        cursor = Database.wardmaster.find();
+        cursor.sort(sortBy);
+        i = 0;
 
-        for (int j = 0; j < allwards.length; j++) {
-            for (int k = 0; k < allworks.length; k++) {
-
-
-                if (allworks[k].wardNumber == allwards[j].wardNumber) {
-
-                  //Counts the number of in progress and completed works for every ward.
-                  if (allworks[k].equals("Completed")) {
-                      allwards[j].completedWorks++;
-                  } else if (allworks[k].statusfirstLetterCapital.equals("Inprogress")) {
-                      allwards[j].inprogressWorks++;
-                  }
-
-                    //Updates the amount spent in every ward.
-                    allwards[j].amountSpent = allwards[j].amountSpent + allworks[k].amountSanctioned;
+        while (cursor.hasNext()) {
+            if (i < physicalWards) {
+                try {
+                    DBObject wardDBObject = cursor.next();
+                    allwards[i].corporator = wardDBObject.get("Corporator Name English").toString();
+                    allwards[i].population = (int) wardDBObject.get("Population_2011");
+                    i++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println(e.getMessage());
                 }
-
+            } else {
+                break;
             }
 
         }
 
-*/
+        //Calculating the number of works, amount spent in every ward and storing it in the objects.
+
+
+        //Counts all the works (in progress, completed and total) and ward-wise expenditure and stores them in the object.
+        //Work[] allworks = Work.createWorkObjects(new BasicDBObject());
+
+        //System.out.println(Work.allWorks.length);
+        //System.out.println(allwards.length);
+
+        try {
+            for (int j = 0; j < allwards.length; j++) {
+                for (int k = 0; k < Work.allWorks.length; k++) {
+
+                    if (Work.allWorks[k].wardNumber == allwards[j].wardNumber) {
+
+                        //Counts the number of in progress and completed works for every ward.
+                        if (Work.allWorks[k].statusfirstLetterCapital.equals("Completed")) {
+                            allwards[j].completedWorks++;
+                        } else if (Work.allWorks[k].statusfirstLetterCapital.equals("Inprogress")) {
+                            allwards[j].inprogressWorks++;
+                        }
+                        allwards[j].totalWorks++;
+                        //Updates the amount spent in every ward.
+                        allwards[j].amountSpent = allwards[j].amountSpent + Work.allWorks[k].amountSanctioned;
+                    }
+
+                }
+
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+
     }
 }

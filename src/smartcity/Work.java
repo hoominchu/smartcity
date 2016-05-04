@@ -21,7 +21,7 @@ public class Work {
     public String workType;
     public String contractor;
     public String amountSanctionedString;
-    public String amountSanctioned;
+    public int amountSanctioned;
     public String statusFirstLetterSmall;
     public String statusfirstLetterCapital;
     public String workID;
@@ -31,6 +31,8 @@ public class Work {
     public String sourceOfIncome;
     public String statusColor;
     public boolean doWorkDetailsExist;
+
+    public static Work[] allWorks = createWorkObjects(new BasicDBObject());
 
     //Constructor method for class work
     public Work(DBObject workObject) {
@@ -53,7 +55,9 @@ public class Work {
         this.contractor = workObject.get("Contractor").toString();
         this.amountSanctionedString = workObject.get("Amount Sanctioned").toString();
         //Converting string to integer with commas
-        this.amountSanctioned = amountSanctionedString; //IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
+            Double temp = Double.parseDouble(amountSanctionedString);
+            this.amountSanctioned = temp.intValue();
+            // IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
         this.statusFirstLetterSmall = workObject.get("Status").toString();
         this.statusfirstLetterCapital = General.capitalizeFirstLetter(this.statusFirstLetterSmall);
@@ -79,8 +83,6 @@ public class Work {
         }
      catch (Exception e) {
          e.printStackTrace();
-         System.out.println(this.statusFirstLetterSmall);
-         System.out.println(this.workTypeID);
         System.err.println(e.getClass().getName() + " : " + e.getMessage());
          System.err.println("here");
     }
