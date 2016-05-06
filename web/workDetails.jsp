@@ -17,7 +17,6 @@
 <%
     String workIDParameter = request.getParameter("workID");
     String jumbotronParameter = request.getParameter("jumbotron");
-    System.out.println(workIDParameter);
 
     BasicDBObject workIDQuery = new BasicDBObject();
     //BasicDBObject workDetailsObject = new BasicDBObject();
@@ -82,7 +81,6 @@
         <%
             //WorkResults wr = mymethod(request);
             DBCursor workDetailsCursor = Database.workDetailsCollection.find(workIDQuery);
-            System.out.println(workDetailsCursor.count());
 
             try {
                 while (workDetailsCursor.hasNext()) {
