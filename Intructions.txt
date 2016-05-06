@@ -13,4 +13,4 @@ Instructions to set up <PROJECT NAME HERE>
 
 		c. mongoimport -d smartcitydb -c workdetails --type csv --file <PATH>/smartcity/data/HD-works-details-2014-15.csv --headerline
 
-		
+4. 	Build 'war' using Maven and deploy it to Tomcat. 

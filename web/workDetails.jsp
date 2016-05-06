@@ -136,7 +136,7 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
         var workKML = new google.maps.KmlLayer({
-            url: 'http://hack4hd.org/data/kmlfiles/<%=workIDParameter%>.kml',
+            url: 'http://hack4hd.org/workIDkmls/<%=workIDParameter%>.kml',
             map: map
         });
     }
