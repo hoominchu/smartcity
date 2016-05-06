@@ -17,15 +17,24 @@
 
     BasicDBObject myQuery = smartcity.Filter.generateFiltersHashset(request);
 
+    System.out.println("Requests processed and query object generated");
+
     String baseLink = "index.jsp?";
     String dynamicLink = General.genLink();
+
+    System.out.println("New link generated");
 
     DBCursor cursor = Database.allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
     Work[] works = Work.createWorkObjects(myQuery);
+    System.out.println("Work objects created");
 
     Ward.createAllWardObjects();
+    System.out.println("Ward objects created");
+
+    Contractor.createContractors();
+    System.out.println("Contractor objects created");
 
 %>
 
@@ -234,10 +243,8 @@
     String allWardsCompletedWorks = Ward.getAllWardsCompletedWorks();
     String allWardsInprogressWorks = Ward.getAllWardsInprogressWorks();
 
-    Contractor.createContractors();
     String top50contractors = Contractor.getTop50ContractorsNames();
     String top50contractorsAmount = Contractor.getTop50ContractorsAmount();
-    System.out.println(top50contractorsAmount);
 %>
 <script>
     $(function () {

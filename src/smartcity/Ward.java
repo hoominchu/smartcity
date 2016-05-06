@@ -25,7 +25,6 @@ public class Ward {
      * Constructor method for class Ward
      */
     public Ward(DBObject object) {
-        super();
         try {
             this.wardNumber = (int) object.get("ID");
 
