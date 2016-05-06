@@ -105,6 +105,39 @@ public class Contractor {
         return top50ContractorAmount;
     }
 
+    public static String getTop50ContractorsTotalWorks(){
+
+        String top50ContractorTotalWorks = "";
+
+        for (int i = 0; i < 50; i++){
+            top50ContractorTotalWorks = top50ContractorTotalWorks + contractors.get(i).totalWorks + ",";
+        }
+
+        return top50ContractorTotalWorks;
+    }
+
+    public static String getTop50ContractorsInprogressWorks(){
+
+        String top50ContractorInprogressWorks = "";
+
+        for (int i = 0; i < 50; i++){
+            top50ContractorInprogressWorks = top50ContractorInprogressWorks + contractors.get(i).inprogressWorks + ",";
+        }
+
+        return top50ContractorInprogressWorks;
+    }
+
+    public static String getTop50ContractorsCompletedWorks(){
+
+        String top50ContractorCompletedWorks = "";
+
+        for (int i = 0; i < 50; i++){
+            top50ContractorCompletedWorks = top50ContractorCompletedWorks + contractors.get(i).completedWorks + ",";
+        }
+
+        return top50ContractorCompletedWorks;
+    }
+
     public static Comparator<Contractor> compareContractorByAmount = new Comparator<Contractor>() {
         @Override
         public int compare(Contractor o1, Contractor o2) {

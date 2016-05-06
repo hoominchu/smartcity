@@ -15,11 +15,23 @@
     String languageParameter = request.getParameter("language");
     String jumbotronParameter = request.getParameter("jumbotron");
 
+    String queryString = request.getParameter("queryString");
+    System.out.println(queryString);
+
+    BasicDBObject myQuery = smartcity.Filter.generateFiltersHashset(request);
+
     System.out.println("Requests processed and query object generated");
 
-    String baseLink = "index.jsp?";
+    String baseLink = "works.jsp?";
+    String dynamicLink = General.genLink();
 
     System.out.println("New link generated");
+
+    DBCursor cursor = Database.allworks.find(myQuery);
+    int numberOfWorksDisplayed = cursor.count();
+
+    Work[] works = Work.createWorkObjects(myQuery);
+    System.out.println("Work objects created");
 
     Ward.createAllWardObjects();
     System.out.println("Ward objects created");
@@ -97,9 +109,9 @@
     </form>
 
     <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%>&jumbotron=map&" class="btn btn-default">Map</a>
-        <a href="<%=baseLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
-        <a href="<%=baseLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
+        <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=map&" class="btn btn-default">Map</a>
+        <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
+        <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
     </div>
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
@@ -117,6 +129,121 @@
         %>
     </div>
 
+    <h4>Number of works : <%=numberOfWorksDisplayed%>
+    </h4>
+
+    <% if (languageParameter != null) {
+        dynamicLink = dynamicLink + "&language=kannada&";
+    }
+        dynamicLink = dynamicLink.replaceAll("&&", "&");
+    %>
+    <%
+        Iterator filtersApplied = smartcity.Filter.FILTERS.iterator();
+
+        while (filtersApplied.hasNext()) {
+            Filter click = (Filter) filtersApplied.next();
+            String dismissalLink = baseLink + dynamicLink.replace(click.parameter + "=" + click.parameterValue, "");
+            dismissalLink = dismissalLink.substring(0, dismissalLink.lastIndexOf("&"));
+    %>
+    <span class="label label-primary"
+          style="font-size: 1.1em;"><%=click.parameterPresentable%> : <%=click.parameterValuePresentable%> <a
+            href=<%=dismissalLink%>> <i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
+    <%
+        }
+    %>
+    <table class="table-striped table-responsive sortable" id="myTable"
+           style="margin-top:2em; width: 100%; table-layout: fixed">
+
+        <thead>
+        <tr>
+            <th style="width: 3%; padding: 2px; text-align: center">Ward</th>
+            <th style="width: 40%; padding: 2px; text-align: center">Work Description</th>
+            <th style="width: 6%; padding: 2px; text-align: center">Work Order Date</th>
+            <th style="width: 6%; padding: 2px; text-align: center">Work Completion Date</th>
+            <th style="width: 10%; padding: 2px; text-align: center">Work Type</th>
+            <th style="width: 10%; padding: 2px; text-align: center">Source of Income</th>
+            <th style="width: 13%; padding: 2px; text-align: center">Contractor</th>
+            <th style="width: 7%; padding: 2px; text-align: center">Amount Sanctioned</th>
+            <th style="width: 5%; padding: 2px; text-align: center">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%
+            //WorkResults wr = mymethod(request);
+            int numberOfWorksQueried = works.length;
+            try {
+                for (int i = 0; i < numberOfWorksQueried; i++) {
+
+                    int wardNumber = works[i].wardNumber;
+                    String workDescriptionEnglish = works[i].workDescriptionEnglish;
+                    String workDescriptionKannada = works[i].workDescriptionKannada;
+                    String workDescriptionFinal = null;
+                    String workOrderDate = works[i].workOrderDate;
+                    String workCompletionDate = works[i].workCompletionDate;
+                    String workType = works[i].workType;
+                    String sourceOfIncome = works[i].sourceOfIncome;
+                    String contractor = works[i].contractor;
+                    String amountSanctionedString = works[i].amountSanctionedString;
+
+                    //Converting string to integer with commas
+                    int amountSanctioned = works[i].amountSanctioned;
+                    String status = works[i].statusfirstLetterCapital;
+                    String statusFirstLetterSmall = works[i].statusFirstLetterSmall;
+
+                    //Values for backend
+                    String workID = works[i].workID;
+                    String workTypeID = works[i].workTypeID;
+                    String contractorID = works[i].contractorID;
+                    String sourceOfIncomeID = works[i].sourceOfIncomeID;
+                    String statusColor = works[i].statusColor;
+
+                    workDescriptionFinal = General.setWorkDescriptionFinal(languageParameter, workDescriptionEnglish, workDescriptionKannada);
+        %>
+        <tr>
+            <td style="text-align: center; padding-left: 0.2em"><a
+                    href="<%=baseLink%><%=dynamicLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%>
+            </a>
+            </td>
+            <td style="padding: 1.5em">
+                <% if (works[i].doWorkDetailsExist) { %>
+                <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=map">
+                    <%=workDescriptionFinal%>
+                </a>
+                <% } else if (!works[i].doWorkDetailsExist) { %>
+                <%=workDescriptionFinal%>
+                <% } %>
+            </td>
+            <td style="text-align: center"><%=workOrderDate%>
+            </td>
+            <td style="text-align: center"><%=workCompletionDate%>
+            </td>
+            <td style="text-align: center"><a
+                    href="<%=baseLink%><%=dynamicLink%>workTypeID=<%=workTypeID%>"><%=workType%>
+            </a>
+            </td>
+            <td style="text-align: center"><a
+                    href="<%=baseLink%><%=dynamicLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
+            </a>
+            </td>
+            <td style="text-align: center"><a
+                    href="<%=baseLink%><%=dynamicLink%>contractorID=<%=contractorID%>"><%=contractor%>
+            </a>
+            </td>
+            <td style="text-align: center"><%=amountSanctioned%>
+            </td>
+            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
+                    href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>
+            </a>
+            </td>
+        </tr>
+        <%
+                }
+            } catch (Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            }
+        %>
+        </tbody>
+    </table>
     <a href="#" class="scrollup">Go to top</a>
 </div>
 
@@ -129,10 +256,6 @@
 
     String top50contractors = Contractor.getTop50ContractorsNames();
     String top50contractorsAmount = Contractor.getTop50ContractorsAmount();
-    String top50contractorsTotalWorks = Contractor.getTop50ContractorsTotalWorks();
-    String top50contractorsInprogressWorks = Contractor.getTop50ContractorsInprogressWorks();
-    String top50contractorsCompletedWorks = Contractor.getTop50ContractorsCompletedWorks();
-
 %>
 <script>
     $(function () {
@@ -196,23 +319,11 @@
                 data: [<%=top50contractorsAmount%>],
                 visible: true
 
-            }, {name: 'Total works',
-                data: [<%=top50contractorsTotalWorks%>],
-                visible: false
-            }, {
-                name: 'Completed works',
-                data: [<%=top50contractorsCompletedWorks%>],
-                visible: false
-            }, {
-                name: 'In progress works',
-                data: [<%=top50contractorsInprogressWorks%>],
-
             }]
         });
     });
 </script>
-<div class="panel-footer" style="text-align: center; margin-top: 3em">All the data presented here has been provided by
-    Hubli-Dharwad
+<div class="panel-footer" style="text-align: center">All the data presented here has been provided by Hubli-Dharwad
     Municipal Corporation
 </div>
 </body>
