@@ -1,0 +1,16 @@
+Instructions to set up <PROJECT NAME HERE>
+------------------------------------------
+1. 	Clone the project from github.
+	Link-- https://github.com/hoominchu/smartcity
+
+2. 	Set up mongodb if you haven't already. 
+
+3. 	Import the csv files to mongo using--
+	
+		a. mongoimport -d smartcitydb -c allworks --type csv --file <PATH>/smartcity/data/all_works_2014_15_k.csv --headerline
+
+		b. mongoimport -d smartcitydb -c wardmaster --type csv --file <PATH>/smartcity/data/HD-ward-master.csv --headerline
+
+		c. mongoimport -d smartcitydb -c workdetails --type csv --file <PATH>/smartcity/data/HD-works-details-2014-15.csv --headerline
+
+		

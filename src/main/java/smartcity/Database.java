@@ -12,7 +12,6 @@ public class Database {
     public static DB db = mongo.getDB("smartcitydb");
 
     public static DBCollection allworks = db.getCollection("allworks");
-    public static DBCollection corporatorsCollection = db.getCollection("corporatorsC");
     public static DBCollection workDetailsCollection = db.getCollection("workdetails");
     public static DBCollection wardmaster = db.getCollection("wardmaster");
 
