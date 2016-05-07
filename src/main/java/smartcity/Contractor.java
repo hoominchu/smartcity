@@ -44,7 +44,7 @@ public class Contractor {
 
     @Override
     public int hashCode(){
-        return ID.hashCode();
+        return this.ID.hashCode();
     }
 
 

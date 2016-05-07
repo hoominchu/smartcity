@@ -21,6 +21,8 @@
 
     System.out.println("New link generated");
 
+    System.out.println((int) Database.wardmaster.count());
+
     Ward.createAllWardObjects();
     System.out.println("Ward objects created");
 
@@ -89,10 +91,10 @@
             href="<%=baseLink%>">English</a></div>
 
     <form method="post" action="works.jsp">
-        <div class="form-group">
+        <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
             <input name="queryString" class="form-control" id="focusedInput" type="text" placeholder="Enter your search query here..."
-                   style="display: inline-block; width: 50%">
-            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i></button>
+                   style="display: inline-block; width: 91.6%">
+            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
         </div>
     </form>
 
@@ -132,6 +134,11 @@
     String top50contractorsTotalWorks = Contractor.getTop50ContractorsTotalWorks();
     String top50contractorsInprogressWorks = Contractor.getTop50ContractorsInprogressWorks();
     String top50contractorsCompletedWorks = Contractor.getTop50ContractorsCompletedWorks();
+    //String top50contractors = "";
+    //String top50contractorsAmount = "";
+    //String top50contractorsTotalWorks = "";
+    //String top50contractorsInprogressWorks = "";
+    //String top50contractorsCompletedWorks = "";
 
 %>
 <script>

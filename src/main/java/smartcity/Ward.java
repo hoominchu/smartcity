@@ -107,10 +107,16 @@ public class Ward {
         sortBy.put("ID", 1);
         cursor.sort(sortBy);
         int i = 0;
-        while (cursor.hasNext()) {
-            DBObject wardDBObject = cursor.next();
-            allwards[i] = new Ward(wardDBObject);
-            i++;
+        try {
+            while (cursor.hasNext()) {
+                DBObject wardDBObject = cursor.next();
+                allwards[i] = new Ward(wardDBObject);
+                i++;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         cursor.close();
 

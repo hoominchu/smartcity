@@ -101,10 +101,10 @@
             href="<%=baseLink%>">English</a></div>
 
     <form method="post" action="works.jsp">
-        <div class="form-group">
+        <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%">
             <input name="queryString" class="form-control" id="focusedInput" type="text" placeholder="Enter your search query here..."
-                   style="display: inline-block; width: 50%">
-            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i></button>
+                   style="display: inline-block; width: 91.6%">
+            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
         </div>
     </form>
 
@@ -256,6 +256,9 @@
 
     String top50contractors = Contractor.getTop50ContractorsNames();
     String top50contractorsAmount = Contractor.getTop50ContractorsAmount();
+    String top50contractorsTotalWorks = Contractor.getTop50ContractorsTotalWorks();
+    String top50contractorsInprogressWorks = Contractor.getTop50ContractorsInprogressWorks();
+    String top50contractorsCompletedWorks = Contractor.getTop50ContractorsCompletedWorks();
 %>
 <script>
     $(function () {
@@ -318,6 +321,17 @@
                 name: 'Total contract amount',
                 data: [<%=top50contractorsAmount%>],
                 visible: true
+
+            }, {name: 'Total works',
+                data: [<%=top50contractorsTotalWorks%>],
+                visible: false
+            }, {
+                name: 'Completed works',
+                data: [<%=top50contractorsCompletedWorks%>],
+                visible: false
+            }, {
+                name: 'In progress works',
+                data: [<%=top50contractorsInprogressWorks%>],
 
             }]
         });
