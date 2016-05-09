@@ -1,6 +1,8 @@
 package smartcity;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by minchu on 21/04/16.
@@ -52,35 +54,39 @@ public class Contractor {
 
         Set<Contractor> contractorsSet = new HashSet<Contractor>();
 
-        for (int i = 0; i < Work.allWorks.length; i++){
-            Contractor c = new Contractor(Work.allWorks[i].contractorID, Work.allWorks[i].contractor);
+        for (int i = 0; i < Work.allWorks.size(); i++){
+            Contractor c = new Contractor(Work.allWorks.get(i).contractorID, Work.allWorks.get(i).contractor);
             contractorsSet.add(c);
         }
 
         contractors = new ArrayList(contractorsSet);
 
-        for (int i = 0; i < Work.allWorks.length; i++) {
+        for (int i = 0; i < Work.allWorks.size(); i++) {
 
             for (Contractor c : contractors) {
-                if (Work.allWorks[i].contractorID.equals(c.ID)) {
+                if (Work.allWorks.get(i).contractorID.equals(c.ID)) {
 
                     //Adding amount to the contractor.
-                    c.totalContractAmount = c.totalContractAmount + Work.allWorks[i].amountSanctioned;
+                    c.totalContractAmount = c.totalContractAmount + Work.allWorks.get(i).amountSanctioned;
 
                     //Adding to thr number of works of the contractor.
                     c.totalWorks++;
 
                     //Checking the status of the work and adding it to the relevant field.
-                    if (Work.allWorks[i].statusfirstLetterCapital.equals("Completed")) {
+                    if (Work.allWorks.get(i).statusfirstLetterCapital.equals("Completed")) {
                         c.completedWorks++;
-                    } else if (Work.allWorks[i].statusfirstLetterCapital.equals("Inprogress")) {
+                    } else if (Work.allWorks.get(i).statusfirstLetterCapital.equals("Inprogress")) {
                         c.inprogressWorks++;
                     }
                 }
             }
         }
 
-        Collections.sort(contractors, compareContractorByAmount);
+        Stream<Contractor> stream = contractors.stream();
+        contractors = stream.sorted(compareContractorByAmount).collect(Collectors.<Contractor>toList());
+
+        //Collections.sort(contractors, compareContractorByAmount);
+
     }
 
     public static String getTop50ContractorsNames(){

@@ -5,11 +5,12 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * Created by minchu on 16/04/16.
  */
-public class Work {
+public class Work implements Comparable<Work>{
 
     public String workObjectID;
     public int wardNumber;
@@ -32,7 +33,7 @@ public class Work {
     public String statusColor;
     public boolean doWorkDetailsExist;
 
-    public static Work[] allWorks = createWorkObjects(new BasicDBObject());
+    public static ArrayList<Work> allWorks = createWorkObjects(new BasicDBObject());
 
     //Constructor method for class work
     public Work(DBObject workObject) {
@@ -88,7 +89,25 @@ public class Work {
     }
     }
 
-    public static Work[] createWorkObjects(BasicDBObject query) {
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null) {
+            return false;
+        }
+
+        Work w = (Work) obj;
+
+        return (w.workID.equals(this.workID));
+    }
+
+    @Override
+    public int hashCode(){
+        return this.workID.hashCode();
+    }
+
+
+    public static ArrayList<Work> createWorkObjects(BasicDBObject query) {
 
         DBCursor cursor = Database.allworks.find();
 
@@ -97,17 +116,74 @@ public class Work {
         }
         int numberOfWorks = cursor.count();
 
-        Work[] works = new Work[numberOfWorks];
-        int i = 0;
+        ArrayList<Work> works = new ArrayList<>();
+        //int i = 0;
 
         while (cursor.hasNext()) {
             DBObject workDBObject = cursor.next();
 
-            works[i] = new Work(workDBObject);
-            i++;
+            Work newWork = new Work(workDBObject);
+
+            works.add(newWork);
+
+            //works[i] = new Work(workDBObject);
+            //i++;
 
         }
 
+        try {
+            //ArrayList<Work> worksList = new ArrayList<Work>(Arrays.asList(works));
+            Collections.sort(works, compareWorks);
+            //Arrays.sort(works, compareWorks);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         return works;
+    }
+
+    public static Comparator<Work> compareWorks = new Comparator<Work>() {
+        @Override
+        public int compare(Work w1, Work w2) {
+
+            float compareQuantity1 = w1.amountSanctioned/1000;
+            float compareQuantity2 = w2.amountSanctioned/1000;
+
+            if (w1.statusfirstLetterCapital.equals("Inprogress")){
+                compareQuantity1 = compareQuantity1 * 1000;
+            }
+
+            if (w2.statusfirstLetterCapital.equals("Inprogress")){
+                compareQuantity2 = compareQuantity2 * 1000;
+            }
+
+            int val = 0;
+            if (compareQuantity1 < compareQuantity2){
+                val = 1;
+            }
+
+            else if(compareQuantity1 > compareQuantity2){
+                val = -1;
+            }
+
+            else {
+                val = 0;
+            }
+
+            return val;
+        }
+    };
+
+    public int compareTo(Work compareWork) {
+
+        int compareQuantity = Integer.parseInt(((Work) compareWork).workTypeID);
+
+        //ascending order
+        return Integer.parseInt(this.workTypeID) - compareQuantity;
+
+        //descending order
+        //return compareQuantity - this.quantity;
+
     }
 }

@@ -12,6 +12,7 @@
          import="smartcity.Filter"
 %>
 <%
+    long initialTime = System.currentTimeMillis();
     String languageParameter = request.getParameter("language");
     String jumbotronParameter = request.getParameter("jumbotron");
 
@@ -50,6 +51,21 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+    <script>
+        var x = document.getElementById("demo");
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position) {
+            x.innerHTML = "Latitude: " + position.coords.latitude +
+                    "<br>Longitude: " + position.coords.longitude;
+        }
+    </script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
     <style>
@@ -77,8 +93,8 @@
             async defer></script>
 
 </head>
-<body>
-
+<body onload="getLocation()">
+<div id="demo">erfrf : </div>
 <div class="container">
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
@@ -225,4 +241,7 @@
     Municipal Corporation
 </div>
 </body>
+<%
+    System.out.println(System.currentTimeMillis()-initialTime);
+%>
 </html>

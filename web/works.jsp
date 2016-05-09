@@ -30,7 +30,7 @@
     DBCursor cursor = Database.allworks.find(myQuery);
     int numberOfWorksDisplayed = cursor.count();
 
-    Work[] works = Work.createWorkObjects(myQuery);
+    ArrayList<Work> works = Work.createWorkObjects(myQuery);
     System.out.println("Work objects created");
 
     Ward.createAllWardObjects();
@@ -98,8 +98,8 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px;"><a href="<%=baseLink%>language=kannada">ಕನ್ನಡ</a> | <a
-            href="<%=baseLink%>">English</a></div>
+    <div class="pull-right" style="margin-top:40px;"><a href="<%=baseLink%><%=dynamicLink%>language=kannada">ಕನ್ನಡ</a> | <a
+            href="<%=baseLink%><%=dynamicLink%>">English</a></div>
 
     <form method="post" action="works.jsp">
         <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%">
@@ -171,32 +171,33 @@
         <tbody>
         <%
             //WorkResults wr = mymethod(request);
-            int numberOfWorksQueried = works.length;
+            int numberOfWorksQueried = works.size();
+
             try {
                 for (int i = 0; i < numberOfWorksQueried; i++) {
 
-                    int wardNumber = works[i].wardNumber;
-                    String workDescriptionEnglish = works[i].workDescriptionEnglish;
-                    String workDescriptionKannada = works[i].workDescriptionKannada;
+                    int wardNumber = works.get(i).wardNumber;
+                    String workDescriptionEnglish = works.get(i).workDescriptionEnglish;
+                    String workDescriptionKannada = works.get(i).workDescriptionKannada;
                     String workDescriptionFinal = null;
-                    String workOrderDate = works[i].workOrderDate;
-                    String workCompletionDate = works[i].workCompletionDate;
-                    String workType = works[i].workType;
-                    String sourceOfIncome = works[i].sourceOfIncome;
-                    String contractor = works[i].contractor;
-                    String amountSanctionedString = works[i].amountSanctionedString;
+                    String workOrderDate = works.get(i).workOrderDate;
+                    String workCompletionDate = works.get(i).workCompletionDate;
+                    String workType = works.get(i).workType;
+                    String sourceOfIncome = works.get(i).sourceOfIncome;
+                    String contractor = works.get(i).contractor;
+                    String amountSanctionedString = works.get(i).amountSanctionedString;
 
                     //Converting string to integer with commas
-                    int amountSanctioned = works[i].amountSanctioned;
-                    String status = works[i].statusfirstLetterCapital;
-                    String statusFirstLetterSmall = works[i].statusFirstLetterSmall;
+                    int amountSanctioned = works.get(i).amountSanctioned;
+                    String status = works.get(i).statusfirstLetterCapital;
+                    String statusFirstLetterSmall = works.get(i).statusFirstLetterSmall;
 
                     //Values for backend
-                    String workID = works[i].workID;
-                    String workTypeID = works[i].workTypeID;
-                    String contractorID = works[i].contractorID;
-                    String sourceOfIncomeID = works[i].sourceOfIncomeID;
-                    String statusColor = works[i].statusColor;
+                    String workID = works.get(i).workID;
+                    String workTypeID = works.get(i).workTypeID;
+                    String contractorID = works.get(i).contractorID;
+                    String sourceOfIncomeID = works.get(i).sourceOfIncomeID;
+                    String statusColor = works.get(i).statusColor;
 
                     workDescriptionFinal = General.setWorkDescriptionFinal(languageParameter, workDescriptionEnglish, workDescriptionKannada);
         %>
@@ -206,11 +207,11 @@
             </a>
             </td>
             <td style="padding: 1.5em">
-                <% if (works[i].doWorkDetailsExist) { %>
+                <% if (works.get(i).doWorkDetailsExist) { %>
                 <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=map">
                     <%=workDescriptionFinal%>
                 </a>
-                <% } else if (!works[i].doWorkDetailsExist) { %>
+                <% } else if (!works.get(i).doWorkDetailsExist) { %>
                 <%=workDescriptionFinal%>
                 <% } %>
             </td>

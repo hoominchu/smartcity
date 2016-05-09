@@ -155,19 +155,19 @@ public class Ward {
 
         try {
             for (int j = 0; j < allwards.length; j++) {
-                for (int k = 0; k < Work.allWorks.length; k++) {
+                for (int k = 0; k < Work.allWorks.size(); k++) {
 
-                    if (Work.allWorks[k].wardNumber == allwards[j].wardNumber) {
+                    if (Work.allWorks.get(k).wardNumber == allwards[j].wardNumber) {
 
                         //Counts the number of in progress and completed works for every ward.
-                        if (Work.allWorks[k].statusfirstLetterCapital.equals("Completed")) {
+                        if (Work.allWorks.get(k).statusfirstLetterCapital.equals("Completed")) {
                             allwards[j].completedWorks++;
-                        } else if (Work.allWorks[k].statusfirstLetterCapital.equals("Inprogress")) {
+                        } else if (Work.allWorks.get(k).statusfirstLetterCapital.equals("Inprogress")) {
                             allwards[j].inprogressWorks++;
                         }
                         allwards[j].totalWorks++;
                         //Updates the amount spent in every ward.
-                        allwards[j].amountSpent = allwards[j].amountSpent + Work.allWorks[k].amountSanctioned;
+                        allwards[j].amountSpent = allwards[j].amountSpent + Work.allWorks.get(k).amountSanctioned;
                     }
 
                 }

@@ -81,6 +81,7 @@
 
         <%
             //WorkResults wr = mymethod(request);
+            Double totalSpent = 0.0;
             DBCursor workDetailsCursor = Database.workDetailsCollection.find(workIDQuery);
 
             try {
@@ -97,6 +98,8 @@
                     Double truncatedTotal = new BigDecimal(totalAmount).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
                     String totalAmountString = truncatedTotal.toString();
                     String kmlString = workDetailsObject.get("kml").toString();
+
+                    totalSpent = totalSpent + truncatedTotal;
 
                     PrintWriter kmlFile = new PrintWriter("workKML.kml", "UTF-8");
                     kmlFile.print(kmlString);
@@ -123,6 +126,7 @@
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
             }
         %>
+        <tr>Total amount for this work : <%=totalSpent%></tr>
         </tbody>
     </table>
 </div>
