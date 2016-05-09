@@ -29,6 +29,7 @@
     <title>HDMC Smart City Project</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/hdmc-logo.ico" type="image/x-icon"/>
     <script src="commonfiles/sorttable.js"></script>
     <link rel="stylesheet" href="commonfiles/bootstrap.css">
     <script src="commonfiles/jquery.min.js"></script>

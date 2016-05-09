@@ -36,6 +36,7 @@
     <title>HDMC Smart City Project</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/hdmc-logo.ico" type="image/x-icon"/>
     <script src="commonfiles/sorttable.js"></script>
     <link rel="stylesheet" href="commonfiles/bootstrap.css">
     <script src="commonfiles/jquery.min.js"></script>
@@ -93,8 +94,9 @@
     <form method="post" action="works.jsp">
         <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
             <input name="queryString" class="form-control" id="focusedInput" type="text" placeholder="Enter your search query here..."
-                   style="display: inline-block; width: 91.6%">
+                   style="display: inline-block; width: 75%">
             <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: 45px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> See all works</button>
         </div>
     </form>
 
