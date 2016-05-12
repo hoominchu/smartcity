@@ -6,10 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
-         import="com.mongodb.*"
          import="smartcity.*"
-         import="java.util.*"
-         import="smartcity.Filter"
 %>
 <%
     long initialTime = System.currentTimeMillis();
@@ -52,16 +49,16 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <script>
-        var x = document.getElementById("demo");
+        window.x = document.getElementById("demo");
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
             } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
+                window.x.innerHTML = "Geolocation is not supported by this browser.";
             }
         }
         function showPosition(position) {
-            x.innerHTML = "Latitude: " + position.coords.latitude +
+            window.x.innerHTML = "Latitude: " + position.coords.latitude +
                     "<br>Longitude: " + position.coords.longitude;
         }
     </script>
@@ -94,7 +91,6 @@
 
 </head>
 <body onload="getLocation()">
-<div id="demo">erfrf : </div>
 <div class="container">
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
@@ -136,8 +132,6 @@
             }
         %>
     </div>
-
-    <a href="#" class="scrollup">Go to top</a>
 </div>
 
 <%

@@ -18,6 +18,8 @@
     String workIDParameter = request.getParameter("workID");
     String jumbotronParameter = request.getParameter("jumbotron");
 
+    String baseLink = "workDetails.jsp";
+
     BasicDBObject workIDQuery = new BasicDBObject();
     //BasicDBObject workDetailsObject = new BasicDBObject();
 
@@ -49,8 +51,6 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px;"><a href="index.jsp?language=kannada">ಕನ್ನಡ</a> | <a
-            href="index.jsp">English</a></div>
 
     <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
         <% if (jumbotronParameter == null || jumbotronParameter.equals("map")) {

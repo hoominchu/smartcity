@@ -15,8 +15,14 @@
     String languageParameter = request.getParameter("language");
     String jumbotronParameter = request.getParameter("jumbotron");
 
+    String searchPlaceholder = "Enter your search query here...";
+
     String queryString = request.getParameter("queryString");
     System.out.println(queryString);
+
+    if (queryString != null){
+        searchPlaceholder = queryString;
+    }
 
     BasicDBObject myQuery = smartcity.Filter.generateFiltersHashset(request);
 
@@ -27,11 +33,42 @@
 
     System.out.println("New link generated");
 
-    DBCursor cursor = Database.allworks.find(myQuery);
-    int numberOfWorksDisplayed = cursor.count();
+    //DBCursor cursor = Database.allworks.find(myQuery);
 
     ArrayList<Work> works = Work.createWorkObjects(myQuery);
     System.out.println("Work objects created");
+
+    Set<Work> worksTODisplay = new HashSet<>();
+
+    Set<String> searchResults = new HashSet<>();
+    if (queryString != null) {
+        searchResults = smartcity.Filter.searchResults(queryString);
+    }
+
+    if (queryString == null){
+        queryString="";
+    }
+
+    //System.out.println(searchResults.size());
+
+    if (searchResults.size() != 0) {
+        for (Work work : works) {
+            //System.out.println(work.workID);
+            for (String workID : searchResults) {
+                //System.out.println(workID);
+                if (work.workID.toString().equals(workID)) {
+                    worksTODisplay.add(work);
+                    //break;
+                }
+            }
+        }
+
+        works.clear();
+
+        works.addAll(worksTODisplay);
+    }
+
+    int numberOfWorksDisplayed = works.size();
 
     Ward.createAllWardObjects();
     System.out.println("Ward objects created");
@@ -103,12 +140,19 @@
 
     <form method="post" action="works.jsp">
         <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%">
-            <input name="queryString" class="form-control" id="focusedInput" type="text" placeholder="Enter your search query here..."
-                   style="display: inline-block; width: 91.6%">
+            <input name="queryString" class="form-control" id="focusedInput" type="text" placeholder="<%=searchPlaceholder%>"
+                   style="display: inline-block; width: 75%">
             <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: 45px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> See all works</button>
         </div>
     </form>
 
+    <%
+        System.out.println(numberOfWorksDisplayed);
+        System.out.println("Q " + queryString);
+
+        if (((numberOfWorksDisplayed > 0) && (searchResults.size() > 0)) || (queryString.equals(""))){
+    %>
     <div class="btn-group btn-group-justified">
         <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=map&" class="btn btn-default">Map</a>
         <a href="<%=baseLink%><%=dynamicLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
@@ -247,6 +291,25 @@
         </tbody>
     </table>
     <a href="#" class="scrollup">Go to top</a>
+    <%
+        }
+        else {
+            %>
+    <div style="text-align: center; margin-bottom: 5%; margin-top: 5%"><h4><p class="text-danger">No results found  for the query </p><a href="#"><h3><%=queryString%></h3></a><br> Please try searching for something else. <br>
+        <br>
+        <br>
+        Here are some examples :
+        <br>
+        <br>
+
+        "Emergency works in ward 41"<br><br>
+        "Inprogress road works in Kalyan Nagar"<br><br>
+        "Completed works by S.K. Savadi in ward 13"<br><br>
+
+    </h4></div>
+    <%
+        }
+    %>
 </div>
 
 <%

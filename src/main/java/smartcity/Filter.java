@@ -1,7 +1,9 @@
 package smartcity;
 
 import com.mongodb.*;
+import searchpack.Search;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -86,8 +88,31 @@ public class Filter {
             FILTERS.add(click);
         }
 
-
-
         return myQuery;
+    }
+
+    public static Set<String> searchResults (String query){
+
+        Set<String> workIDS = new HashSet<>();
+
+        try{
+            workIDS = Search.search(query);
+/*
+        System.out.println(workIDS.size());
+        for (String id : workIDS){
+            myQuery.put("Work ID", Integer.parseInt(id));
+            System.out.println(myQuery.toJson());
+        }
+
+        myQuery.append("Work ID", 72323);
+        */
+        }
+
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            return workIDS;
+        }
     }
 }
