@@ -35,68 +35,6 @@ public class Ward {
     }
 
     /**
-     * Returns the string of all the ward numbers. This is for the chart.
-     */
-    public static String getAllWardNumbersString() {
-
-        String allWardNumbersString = "";
-        for (int i = 0; i < allwards.length; i++) {
-            allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
-        }
-        allWardNumbersString = allWardNumbersString.substring(0, allWardNumbersString.length() - 1);
-        return allWardNumbersString;
-    }
-
-    /**
-     * Returns the string of all the ward numbers. This is for the chart.
-     */  //Edit
-    public static String getAllWardsAmountSpent() {
-
-        String allWardsAmountSpent = "";
-        for (int i = 0; i < allwards.length; i++) {
-            allWardsAmountSpent = allWardsAmountSpent + allwards[i].amountSpent + ",";
-        }
-        return allWardsAmountSpent;
-    }
-
-    /**
-     * Returns the string of all the ward numbers. This is for the chart.
-     */  //Edit
-    public static String getAllWardsTotalWorks() {
-
-        String allWardsTotalWorks = "";
-        for (int i = 0; i < allwards.length; i++) {
-            allWardsTotalWorks = allWardsTotalWorks + allwards[i].totalWorks + ",";
-        }
-        return allWardsTotalWorks;
-    }
-
-    /**
-     * Returns the string of all the ward numbers. This is for the chart.
-     */  //Edit
-    public static String getAllWardsCompletedWorks() {
-
-        String allWardsCompletedWorks = "";
-        for (int i = 0; i < allwards.length; i++) {
-            allWardsCompletedWorks = allWardsCompletedWorks + allwards[i].completedWorks + ",";
-        }
-        return allWardsCompletedWorks;
-    }
-
-    /**
-     * Returns the string of all the ward numbers. This is for the chart.
-     */  //Edit
-    public static String getAllWardsInprogressWorks() {
-
-        String allWardsInprogressWorks = "";
-        for (int i = 0; i < allwards.length; i++) {
-            allWardsInprogressWorks = allWardsInprogressWorks + allwards[i].inprogressWorks + ",";
-        }
-        return allWardsInprogressWorks;
-    }
-
-
-    /**
      * Creates static array of all the ward objects from wardmaster collection in the database.
      */
     public static void createAllWardObjects() {
@@ -180,4 +118,66 @@ public class Ward {
         }
 
     }
+
+    /**
+     * Returns the string of all the ward numbers.
+     */
+    public static String getAllWardNumbersString() {
+
+        String allWardNumbersString = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
+        }
+        allWardNumbersString = allWardNumbersString.substring(0, allWardNumbersString.length() - 1);
+        return allWardNumbersString;
+    }
+
+    /**
+     * Returns the string of amount spent in all wards.
+     */  //Edit
+    public static String getAllWardsAmountSpent() {
+
+        String allWardsAmountSpent = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsAmountSpent = allWardsAmountSpent + allwards[i].amountSpent + ",";
+        }
+        return allWardsAmountSpent;
+    }
+
+    /**
+     * Returns the string of total works in all wards.
+     */  //Edit
+    public static String getAllWardsTotalWorks() {
+
+        String allWardsTotalWorks = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsTotalWorks = allWardsTotalWorks + allwards[i].totalWorks + ",";
+        }
+        return allWardsTotalWorks;
+    }
+
+    /**
+     * Returns the string of completed works in all wards.
+     */  //Edit
+    public static String getAllWardsCompletedWorks() {
+
+        String allWardsCompletedWorks = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsCompletedWorks = allWardsCompletedWorks + allwards[i].completedWorks + ",";
+        }
+        return allWardsCompletedWorks;
+    }
+
+    /**
+     * Returns the string of all inprogress works.
+     */  //Edit
+    public static String getAllWardsInprogressWorks() {
+
+        String allWardsInprogressWorks = "";
+        for (int i = 0; i < allwards.length; i++) {
+            allWardsInprogressWorks = allWardsInprogressWorks + allwards[i].inprogressWorks + ",";
+        }
+        return allWardsInprogressWorks;
+    }
+
 }

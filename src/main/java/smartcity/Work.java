@@ -107,6 +107,11 @@ public class Work implements Comparable<Work>{
     }
 
 
+    /**
+     * Creates all the work objects based on the database query given as argument. Returns an arraylist of Works
+     * @param query
+     * @return
+     */
     public static ArrayList<Work> createWorkObjects(BasicDBObject query) {
 
         DBCursor cursor = Database.allworks.find();

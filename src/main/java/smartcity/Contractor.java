@@ -49,7 +49,9 @@ public class Contractor {
         return this.ID.hashCode();
     }
 
-
+    /**
+     * Creates all the contractor objects and sorts them based on the contract amount.
+     */
     public static void createContractors() {
 
         Set<Contractor> contractorsSet = new HashSet<Contractor>();
@@ -89,6 +91,10 @@ public class Contractor {
 
     }
 
+    /**
+     * Returns the string of the names of top 50 contractors.
+     * @return
+     */
     public static String getTop50ContractorsNames(){
 
         String top50ContractorNames = "";
@@ -100,6 +106,10 @@ public class Contractor {
         return top50ContractorNames;
     }
 
+    /**
+     * Returns the string of the contract amounts of top 50 contractors.
+     * @return
+     */
     public static String getTop50ContractorsAmount(){
 
         String top50ContractorAmount = "";
@@ -111,6 +121,10 @@ public class Contractor {
         return top50ContractorAmount;
     }
 
+    /**
+     * Returns the string of the number of works of top 50 contractors.
+     * @return
+     */
     public static String getTop50ContractorsTotalWorks(){
 
         String top50ContractorTotalWorks = "";
@@ -122,6 +136,10 @@ public class Contractor {
         return top50ContractorTotalWorks;
     }
 
+    /**
+     * Returns the string of the number of inprogress works of top 50 contractors.
+     * @return
+     */
     public static String getTop50ContractorsInprogressWorks(){
 
         String top50ContractorInprogressWorks = "";
@@ -133,6 +151,10 @@ public class Contractor {
         return top50ContractorInprogressWorks;
     }
 
+    /**
+     * Returns the string of the number of completed works of top 50 contractors.
+     * @return
+     */
     public static String getTop50ContractorsCompletedWorks(){
 
         String top50ContractorCompletedWorks = "";
@@ -144,6 +166,9 @@ public class Contractor {
         return top50ContractorCompletedWorks;
     }
 
+    /**
+     * Custom method to compare two contractors based on their contract amount.
+     */
     public static Comparator<Contractor> compareContractorByAmount = new Comparator<Contractor>() {
         @Override
         public int compare(Contractor o1, Contractor o2) {

@@ -41,6 +41,11 @@ public class Filter {
         }
     }
 
+    /**
+     * Generates filters hash set given the http request.
+     * @param request
+     * @return
+     */
     public static BasicDBObject generateFiltersHashset(HttpServletRequest request){
 
         String wardNumberParameter = request.getParameter("wardNumber");
@@ -91,21 +96,18 @@ public class Filter {
         return myQuery;
     }
 
+    /**
+     * Gets the relevant work IDs based on the search query entered.
+     * @param query
+     * @return
+     */
     public static Set<String> searchResults (String query){
 
         Set<String> workIDS = new HashSet<>();
 
         try{
             workIDS = Search.search(query);
-/*
-        System.out.println(workIDS.size());
-        for (String id : workIDS){
-            myQuery.put("Work ID", Integer.parseInt(id));
-            System.out.println(myQuery.toJson());
-        }
 
-        myQuery.append("Work ID", 72323);
-        */
         }
 
         catch(Exception e){

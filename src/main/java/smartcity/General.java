@@ -13,6 +13,13 @@ public class General {
         return output;
     }
 
+    /**
+     * Decides which language description should be displayed based on the language chosen by the user.
+     * @param languageParameter
+     * @param workDescriptionEnglish
+     * @param workDescriptionKannada
+     * @return
+     */
     public static String setWorkDescriptionFinal(String languageParameter, String workDescriptionEnglish, String workDescriptionKannada){
 
         String workDescriptionFinal = null;
