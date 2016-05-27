@@ -48,3 +48,43 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   	margin-right:auto;
   	position:relative;
   }
+
+  .round-corner {
+      border-radius: 0.6em;
+  }
+
+  .round-corner-left {
+      border-bottom-left-radius: 0.6em;
+      border-top-left-radius: 0.6em;
+  }
+
+  .round-corner-right {
+      border-bottom-right-radius: 0.6em;
+      border-top-right-radius: 0.6em;
+  }
+
+  .round-corner-top {
+      border-top-left-radius: 0.6em;
+      border-top-right-radius: 0.6em;
+  }
+
+  .round-corner-bottom {
+      border-bottom-left-radius: 0.6em;
+      border-bottom-right-radius: 0.6em;
+  }
+
+  .round-corner-top-left {
+      border-top-left-radius: 0.6em;
+  }
+
+  .round-corner-top-right {
+      border-top-right-radius: 0.6em;
+  }
+
+  .round-corner-bottom-left {
+      border-bottom-left-radius: 0.6em;
+  }
+
+  .round-corner-bottom-right {
+      border-bottom-right-radius: 0.6em;
+  }

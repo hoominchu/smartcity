@@ -54,6 +54,7 @@ public class Filter {
         String contractorIDParameter = request.getParameter("contractorID");
         String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
         String languageParameter = request.getParameter("language");
+        String yearParameter = request.getParameter("year");
 
         FILTERS.clear();
         BasicDBObject myQuery = new BasicDBObject();
@@ -90,6 +91,13 @@ public class Filter {
             myQuery.put("Source of Income ID", Integer.parseInt(sourceOfIncomeIDParameter));
 
             Filter click = new Filter("sourceOfIncomeID", sourceOfIncomeIDParameter, "Source of Income", "Source of Income ID");
+            FILTERS.add(click);
+        }
+
+        if (yearParameter != null) {
+            myQuery.put("Year", Integer.parseInt(yearParameter));
+
+            Filter click = new Filter("year", yearParameter, "Year", "Year");
             FILTERS.add(click);
         }
 

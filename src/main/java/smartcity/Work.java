@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by minchu on 16/04/16.
  */
-public class Work implements Comparable<Work>{
+public class Work implements Comparable<Work> {
 
     public String workObjectID;
     public int wardNumber;
@@ -31,6 +31,7 @@ public class Work implements Comparable<Work>{
     public String sourceOfIncomeID;
     public String sourceOfIncome;
     public String statusColor;
+    public String year;
     public boolean doWorkDetailsExist;
 
     public static ArrayList<Work> allWorks = createWorkObjects(new BasicDBObject());
@@ -39,54 +40,54 @@ public class Work implements Comparable<Work>{
     public Work(DBObject workObject) {
 
         try {
-        DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
+            DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
 
-        this.workObjectID = workObject.get("_id").toString();
+            this.workObjectID = workObject.get("_id").toString();
 
-        this.wardNumber = (int) workObject.get("Ward Number");
-        this.workDescriptionEnglish = workObject.get("Work Description English").toString();
-        this.workDescriptionKannada = workObject.get("Work Description Kannada").toString();
+            this.wardNumber = (int) workObject.get("Ward Number");
+            this.workDescriptionEnglish = workObject.get("Work Description English").toString();
+            this.workDescriptionKannada = workObject.get("Work Description Kannada").toString();
 
-        this.workDescriptionFinal = null;
+            this.workDescriptionFinal = null;
 
-        this.workOrderDate = workObject.get("Work Order Date").toString();
-        this.workCompletionDate = workObject.get("Work Completion Date").toString();
-        this.workType = workObject.get("Work Type").toString();
-        this.sourceOfIncome = workObject.get("Source of Income").toString();
-        this.contractor = workObject.get("Contractor").toString();
-        this.amountSanctionedString = workObject.get("Amount Sanctioned").toString();
-        //Converting string to integer with commas
+            this.workOrderDate = workObject.get("Work Order Date").toString();
+            this.workCompletionDate = workObject.get("Work Completion Date").toString();
+            this.workType = workObject.get("Work Type").toString();
+            this.sourceOfIncome = workObject.get("Source of Income").toString();
+            this.contractor = workObject.get("Contractor").toString();
+            this.amountSanctionedString = workObject.get("Amount Sanctioned").toString();
+            //Converting string to integer with commas
             Double temp = Double.parseDouble(amountSanctionedString);
             this.amountSanctioned = temp.intValue();
             // IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
 
-        this.statusFirstLetterSmall = workObject.get("Status").toString();
-        this.statusfirstLetterCapital = General.capitalizeFirstLetter(this.statusFirstLetterSmall);
+            this.year = workObject.get("Year").toString();
 
-        //Values for backend
-        this.workID = workObject.get("Work ID").toString();
-        this.workTypeID = workObject.get("Work Type ID").toString();
-        this.contractorID = workObject.get("Contractor ID").toString();
-        this.sourceOfIncomeID = workObject.get("Source of Income ID").toString();
+            this.statusFirstLetterSmall = workObject.get("Status").toString();
+            this.statusfirstLetterCapital = General.capitalizeFirstLetter(this.statusFirstLetterSmall);
 
-        if (this.statusfirstLetterCapital.equals("Completed")) {
-            this.statusColor = "43ac6a";
-        } else if (this.statusfirstLetterCapital.equals("Inprogress")) {
-            this.statusColor = "f04124";
-        }
+            //Values for backend
+            this.workID = workObject.get("Work ID").toString();
+            this.workTypeID = workObject.get("Work Type ID").toString();
+            this.contractorID = workObject.get("Contractor ID").toString();
+            this.sourceOfIncomeID = workObject.get("Source of Income ID").toString();
 
-            if (this.workType.equals("Capital") || this.workType.equals("Maintenance") || this.workType.equals("Under 22.75%")){
-                this.doWorkDetailsExist = true;
+            if (this.statusfirstLetterCapital.equals("Completed")) {
+                this.statusColor = "43ac6a";
+            } else if (this.statusfirstLetterCapital.equals("Inprogress")) {
+                this.statusColor = "f04124";
             }
-            else {
+
+            if (this.workType.equals("Capital") || this.workType.equals("Maintenance") || this.workType.equals("Under 22.75%")) {
+                this.doWorkDetailsExist = true;
+            } else {
                 this.doWorkDetailsExist = false;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName() + " : " + e.getMessage());
+            System.err.println("here");
         }
-     catch (Exception e) {
-         e.printStackTrace();
-        System.err.println(e.getClass().getName() + " : " + e.getMessage());
-         System.err.println("here");
-    }
     }
 
     @Override
@@ -102,13 +103,14 @@ public class Work implements Comparable<Work>{
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return this.workID.hashCode();
     }
 
 
     /**
      * Creates all the work objects based on the database query given as argument. Returns an arraylist of Works
+     *
      * @param query
      * @return
      */
@@ -140,8 +142,7 @@ public class Work implements Comparable<Work>{
             //ArrayList<Work> worksList = new ArrayList<Work>(Arrays.asList(works));
             Collections.sort(works, compareWorks);
             //Arrays.sort(works, compareWorks);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -152,27 +153,23 @@ public class Work implements Comparable<Work>{
         @Override
         public int compare(Work w1, Work w2) {
 
-            float compareQuantity1 = w1.amountSanctioned/1000;
-            float compareQuantity2 = w2.amountSanctioned/1000;
+            float compareQuantity1 = w1.amountSanctioned / 1000;
+            float compareQuantity2 = w2.amountSanctioned / 1000;
 
-            if (w1.statusfirstLetterCapital.equals("Inprogress")){
+            if (w1.statusfirstLetterCapital.equals("Inprogress")) {
                 compareQuantity1 = compareQuantity1 * 1000;
             }
 
-            if (w2.statusfirstLetterCapital.equals("Inprogress")){
+            if (w2.statusfirstLetterCapital.equals("Inprogress")) {
                 compareQuantity2 = compareQuantity2 * 1000;
             }
 
             int val = 0;
-            if (compareQuantity1 < compareQuantity2){
+            if (compareQuantity1 < compareQuantity2) {
                 val = 1;
-            }
-
-            else if(compareQuantity1 > compareQuantity2){
+            } else if (compareQuantity1 > compareQuantity2) {
                 val = -1;
-            }
-
-            else {
+            } else {
                 val = 0;
             }
 

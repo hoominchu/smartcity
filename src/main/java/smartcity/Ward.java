@@ -12,6 +12,22 @@ public class Ward {
     public int wardNumber;
     public String corporator;
     public int population;
+
+    public int capitalWorks;
+    public int capitalInprogressWorks;
+    public int capitalCompletedWorks;
+    public int capitalAmountSpent;
+
+    public int maintenanceWorks;
+    public int maintenanceInprogressWorks;
+    public int maintenanceCompletedWorks;
+    public int maintenanceAmountSpent;
+
+    public int emergencyWorks;
+    public int emergencyInprogressWorks;
+    public int emergencyCompletedWorks;
+    public int emergencyAmountSpent;
+
     public int totalWorks;
     public int inprogressWorks;
     public int completedWorks;
@@ -95,17 +111,62 @@ public class Ward {
             for (int j = 0; j < allwards.length; j++) {
                 for (int k = 0; k < Work.allWorks.size(); k++) {
 
-                    if (Work.allWorks.get(k).wardNumber == allwards[j].wardNumber) {
+                    Work tempWork = Work.allWorks.get(k);
+
+                    if (tempWork.wardNumber == allwards[j].wardNumber) {
+
+                        //Counts capital works
+                        if (tempWork.workType.equals("Capital")){
+                            allwards[j].capitalWorks++;
+                            allwards[j].capitalAmountSpent = allwards[j].capitalAmountSpent + tempWork.amountSanctioned;
+
+                            if (tempWork.statusfirstLetterCapital.equals("Inprogress")){
+                                allwards[j].capitalInprogressWorks++;
+                            }
+
+                            else {
+                                allwards[j].capitalCompletedWorks++;
+                            }
+                        }
+
+                        //Counts maintenance works
+                        else if (tempWork.workType.equals("Maintenance")){
+                            allwards[j].maintenanceWorks++;
+                            allwards[j].maintenanceAmountSpent = allwards[j].maintenanceAmountSpent + tempWork.amountSanctioned;
+
+                            if (tempWork.statusfirstLetterCapital.equals("Inprogress")){
+                                allwards[j].maintenanceInprogressWorks++;
+                            }
+
+                            else {
+                                allwards[j].maintenanceCompletedWorks++;
+                            }
+                        }
+
+                        //Counts emergency works
+                        else if (tempWork.workType.equals("Emergency")){
+                            allwards[j].emergencyWorks++;
+                            allwards[j].emergencyAmountSpent = allwards[j].emergencyAmountSpent + tempWork.amountSanctioned;
+
+                            if (tempWork.statusfirstLetterCapital.equals("Inprogress")){
+                                allwards[j].emergencyInprogressWorks++;
+                            }
+
+                            else {
+                                allwards[j].emergencyCompletedWorks++;
+                            }
+                        }
+
 
                         //Counts the number of in progress and completed works for every ward.
-                        if (Work.allWorks.get(k).statusfirstLetterCapital.equals("Completed")) {
+                        if (tempWork.statusfirstLetterCapital.equals("Completed")) {
                             allwards[j].completedWorks++;
-                        } else if (Work.allWorks.get(k).statusfirstLetterCapital.equals("Inprogress")) {
+                        } else if (tempWork.statusfirstLetterCapital.equals("Inprogress")) {
                             allwards[j].inprogressWorks++;
                         }
                         allwards[j].totalWorks++;
                         //Updates the amount spent in every ward.
-                        allwards[j].amountSpent = allwards[j].amountSpent + Work.allWorks.get(k).amountSanctioned;
+                        allwards[j].amountSpent = allwards[j].amountSpent + tempWork.amountSanctioned;
                     }
 
                 }
@@ -117,6 +178,135 @@ public class Ward {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public static String[] getWardDetails(){
+        String[] wardDetails = new String[7];
+
+        String allWardNumbersString = "";
+        String allWardsAmountSpent = "";
+        String allWardsTotalWorks = "";
+        String allWardsCapitalWorks = "";
+        String allWatdsMaintenanceWorks = "";
+        String allWardsEmergencyWorks = "";
+        String allWardsCompletedWorks = "";
+        String allWardsInprogressWorks = "";
+        String allWardsPopulation = "";
+        String allWardsPerCapitaExpenditure = "";
+
+        for (int i = 0; i < allwards.length; i++) {
+            allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
+            allWardsAmountSpent = allWardsAmountSpent + allwards[i].amountSpent + ",";
+            allWardsTotalWorks = allWardsTotalWorks + allwards[i].totalWorks + ",";
+            allWardsCompletedWorks = allWardsCompletedWorks + allwards[i].completedWorks + ",";
+            allWardsInprogressWorks = allWardsInprogressWorks + allwards[i].inprogressWorks + ",";
+            allWardsPopulation = allWardsPopulation + allwards[i].population + ",";
+            allWardsCapitalWorks = allWardsCapitalWorks + allwards[i].capitalWorks + ",";
+            allWatdsMaintenanceWorks = allWatdsMaintenanceWorks + allwards[i].maintenanceWorks + ",";
+            allWardsEmergencyWorks = allWardsEmergencyWorks + allwards[i].emergencyWorks + ",";
+
+            if (allwards[i].population >0) {
+                allWardsPerCapitaExpenditure = allWardsPerCapitaExpenditure + (allwards[i].amountSpent / allwards[i].population) + ",";
+            }
+
+            else {
+                allWardsPerCapitaExpenditure = allWardsPerCapitaExpenditure + "0,";
+            }
+        }
+
+        wardDetails[0] = allWardNumbersString;
+        wardDetails[1] = allWardsAmountSpent;
+        wardDetails[2] = allWardsTotalWorks;
+        wardDetails[3] = allWardsCompletedWorks;
+        wardDetails[4] = allWardsInprogressWorks;
+        wardDetails[5] = allWardsPopulation;
+        wardDetails[6] = allWardsPerCapitaExpenditure;
+
+        return wardDetails;
+    }
+
+    public static String[] getCapitalWorksDetails(){
+        String[] capitalDetails = new String[5];
+
+        String allWardNumbersString = "";
+        String capitalAmountSpent = "";
+        String capitalWorks = "";
+        String capitalCompletedWorks = "";
+        String capitalInprogressWorks = "";
+
+        for (int i = 0; i < allwards.length; i++) {
+
+            allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
+            capitalAmountSpent = capitalAmountSpent + allwards[i].capitalAmountSpent + ",";
+            capitalWorks = capitalWorks + allwards[i].capitalWorks + ",";
+            capitalCompletedWorks = capitalCompletedWorks + allwards[i].capitalCompletedWorks + ",";
+            capitalInprogressWorks = capitalInprogressWorks + allwards[i].capitalInprogressWorks + ",";
+
+        }
+
+        capitalDetails[0] = allWardNumbersString;
+        capitalDetails[1] = capitalAmountSpent;
+        capitalDetails[2] = capitalWorks;
+        capitalDetails[3] = capitalCompletedWorks;
+        capitalDetails[4] = capitalInprogressWorks;
+
+        return capitalDetails;
+    }
+
+    public static String[] getMaintenanceDetails(){
+        String[] maintenanceDetails = new String[5];
+
+        String allWardNumbersString = "";
+        String maintenanceAmountSpent = "";
+        String maintenanceWorks = "";
+        String maintenanceCompletedWorks = "";
+        String maintenanceInprogressWorks = "";
+
+        for (int i = 0; i < allwards.length; i++) {
+
+            allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
+            maintenanceAmountSpent = maintenanceAmountSpent + allwards[i].maintenanceAmountSpent + ",";
+            maintenanceWorks = maintenanceWorks + allwards[i].maintenanceWorks + ",";
+            maintenanceCompletedWorks = maintenanceCompletedWorks + allwards[i].maintenanceCompletedWorks + ",";
+            maintenanceInprogressWorks = maintenanceInprogressWorks + allwards[i].maintenanceInprogressWorks + ",";
+
+        }
+
+        maintenanceDetails[0] = allWardNumbersString;
+        maintenanceDetails[1] = maintenanceAmountSpent;
+        maintenanceDetails[2] = maintenanceWorks;
+        maintenanceDetails[3] = maintenanceCompletedWorks;
+        maintenanceDetails[4] = maintenanceInprogressWorks;
+
+        return maintenanceDetails;
+    }
+
+    public static String[] getEmergencyDetails(){
+        String[] emergencyDetails = new String[5];
+
+        String allWardNumbersString = "";
+        String emergencyAmountSpent = "";
+        String emergencyWorks = "";
+        String emergencyCompletedWorks = "";
+        String emergencyInprogressWorks = "";
+
+        for (int i = 0; i < allwards.length; i++) {
+
+            allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
+            emergencyAmountSpent = emergencyAmountSpent + allwards[i].emergencyAmountSpent + ",";
+            emergencyWorks = emergencyWorks + allwards[i].emergencyWorks + ",";
+            emergencyCompletedWorks = emergencyCompletedWorks + allwards[i].emergencyCompletedWorks + ",";
+            emergencyInprogressWorks = emergencyInprogressWorks + allwards[i].emergencyInprogressWorks + ",";
+
+        }
+
+        emergencyDetails[0] = allWardNumbersString;
+        emergencyDetails[1] = emergencyAmountSpent;
+        emergencyDetails[2] = emergencyWorks;
+        emergencyDetails[3] = emergencyCompletedWorks;
+        emergencyDetails[4] = emergencyInprogressWorks;
+
+        return emergencyDetails;
     }
 
     /**

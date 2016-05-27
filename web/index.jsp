@@ -12,6 +12,7 @@
     long initialTime = System.currentTimeMillis();
     String languageParameter = request.getParameter("language");
     String jumbotronParameter = request.getParameter("jumbotron");
+    String workTypeParameter = request.getParameter("workType");
 
     System.out.println("Requests processed and query object generated");
 
@@ -90,7 +91,7 @@
             async defer></script>
 
 </head>
-<body onload="getLocation()">
+<body>
 <div class="container">
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
@@ -105,52 +106,105 @@
 
     <form method="post" action="works.jsp">
         <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
-            <input name="queryString" class="form-control" id="focusedInput" type="text" placeholder="Enter your search query here..."
+            <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
+                   placeholder="Enter your search query here..."
                    style="display: inline-block; width: 75%">
-            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
-            <button type="submit" class="btn btn-primary" style="display: inline-block; margin-top: -4px; margin-left: 45px; height: 39px"><i class="fa fa-search" aria-hidden="true"></i> See all works</button>
+            <button type="submit" class="btn btn-primary round-corner-right"
+                    style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i
+                    class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
+            <button type="submit" class="btn btn-primary round-corner"
+                    style="display: inline-block; margin-top: -4px; margin-left: 45px; height: 39px"><i
+                    class="fa fa-search" aria-hidden="true"></i> See all works
+            </button>
         </div>
     </form>
 
     <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%>&jumbotron=map&" class="btn btn-default">Map</a>
+        <a href="<%=baseLink%>&jumbotron=map&" class="btn btn-default round-corner-top-left">Map</a>
         <a href="<%=baseLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
-        <a href="<%=baseLink%>&jumbotron=topContractors&" class="btn btn-default">Top Contractors</a>
+        <a href="<%=baseLink%>&jumbotron=topContractors&" class="btn btn-default round-corner-top-right">Top Contractors</a>
     </div>
 
-    <div class="jumbotron" style="height: 26em; padding: 0px; margin: 0px">
-        <% if (jumbotronParameter == null || jumbotronParameter.equals("map")) {
-        %>
-        <div id="map" style="width:100%; height: 100%; position: relative"></div>
+    <div class="jumbotron round-corner-bottom" style="height: 26em; padding: 0px; margin: 0px">
+
         <%
-        } else if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")) { %>
+            if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")) {
+                if (workTypeParameter != null && workTypeParameter.equals("capital")) {
+        %>
+        <div id="capitalChart"></div>
+        <%
+        } else if (workTypeParameter != null && workTypeParameter.equals("maintenance")) {
+        %>
+        <div id="maintenanceChart"></div>
+        <%
+        } else if (workTypeParameter != null && workTypeParameter.equals("emergency")) {
+        %>
+        <div id="emergencyChart"></div>
+        <%
+                }
+            }
+            if ((jumbotronParameter == null && workTypeParameter == null) || jumbotronParameter != null && jumbotronParameter.equals("map")) {
+        %>
+        <div id="map" class="round-corner-bottom" style="width:100%; height: 100%; position: relative"></div>
+        <%
+        } else if ((jumbotronParameter != null && workTypeParameter == null) && jumbotronParameter.equals("wardExpenses")) { %>
         <div id="wardExpensesChart" style="width:100%; height:100%;"></div>
         <%
-        } else if (jumbotronParameter != null && jumbotronParameter.equals("topContractors")) { %>
+        } else if ((jumbotronParameter != null && workTypeParameter == null) && jumbotronParameter.equals("topContractors")) { %>
         <div id="topContractorsChart" style="width:100%; height:100%;"></div>
         <%
             }
+
+            if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")) {
         %>
+        <div class="btn-group btn-group-justified">
+            <a href="<%=baseLink%>&jumbotron=wardExpenses" class="btn btn-default round-corner-bottom-left">All works</a>
+            <a href="<%=baseLink%>&jumbotron=wardExpenses&workType=capital&" class="btn btn-default">Capital works</a>
+            <a href="<%=baseLink%>&jumbotron=wardExpenses&workType=maintenance&" class="btn btn-default">Maintenance works</a>
+            <a href="<%=baseLink%>&jumbotron=wardExpenses&workType=emergency&" class="btn btn-default round-corner-bottom-right">Emergency works</a>
+        </div>
+        <%
+            }
+        %>
+
     </div>
 </div>
 
 <%
-    String allWardsString = Ward.getAllWardNumbersString();
-    String allWardsAmountSpent = Ward.getAllWardsAmountSpent();
-    String allWardsTotalWorks = Ward.getAllWardsTotalWorks();
-    String allWardsCompletedWorks = Ward.getAllWardsCompletedWorks();
-    String allWardsInprogressWorks = Ward.getAllWardsInprogressWorks();
+    String[] wardDetails = Ward.getWardDetails();
+    String[] capitalDetails = Ward.getCapitalWorksDetails();
+    String[] maintenanceDetails = Ward.getMaintenanceDetails();
+    String[] emergencyDetails = Ward.getEmergencyDetails();
+
+    String allWardsString = wardDetails[0];
+    String allWardsAmountSpent = wardDetails[1];
+    String allWardsTotalWorks = wardDetails[2];
+    String allWardsCompletedWorks = wardDetails[3];
+    String allWardsInprogressWorks = wardDetails[4];
+    String allWardsPopulation = wardDetails[5];
+    String allWardsPerCapitaExpenditure = wardDetails[6];
+
+    String capitalAmountSpent = capitalDetails[1];
+    String capitalWorks = capitalDetails[2];
+    String capitalCompletedWorks = capitalDetails[3];
+    String capitalInprogressWorks = capitalDetails[4];
+
+    String maintenanceAmountSpent = maintenanceDetails[1];
+    String maintenanceWorks = maintenanceDetails[2];
+    String maintenanceCompletedWorks = maintenanceDetails[3];
+    String maintenanceInprogressWorks = maintenanceDetails[4];
+
+    String emergencyAmountSpent = emergencyDetails[1];
+    String emergencyWorks = emergencyDetails[2];
+    String emergencyCompletedWorks = emergencyDetails[3];
+    String emergencyInprogressWorks = emergencyDetails[4];
 
     String top50contractors = Contractor.getTop50ContractorsNames();
     String top50contractorsAmount = Contractor.getTop50ContractorsAmount();
     String top50contractorsTotalWorks = Contractor.getTop50ContractorsTotalWorks();
     String top50contractorsInprogressWorks = Contractor.getTop50ContractorsInprogressWorks();
     String top50contractorsCompletedWorks = Contractor.getTop50ContractorsCompletedWorks();
-    //String top50contractors = "";
-    //String top50contractorsAmount = "";
-    //String top50contractorsTotalWorks = "";
-    //String top50contractorsInprogressWorks = "";
-    //String top50contractorsCompletedWorks = "";
 
 %>
 <script>
@@ -189,6 +243,14 @@
                 name: 'Total amount spent',
                 data: [<%=allWardsAmountSpent%>],
                 visible: false
+            }, {
+                name: 'Population',
+                data: [<%=allWardsPopulation%>],
+                visible: false
+            }, {
+                name: 'Per Capita Expenditure',
+                data: [<%=allWardsPerCapitaExpenditure%>],
+                visible: false
             }]
         });
 
@@ -215,7 +277,8 @@
                 data: [<%=top50contractorsAmount%>],
                 visible: true
 
-            }, {name: 'Total works',
+            }, {
+                name: 'Total works',
                 data: [<%=top50contractorsTotalWorks%>],
                 visible: false
             }, {
@@ -225,17 +288,128 @@
             }, {
                 name: 'In progress works',
                 data: [<%=top50contractorsInprogressWorks%>],
-
+                visible: false
             }]
         });
+
+        $('#capitalChart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Ward wise dashboard'
+            },
+            credits: {
+                enabled: true
+            },
+            xAxis: {
+                categories: [<%=allWardsString%>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Magnitude'
+                }
+            },
+            series: [{
+                name: 'Capital works',
+                data: [<%=capitalWorks%>],
+                visible: false
+            }, {
+                name: 'Completed capital works',
+                data: [<%=capitalCompletedWorks%>],
+                visible: false
+            }, {
+                name: 'In progress capital works',
+                data: [<%=capitalInprogressWorks%>],
+
+            }, {
+                name: 'Amount spent on capital works',
+                data: [<%=capitalAmountSpent%>],
+                visible: false
+            }]
+        });
+
+        $('#maintenanceChart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Maintenance works dashboard'
+            },
+            credits: {
+                enabled: true
+            },
+            xAxis: {
+                categories: [<%=allWardsString%>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Magnitude'
+                }
+            },
+            series: [{
+                name: 'Maintenance works',
+                data: [<%=maintenanceWorks%>],
+                visible: false
+            }, {
+                name: 'Completed maintenance works',
+                data: [<%=maintenanceCompletedWorks%>],
+                visible: false
+            }, {
+                name: 'In progress maintenance works',
+                data: [<%=maintenanceCompletedWorks%>],
+
+            }, {
+                name: 'Amount spent on maintenance works',
+                data: [<%=maintenanceCompletedWorks%>],
+                visible: false
+            }]
+        });
+
+        $('#emergencyChart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Emergency works dashboard'
+            },
+            credits: {
+                enabled: true
+            },
+            xAxis: {
+                categories: [<%=allWardsString%>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Magnitude'
+                }
+            },
+            series: [{
+                name: 'Emergency works',
+                data: [<%=emergencyWorks%>],
+                visible: false
+            }, {
+                name: 'Completed emergency works',
+                data: [<%=emergencyCompletedWorks%>],
+                visible: false
+            }, {
+                name: 'In progress emergency works',
+                data: [<%=emergencyInprogressWorks%>],
+
+            }, {
+                name: 'Amount spent on emergency ',
+                data: [<%=emergencyAmountSpent%>],
+                visible: false
+            }]
+        });
+
+
     });
 </script>
-<div class="panel-footer" style="text-align: center; margin-top: 3em">All the data presented here has been provided by
-    Hubli-Dharwad
-    Municipal Corporation
+<div class="panel-footer" style="text-align: center; margin-top: 5em"> &#169 Hubballi-Dharwad Municipal Corporation 2016
 </div>
 </body>
 <%
-    System.out.println(System.currentTimeMillis()-initialTime);
+    System.out.println(System.currentTimeMillis() - initialTime);
 %>
 </html>

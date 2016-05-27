@@ -1,7 +1,7 @@
 package smartcity;
 
 /**
- * This class isn't being used right now. This has been created keeping in mind the scalability of the project. 
+ * This class isn't being used right now. This has been created keeping in mind the scalability of the project.
  * Created by minchu on 21/04/16.
  */
 public class Corporator {
