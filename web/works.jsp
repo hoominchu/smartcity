@@ -6,13 +6,15 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
-         import="com.mongodb.*"
-         import="smartcity.*"
-         import="java.util.*"
+         import="com.mongodb.BasicDBObject"
          import="smartcity.Filter"
+         import="smartcity.General"
+         import="smartcity.Work"
 %>
+<%@ page import="java.util.*" %>
 
 <%
+    Calendar today = Calendar.getInstance();
 
     String languageParameter = request.getParameter("language");
 
@@ -27,12 +29,12 @@
 
     BasicDBObject myQuery = smartcity.Filter.generateFiltersHashset(request);
 
-    System.out.println("Requests processed and query object generated");
+    //System.out.println("Requests processed and query object generated");
 
     String baseLink = "works.jsp?";
     String dynamicLink = General.genLink();
 
-    System.out.println("New link generated");
+    //System.out.println("New link generated");
 
     //DBCursor cursor = Database.allworks.find(myQuery);
 
@@ -81,12 +83,6 @@
     String amountSpentString = General.rupeeFormat(amountSpent.toString());
     String numberOfWorksDisplayedString = General.rupeeFormat(numberOfWorksDisplayed.toString());
 
-    Ward.createAllWardObjects();
-    System.out.println("Ward objects created");
-
-    Contractor.createContractors();
-    System.out.println("Contractor objects created");
-
 %>
 
 <html>
@@ -110,20 +106,14 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
-    <style>
-        .fa {
-            color: white;
-            margin: 2px;
-        }
-    </style>
-
     <script>
         function initMap() {
             var mapDiv = document.getElementById('map');
             var map = new google.maps.Map(mapDiv, {
                 center: new google.maps.LatLng(15.3935685, 75.08009570000002),
                 zoom: 15,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                scrollwheel: false
             });
             var wardBoundariesLayer = new google.maps.KmlLayer({
                 url: 'http://hack4hd.org/data/HD-ward-boundaries.kml',
@@ -168,11 +158,11 @@
                    style="display: inline-block; width: 75%">
             <button type="submit" class="btn btn-primary round-corner-right"
                     style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i
-                    class="fa fa-search" aria-hidden="true"></i> Search
+                    class="fa fa-search white-icon" aria-hidden="true"></i> Search
             </button>
             <button type="submit" class="btn btn-primary round-corner"
                     style="display: inline-block; margin-top: -4px; margin-left: 45px; height: 39px"><i
-                    class="fa fa-search" aria-hidden="true"></i> See all works
+                    class="fa fa-search white-icon" aria-hidden="true"></i> See all works
             </button>
         </div>
     </form>
@@ -207,13 +197,15 @@
     %>
     <span class="label label-primary round-corner"
           style="font-size: 1.1em;"><%=click.parameterPresentable%> : <%=click.parameterValuePresentable%> <a
-            href=<%=dismissalLink%>> <i class="fa fa-times-circle" aria-hidden="true"></i></a></span>
+            href=<%=dismissalLink%>> <i class="fa fa-times-circle white-icon" style="color: white"
+                                        aria-hidden="true"></i></a></span>
     <%
         }
     %>
 
     <div class="btn-group pull-right round-corner-top">
-        <a href="#" class="btn btn-default dropdown-toggle round-corner-top" data-toggle="dropdown" aria-expanded="false">
+        <a href="#" class="btn btn-default dropdown-toggle round-corner-top" data-toggle="dropdown"
+           aria-expanded="false">
             Download Results
             <span class="caret"></span>
         </a>
@@ -224,13 +216,13 @@
         </ul>
     </div>
 
-    <table class="table-striped table-responsive sortable" id="myTable"
+    <table class="table table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
 
         <thead>
         <tr>
             <th style="width: 3%; padding: 2px; text-align: center">Ward</th>
-            <th style="width: 36%; padding: 2px; text-align: center">Work Description</th>
+            <th style="width: 34%; padding: 2px; text-align: center">Work Description</th>
             <th style="width: 6%; padding: 2px; text-align: center">Work Order Date</th>
             <th style="width: 6%; padding: 2px; text-align: center">Work Completion Date</th>
             <th style="width: 7%; padding: 2px; text-align: center">Work Type</th>
@@ -238,7 +230,7 @@
             <th style="width: 14%; padding: 2px; text-align: center">Source Of Income</th>
             <th style="width: 13%; padding: 2px; text-align: center">Contractor</th>
             <th style="width: 7%; padding: 2px; text-align: center">Amount Sanctioned</th>
-            <th style="width: 5%; padding: 2px; text-align: center">Status</th>
+            <th style="width: 7%; padding: 2px; text-align: center">Status</th>
         </tr>
         </thead>
         <tbody>
@@ -256,6 +248,9 @@
                     String workOrderDate = works.get(i).workOrderDate;
                     String workCompletionDate = works.get(i).workCompletionDate;
                     String workType = works.get(i).workType;
+
+                    Calendar completionDate = General.createDate(workCompletionDate);
+                    String rowBG = "";
 
                     String sourceOfIncome = works.get(i).sourceOfIncome;
 
@@ -275,21 +270,32 @@
                     String sourceOfIncomeID = works.get(i).sourceOfIncomeID;
                     String statusColor = works.get(i).statusColor;
 
+                    boolean highlight;
+                    if (today.after(completionDate) && status.equals("Inprogress") && !workCompletionDate.equals(workOrderDate)) {
+                        rowBG = "warning";
+                        highlight = true;
+                    }
+
                     workDescriptionFinal = General.setWorkDescriptionFinal(languageParameter, workDescriptionEnglish, workDescriptionKannada);
         %>
-        <tr>
+        <tr class="<%=rowBG%>">
             <td style="text-align: center; padding-left: 0.2em"><a
-                    href="<%=baseLink%><%=dynamicLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%>
-            </a>
-            </td>
-            <td style="padding: 1.5em">
+                    href="<%=baseLink%><%=dynamicLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%><br>
                 <% if (works.get(i).doWorkDetailsExist) { %>
-                <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=map">
+            </a>
+                <br>
+                <i class="fa fa-list-ul"
+                   style="font-size: 10pt;"
+                   aria-hidden="true" title="This work has more details"></i>
+                <% }
+                %>
+
+            </td>
+
+            <td style="padding: 1.5em">
+                <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=billDetails">
                     <%=workDescriptionFinal%>
                 </a>
-                <% } else if (!works.get(i).doWorkDetailsExist) { %>
-                <%=workDescriptionFinal%>
-                <% } %>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
@@ -313,7 +319,7 @@
             </td>
             <td style="text-align: center"><%=General.rupeeFormat(amountSanctionedString)%>
             </td>
-            <td style="text-align: center; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
+            <td style="text-align: left; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
                     href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>
             </a>
             </td>
@@ -350,97 +356,6 @@
     %>
 </div>
 
-<%
-    String allWardsString = Ward.getAllWardNumbersString();
-    String allWardsAmountSpent = Ward.getAllWardsAmountSpent();
-    String allWardsTotalWorks = Ward.getAllWardsTotalWorks();
-    String allWardsCompletedWorks = Ward.getAllWardsCompletedWorks();
-    String allWardsInprogressWorks = Ward.getAllWardsInprogressWorks();
-
-    String top50contractors = Contractor.getTop50ContractorsNames();
-    String top50contractorsAmount = Contractor.getTop50ContractorsAmount();
-    String top50contractorsTotalWorks = Contractor.getTop50ContractorsTotalWorks();
-    String top50contractorsInprogressWorks = Contractor.getTop50ContractorsInprogressWorks();
-    String top50contractorsCompletedWorks = Contractor.getTop50ContractorsCompletedWorks();
-%>
-<script>
-    $(function () {
-        $('#wardExpensesChart').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Ward wise dashboard'
-            },
-            credits: {
-                enabled: true
-            },
-            xAxis: {
-                categories: [<%=allWardsString%>]
-            },
-            yAxis: {
-                title: {
-                    text: 'Magnitude'
-                }
-            },
-            series: [{
-                name: 'Total works',
-                data: [<%=allWardsTotalWorks%>],
-                visible: false
-            }, {
-                name: 'Completed works',
-                data: [<%=allWardsCompletedWorks%>],
-                visible: false
-            }, {
-                name: 'In progress works',
-                data: [<%=allWardsInprogressWorks%>],
-
-            }, {
-                name: 'Total amount spent',
-                data: [<%=allWardsAmountSpent%>],
-                visible: false
-            }]
-        });
-
-        $('#topContractorsChart').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Top 50 Contractors by Amount'
-            },
-            credits: {
-                enabled: true
-            },
-            xAxis: {
-                categories: [<%=top50contractors%>]
-            },
-            yAxis: {
-                title: {
-                    text: 'Magnitude'
-                }
-            },
-            series: [{
-                name: 'Total contract amount',
-                data: [<%=top50contractorsAmount%>],
-                visible: true
-
-            }, {
-                name: 'Total works',
-                data: [<%=top50contractorsTotalWorks%>],
-                visible: false
-            }, {
-                name: 'Completed works',
-                data: [<%=top50contractorsCompletedWorks%>],
-                visible: false
-            }, {
-                name: 'In progress works',
-                data: [<%=top50contractorsInprogressWorks%>],
-
-            }]
-        });
-    });
-</script>
 <div class="panel-footer" style="text-align: center"> &#169 Hubballi-Dharwad Municipal Corporation 2016
 </div>
 </body>

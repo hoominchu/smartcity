@@ -14,6 +14,7 @@ public class Database {
     public static DBCollection allworks = db.getCollection("allworks");
     public static DBCollection workDetailsCollection = db.getCollection("workdetails");
     public static DBCollection wardmaster = db.getCollection("wardmaster");
+    public static DBCollection billspaid = db.getCollection("billspaid");
 
     //public static String[] WORKTYPES = new String[]{"Capital", "Maintenance", "Hired Vehicle Rent", "Contingency", "Emergency", "Under 7.25", "Under 22.75%"};
 

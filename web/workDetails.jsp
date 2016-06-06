@@ -6,13 +6,16 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
-         import="com.mongodb.*"
-         import="java.lang.Integer"
-         import="smartcity.*"
+         import="com.mongodb.BasicDBObject"
+         import="com.mongodb.DBCursor"
+         import="com.mongodb.DBObject"
 %>
-<%@ page import="java.math.BigDecimal" %>
+<%@ page import="smartcity.Bill" %>
+<%@ page import="smartcity.Database" %>
+<%@ page import="smartcity.General" %>
+<%@ page import="smartcity.Work" %>
 <%@ page import="java.io.File" %>
-<%@ page import="java.io.PrintWriter" %>
+<%@ page import="java.math.BigDecimal" %>
 <%@ page import="java.util.ArrayList" %>
 
 <%
@@ -21,6 +24,8 @@
 
     String baseLink = "workDetails.jsp";
 
+    String imagePath = "images/works/71108";
+
     BasicDBObject workIDQuery = new BasicDBObject();
     //BasicDBObject workDetailsObject = new BasicDBObject();
 
@@ -28,11 +33,16 @@
 
     ArrayList<Work> work = Work.createWorkObjects(workIDQuery);
 
-    String statusColorParameter = "";
-    if (work.get(0).statusFirstLetterSmall.equals("inprogress")){
+    BasicDBObject billPaidQuery = new BasicDBObject();
+    billPaidQuery.put("Recid", Integer.parseInt(workIDParameter));
+    ArrayList<Bill> bills = Bill.createBills(billPaidQuery);
+
+    int totalBillPaid = 0;
+
+    String statusColorParameter;
+    if (work.get(0).statusFirstLetterSmall.equals("inprogress")) {
         statusColorParameter = "danger";
-    }
-    else {
+    } else {
         statusColorParameter = "success";
     }
 %>
@@ -48,9 +58,27 @@
     <script src="commonfiles/bootstrap.min.js"></script>
     <script src="commonfiles/addons.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="commonfiles/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="commonfiles/slick/slick-theme.css"/>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <style>
+        /* the slides */
+        .slick-slide {
+            margin: 0 10px;
+        }
+
+        /* the parent */
+        .slick-list {
+            margin: 0 -10px;
+        }
+    </style>
+
 </head>
 <body>
+
+<script type="text/javascript" src="commonfiles/slick/slick.min.js"></script>
 
 <div class="container">
     <img src="images/hdmc-logo.png" width="140em" height="140em"
@@ -62,56 +90,161 @@
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
 
-    <h4 style="position:relative; text-align: center"><%=work.get(0).workDescriptionEnglish%></h4>
-
-    <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=map" class="btn btn-default round-corner-top-left">Map</a>
-        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=info" class="btn btn-default round-corner-top-right">Info</a>
+    <div class="panel panel-default round-corner" style="text-align: center">
+        <div class="panel-heading round-corner-top">Description</div>
+        <div class="panel-body round-corner">
+            <%=General.cleanText(work.get(0).workDescriptionEnglish)%>
+        </div>
     </div>
 
-    <div class="jumbotron round-corner-bottom" style="height: 26em; padding: 0px; margin: 0px">
+    <div class="btn-group btn-group-justified">
+        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=billDetails"
+           class="btn btn-default round-corner-top-left">Billing Details</a>
+        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=map" class="btn btn-default round-corner-top-left">Map</a>
+        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=info"
+           class="btn btn-default round-corner-top-right">Work Info</a>
+    </div>
 
-        <% if (jumbotronParameter == null || jumbotronParameter.equals("map")) {
+    <div class="jumbotron round-corner-bottom" style="padding: 0px; margin-bottom: 2em">
+        <%
+            if (jumbotronParameter == null || jumbotronParameter.equals("billDetails")) {
+
+                if (bills.size() > 0) {
         %>
-        <div id="map" class="round-corner-bottom" style="width:100%; height: 100%; position: relative"></div>
+
+        <table class="table table-striped table-hover" style="font-size: 10pt; text-align: center">
+            <thead>
+
+            </thead>
+            <tbody style="width: 100%;">
+            <tr>
+                <td> Main Category : <b><%=bills.get(0).mainCategory%>
+                </b>
+                </td>
+            </tr>
+
+            <tr>
+                <td> Passed Category : <b><%=bills.get(0).passedCategory%>
+                </b>
+                </td>
+            </tr>
+
+            <tr>
+                <td> Contractor : <b><%=bills.get(0).contractor%>
+                </b>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <table class="table table-striped table-hover" style="font-size: 10pt; text-align: center">
+            <thead>
+            <tr>
+                <th style="text-align: center"> Sl No.</th>
+                <th style="text-align: center"> Description</th>
+                <th style="text-align: center"> Pass Date</th>
+                <th style="text-align: center"> Pass Amount</th>
+                <th style="text-align: center"> Paid Date</th>
+                <th style="text-align: center"> Paid Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                int slno = 0;
+
+                for (Bill bill : bills) {
+                    slno++;
+                    totalBillPaid = totalBillPaid + Integer.parseInt(bill.paidAmount);
+            %>
+            <tr>
+                <td><%=slno%>
+                </td>
+                <td><%=bill.descriptionEnglish%>
+                </td>
+
+                <td><%=bill.billPassDate%>
+                </td>
+
+                <td>&#8377 <%=General.rupeeFormat(bill.billPassAmount)%>
+                </td>
+
+                <td><%=bill.paidDate%>
+                </td>
+
+                <td>&#8377 <%=General.rupeeFormat(bill.paidAmount)%>
+                </td>
+            </tr>
+
+            <%
+                }
+            %>
+            </tbody>
+        </table>
+        <hr>
+        <table>
+            <tbody>
+            <tr style="padding-bottom: 10px; text-align: center">
+            Total bill paid : <b>&#8377 <%=General.rupeeFormat(new Integer(totalBillPaid).toString())%></b>
+            </tr>
+            </tbody>
+        </table>
+        <%
+        } else {
+        %>
+        <h4 style="text-align: center; padding: 15%;"><u><b>Bill not yet paid</b></u></h4>
+        <%
+            }
+        } else if (jumbotronParameter == null || jumbotronParameter.equals("map")) {
+        %>
+        <div id="map" class="round-corner-bottom" style="width:100%; height: 26em; position: relative"></div>
         <%
         } else if (jumbotronParameter.equals("info")) {
+            for (Bill bill : bills) {
+                totalBillPaid = totalBillPaid + Integer.parseInt(bill.paidAmount);
+            }
         %>
-        <div id="workInfo" style="width: 100%; height: 100%; position: relative;">
+        <div id="workInfo" style="width: 100%; position: relative;">
             <div class="panel panel-default">
-                <div class="panel-body" style="height: 100%; text-align: center">
+                <div class="panel-body" style=" text-align: center">
 
-                    <table class="table table-striped table-hover" style="font-size: 10pt; text-align: center"">
+                    <table class="table table-striped table-hover" style="font-size: 10pt; text-align: center">
                         <thead>
 
                         </thead>
                         <tbody>
                         <tr>
-                            <td> Ward : <b><%=work.get(0).wardNumber%></b>
+                            <td> Ward : <b><%=work.get(0).wardNumber%>
+                            </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Type : <b><%=work.get(0).workType%></b>
+                            <td> Work Type : <b><%=work.get(0).workType%>
+                            </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Source of Income : <b><%=work.get(0).sourceOfIncome%></b>
+                            <td> Source of Income : <b><%=work.get(0).sourceOfIncome%>
+                            </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Year : <b><%=work.get(0).year%></b>
+                            <td> Year : <b><%=work.get(0).year%>
+                            </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Order Date : <b><%=work.get(0).workOrderDate%></b>
+                            <td> Work Order Date : <b><%=work.get(0).workOrderDate%>
+                            </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Completion Date : <b><%=work.get(0).workCompletionDate%></b>
+                            <td> Work Completion Date : <b><%=work.get(0).workCompletionDate%>
+                            </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Contractor : <b><%=work.get(0).contractor%></b>
+                            <td> Contractor : <b><%=work.get(0).contractor%>
+                            </b>
                             </td>
                         </tr>
 
@@ -121,12 +254,31 @@
                         </tr>
 
                         <tr>
-                            <td> Amount Sanctioned : <b> &#8377 <%=General.rupeeFormat(work.get(0).amountSanctionedString)%></b>
+                            <td> Amount Sanctioned : <b>
+                                &#8377 <%=General.rupeeFormat(work.get(0).amountSanctionedString)%>
+                            </b>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td> Amount Paid : <b><%
+                                if (totalBillPaid != 0) { %>
+                                &#8377 <%=General.rupeeFormat(new Integer(totalBillPaid).toString())%>
+                                <%
+                                } else {
+                                %>
+                                Bill not yet paid
+                                <%
+                                    }
+                                %>
+                            </b>
                             </td>
                         </tr>
 
                         <tr class="<%=statusColorParameter%>">
-                            <td> Status : <b style="color: <%=work.get(0).statusColor%>"><%=work.get(0).statusfirstLetterCapital%></b>
+                            <td> Status : <b
+                                    style="color: <%=work.get(0).statusColor%>"><%=work.get(0).statusfirstLetterCapital%>
+                            </b>
                             </td>
                         </tr>
                         </tbody>
@@ -139,6 +291,9 @@
         %>
     </div>
 
+    <%
+        if (Database.workDetailsCollection.find(workIDQuery).size() > 0) {
+    %>
     <table class="table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
 
@@ -190,7 +345,7 @@
             </td>
             <td style="text-align: center"><%=rate%>
             </td>
-            <td style="text-align: center"><%=totalAmountString%>
+            <td style="text-align: center"><%=General.rupeeFormat(totalAmountString)%>
             </td>
 
         </tr>
@@ -204,6 +359,27 @@
 
         </tbody>
     </table>
+
+    <%
+        }
+        File imageDir = new File(imagePath).getCanonicalFile();
+        //System.out.println(imageDir.getAbsolutePath());
+        File[] imageFiles = imageDir.listFiles();
+
+        //if (imageFiles != null) {
+    %>
+    <hr>
+    <h4><b>Photos submitted by the contractor</b></h4>
+    <div class="work-images" style="height: 18em; margin-top: 1.5em; margin-bottom: 1.5em">
+        <%
+            for (int i = 0; i < 4; i++) {
+        %>
+        <div class="slick-slide"><img src="images/works/71108/<%=i%>.jpg" style="height: 18em"></div>
+        <%
+            }
+        %>
+
+    </div>
 
     <div id="disqus_thread"></div>
 
@@ -238,7 +414,8 @@
         var map = new google.maps.Map(mapDiv, {
             center: new google.maps.LatLng(15.3935685, 75.08009570000002),
             zoom: 15,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            scrollwheel: false
         });
         var workKML = new google.maps.KmlLayer({
             url: 'http://hack4hd.org/workIDkmls/<%=workIDParameter%>.kml',
@@ -248,6 +425,20 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
         async defer></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.work-images').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            dots: true,
+            arrows: true,
+            variableWidth: true,
+
+        });
+    });
+</script>
+
 <div class="panel-footer" style="text-align: center"> &#169 Hubballi-Dharwad Municipal Corporation 2016</div>
 </body>
 </html>

@@ -88,3 +88,17 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   .round-corner-bottom-right {
       border-bottom-right-radius: 0.6em;
   }
+
+.white-icon {
+    color: white;
+    margin: 2px;
+}
+
+.margin-left {
+    margin-left: 15em;
+}
+
+.big-checkbox {
+    width: 30px;
+    height: 30px;
+}

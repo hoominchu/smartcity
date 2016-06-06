@@ -8,26 +8,72 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="smartcity.*"
 %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.mongodb.BasicDBObject" %>
+<%@ page import="java.util.stream.Stream" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%
     long initialTime = System.currentTimeMillis();
-    String languageParameter = request.getParameter("language");
+
+    String dynamicLink = General.genLink();
+
     String jumbotronParameter = request.getParameter("jumbotron");
     String workTypeParameter = request.getParameter("workType");
 
-    System.out.println("Requests processed and query object generated");
+    String[] yearParameter = request.getParameterValues("year");
+
+    Map<Integer,String> yearChecked = new HashMap<>();
+
+    BasicDBObject query = new BasicDBObject();
+
+    if (yearParameter == null){
+        query.put("Year", new BasicDBObject("$in", new int[]{2014,2015,2016}));
+        for (int i = 2014; i < 2017; i++){
+            yearChecked.put(i,"checked");
+        }
+    }
+
+    if (yearParameter != null) {
+        int[] years = new int[yearParameter.length];
+        for (int i = 0; i < yearParameter.length; i++){
+            years[i] = Integer.parseInt(yearParameter[i]);
+
+            for (int j = 2014; j < 2017; j++){
+                if (years[i] == j){
+                    yearChecked.put(j,"checked");
+                }
+            }
+        }
+        query.put("Year", new BasicDBObject("$in", years));
+    }
+
+    if (workTypeParameter != null && workTypeParameter.equals("capital")) {
+        query.put("Work Type ID", 1);
+    }
+    if (workTypeParameter != null && workTypeParameter.equals("maintenance")) {
+        query.put("Work Type ID", 2);
+    }
+    if (workTypeParameter != null && workTypeParameter.equals("emergency")) {
+        query.put("Work Type ID", 3);
+    }
+
+    //System.out.println("Requests processed and query object generated");
 
     String baseLink = "index.jsp?";
 
-    System.out.println("New link generated");
+    //System.out.println("New link generated");
 
-    System.out.println((int) Database.wardmaster.count());
+    ArrayList<Work> works = Work.createWorkObjects(query);
 
-    Ward.createAllWardObjects();
-    System.out.println("Ward objects created");
+    Ward.createAllWardObjects(works);
+    //System.out.println("Ward objects created");
 
     Contractor.createContractors();
-    System.out.println("Contractor objects created");
+    //System.out.println("Contractor objects created");
 
+    try {
 %>
 
 <html>
@@ -66,20 +112,14 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
-    <style>
-        .fa {
-            color: white;
-            margin: 2px;
-        }
-    </style>
-
     <script>
         function initMap() {
             var mapDiv = document.getElementById('map');
             var map = new google.maps.Map(mapDiv, {
                 center: new google.maps.LatLng(15.3935685, 75.08009570000002),
                 zoom: 15,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                scrollwheel: false
             });
             var wardBoundariesLayer = new google.maps.KmlLayer({
                 url: 'http://hack4hd.org/data/HD-ward-boundaries.kml',
@@ -92,7 +132,9 @@
 
 </head>
 <body>
+
 <div class="container">
+    <span>
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
 
@@ -104,101 +146,92 @@
     <div class="pull-right" style="margin-top:40px;"><a href="<%=baseLink%>language=kannada">ಕನ್ನಡ</a> | <a
             href="<%=baseLink%>">English</a></div>
 
-    <form method="post" action="works.jsp">
-        <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
-            <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
-                   placeholder="Enter your search query here..."
-                   style="display: inline-block; width: 75%">
-            <button type="submit" class="btn btn-primary round-corner-right"
-                    style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i
-                    class="fa fa-search" aria-hidden="true"></i> Search
-            </button>
-            <button type="submit" class="btn btn-primary round-corner"
-                    style="display: inline-block; margin-top: -4px; margin-left: 45px; height: 39px"><i
-                    class="fa fa-search" aria-hidden="true"></i> See all works
-            </button>
-        </div>
-    </form>
+        </span>
+    <div style="margin-bottom: 2em">
+        <form method="post" action="works.jsp">
+            <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
+                <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
+                       placeholder="Enter your search query here..."
+                       style="display: inline-block; width: 75%">
+                <button type="submit" class="btn btn-primary round-corner-right"
+                        style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i
+                        class="fa fa-search white-icon" aria-hidden="true"></i> Search
+                </button>
+                <button type="submit" class="btn btn-primary round-corner pull-right"
+                        style="display: inline-block; height: 39px"> See all works
+                </button>
+            </div>
+        </form>
 
-    <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%>&jumbotron=map&" class="btn btn-default round-corner-top-left">Map</a>
-        <a href="<%=baseLink%>&jumbotron=wardExpenses&" class="btn btn-default">Wardwise Dashboard</a>
-        <a href="<%=baseLink%>&jumbotron=topContractors&" class="btn btn-default round-corner-top-right">Top Contractors</a>
-    </div>
 
-    <div class="jumbotron round-corner-bottom" style="height: 26em; padding: 0px; margin: 0px">
-
-        <%
-            if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")) {
-                if (workTypeParameter != null && workTypeParameter.equals("capital")) {
-        %>
-        <div id="capitalChart"></div>
-        <%
-        } else if (workTypeParameter != null && workTypeParameter.equals("maintenance")) {
-        %>
-        <div id="maintenanceChart"></div>
-        <%
-        } else if (workTypeParameter != null && workTypeParameter.equals("emergency")) {
-        %>
-        <div id="emergencyChart"></div>
-        <%
-                }
-            }
-            if ((jumbotronParameter == null && workTypeParameter == null) || jumbotronParameter != null && jumbotronParameter.equals("map")) {
-        %>
-        <div id="map" class="round-corner-bottom" style="width:100%; height: 100%; position: relative"></div>
-        <%
-        } else if ((jumbotronParameter != null && workTypeParameter == null) && jumbotronParameter.equals("wardExpenses")) { %>
-        <div id="wardExpensesChart" style="width:100%; height:100%;"></div>
-        <%
-        } else if ((jumbotronParameter != null && workTypeParameter == null) && jumbotronParameter.equals("topContractors")) { %>
-        <div id="topContractorsChart" style="width:100%; height:100%;"></div>
-        <%
-            }
-
-            if (jumbotronParameter != null && jumbotronParameter.equals("wardExpenses")) {
-        %>
         <div class="btn-group btn-group-justified">
-            <a href="<%=baseLink%>&jumbotron=wardExpenses" class="btn btn-default round-corner-bottom-left">All works</a>
-            <a href="<%=baseLink%>&jumbotron=wardExpenses&workType=capital&" class="btn btn-default">Capital works</a>
-            <a href="<%=baseLink%>&jumbotron=wardExpenses&workType=maintenance&" class="btn btn-default">Maintenance works</a>
-            <a href="<%=baseLink%>&jumbotron=wardExpenses&workType=emergency&" class="btn btn-default round-corner-bottom-right">Emergency works</a>
+            <a href="<%=baseLink%>&jumbotron=map&" class="btn btn-default round-corner-top-left">Map</a>
+            <a href="<%=baseLink%>&jumbotron=wardsDashboard&" class="btn btn-default">Wardwise Dashboard</a>
+            <a href="<%=baseLink%>&jumbotron=topContractors&" class="btn btn-default round-corner-top-right">Top
+                Contractors</a>
         </div>
-        <%
-            }
-        %>
 
+        <div class="jumbotron round-corner-bottom" style="height: 26em; padding: 0px; margin: 0px">
+
+            <%
+                if ((jumbotronParameter == null && workTypeParameter == null) || jumbotronParameter != null && jumbotronParameter.equals("map")) {
+            %>
+            <div id="map" class="round-corner-bottom" style="width:100%; height: 100%; position: relative"></div>
+            <%
+            } else if (jumbotronParameter != null && jumbotronParameter.equals("wardsDashboard")) { %>
+            <div id="wardsDashboardChart" style="width:100%; height:100%;"></div>
+            <%
+            } else if ((jumbotronParameter != null && workTypeParameter == null) && jumbotronParameter.equals("topContractors")) { %>
+            <div id="topContractorsChart" style="width:100%; height:100%;"></div>
+            <%
+                }
+
+                if (jumbotronParameter != null && jumbotronParameter.equals("wardsDashboard")) {
+            %>
+            <form method="post" action="<%=dynamicLink%>">
+                <div class="checkbox">
+                    <label class="margin-left big-checkbox" style="margin-left: 22%; font-size: 10pt">
+                        <input type="checkbox" name="year" value="2014" onchange="this.form.submit()" <%=yearChecked.get(2014)%>> 2014
+                    </label>
+
+                    <label class="margin-left big-checkbox" style="margin-left: 22%; font-size: 10pt">
+                        <input type="checkbox" name="year" value="2015" onchange="this.form.submit()" <%=yearChecked.get(2015)%>> 2015
+                    </label>
+
+                    <label class="margin-left big-checkbox" style="margin-left: 22%; font-size: 10pt">
+                        <input type="checkbox" name="year" value="2016" onchange="this.form.submit()" <%=yearChecked.get(2016)%>> 2016
+                    </label>
+                </div>
+            </form>
+
+            <div class="btn-group btn-group-justified">
+                <a href="<%=baseLink%>&jumbotron=wardsDashboard" class="btn btn-default round-corner-bottom-left">All
+                    works</a>
+                <a href="<%=baseLink%>&jumbotron=wardsDashboard&workType=capital" class="btn btn-default">Capital
+                    works</a>
+                <a href="<%=baseLink%>&jumbotron=wardsDashboard&workType=maintenance" class="btn btn-default">Maintenance
+                    works</a>
+                <a href="<%=baseLink%>&jumbotron=wardsDashboard&workType=emergency&"
+                   class="btn btn-default round-corner-bottom-right">Emergency works</a>
+            </div>
+            <%
+                }
+            %>
+
+        </div>
     </div>
 </div>
 
 <%
     String[] wardDetails = Ward.getWardDetails();
-    String[] capitalDetails = Ward.getCapitalWorksDetails();
-    String[] maintenanceDetails = Ward.getMaintenanceDetails();
-    String[] emergencyDetails = Ward.getEmergencyDetails();
 
     String allWardsString = wardDetails[0];
     String allWardsAmountSpent = wardDetails[1];
-    String allWardsTotalWorks = wardDetails[2];
+    String allWardsWorks = wardDetails[2];
     String allWardsCompletedWorks = wardDetails[3];
     String allWardsInprogressWorks = wardDetails[4];
     String allWardsPopulation = wardDetails[5];
     String allWardsPerCapitaExpenditure = wardDetails[6];
-
-    String capitalAmountSpent = capitalDetails[1];
-    String capitalWorks = capitalDetails[2];
-    String capitalCompletedWorks = capitalDetails[3];
-    String capitalInprogressWorks = capitalDetails[4];
-
-    String maintenanceAmountSpent = maintenanceDetails[1];
-    String maintenanceWorks = maintenanceDetails[2];
-    String maintenanceCompletedWorks = maintenanceDetails[3];
-    String maintenanceInprogressWorks = maintenanceDetails[4];
-
-    String emergencyAmountSpent = emergencyDetails[1];
-    String emergencyWorks = emergencyDetails[2];
-    String emergencyCompletedWorks = emergencyDetails[3];
-    String emergencyInprogressWorks = emergencyDetails[4];
 
     String top50contractors = Contractor.getTop50ContractorsNames();
     String top50contractorsAmount = Contractor.getTop50ContractorsAmount();
@@ -209,9 +242,28 @@
 %>
 <script>
     $(function () {
-        $('#wardExpensesChart').highcharts({
+        $('#wardsDashboardChart').highcharts({
             chart: {
                 type: 'column'
+            },
+            tooltip: {
+                borderRadius: 12,
+                animation: true,
+            },
+            plotOptions: {
+                column: {
+                    borderRadius: 0
+                },
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function () {
+                                window.location = "works.jsp?wardNumber=" + this.category;
+                            }
+                        }
+                    }
+                }
             },
             title: {
                 text: 'Ward wise dashboard'
@@ -220,7 +272,8 @@
                 enabled: true
             },
             xAxis: {
-                categories: [<%=allWardsString%>]
+                categories: [<%=allWardsString%>],
+                text: 'Wards'
             },
             yAxis: {
                 title: {
@@ -229,7 +282,7 @@
             },
             series: [{
                 name: 'Total works',
-                data: [<%=allWardsTotalWorks%>],
+                data: [<%=allWardsWorks%>],
                 visible: false
             }, {
                 name: 'Completed works',
@@ -238,20 +291,29 @@
             }, {
                 name: 'In progress works',
                 data: [<%=allWardsInprogressWorks%>],
+                visible: true
 
             }, {
                 name: 'Total amount spent',
                 data: [<%=allWardsAmountSpent%>],
                 visible: false
-            }, {
-                name: 'Population',
-                data: [<%=allWardsPopulation%>],
-                visible: false
-            }, {
-                name: 'Per Capita Expenditure',
-                data: [<%=allWardsPerCapitaExpenditure%>],
-                visible: false
-            }]
+            }
+                <%
+                if (workTypeParameter == null & yearParameter == null || (yearParameter != null && yearParameter.length == 3)){
+                %>
+                , {
+                    name: 'Population',
+                    data: [<%=allWardsPopulation%>],
+                    visible: false
+                }, {
+                    name: 'Per Capita Expenditure',
+                    data: [<%=allWardsPerCapitaExpenditure%>],
+                    visible: false
+                }
+                <%
+                }
+                %>
+            ]
         });
 
         $('#topContractorsChart').highcharts({
@@ -292,124 +354,16 @@
             }]
         });
 
-        $('#capitalChart').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Ward wise dashboard'
-            },
-            credits: {
-                enabled: true
-            },
-            xAxis: {
-                categories: [<%=allWardsString%>]
-            },
-            yAxis: {
-                title: {
-                    text: 'Magnitude'
-                }
-            },
-            series: [{
-                name: 'Capital works',
-                data: [<%=capitalWorks%>],
-                visible: false
-            }, {
-                name: 'Completed capital works',
-                data: [<%=capitalCompletedWorks%>],
-                visible: false
-            }, {
-                name: 'In progress capital works',
-                data: [<%=capitalInprogressWorks%>],
-
-            }, {
-                name: 'Amount spent on capital works',
-                data: [<%=capitalAmountSpent%>],
-                visible: false
-            }]
-        });
-
-        $('#maintenanceChart').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Maintenance works dashboard'
-            },
-            credits: {
-                enabled: true
-            },
-            xAxis: {
-                categories: [<%=allWardsString%>]
-            },
-            yAxis: {
-                title: {
-                    text: 'Magnitude'
-                }
-            },
-            series: [{
-                name: 'Maintenance works',
-                data: [<%=maintenanceWorks%>],
-                visible: false
-            }, {
-                name: 'Completed maintenance works',
-                data: [<%=maintenanceCompletedWorks%>],
-                visible: false
-            }, {
-                name: 'In progress maintenance works',
-                data: [<%=maintenanceCompletedWorks%>],
-
-            }, {
-                name: 'Amount spent on maintenance works',
-                data: [<%=maintenanceCompletedWorks%>],
-                visible: false
-            }]
-        });
-
-        $('#emergencyChart').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Emergency works dashboard'
-            },
-            credits: {
-                enabled: true
-            },
-            xAxis: {
-                categories: [<%=allWardsString%>]
-            },
-            yAxis: {
-                title: {
-                    text: 'Magnitude'
-                }
-            },
-            series: [{
-                name: 'Emergency works',
-                data: [<%=emergencyWorks%>],
-                visible: false
-            }, {
-                name: 'Completed emergency works',
-                data: [<%=emergencyCompletedWorks%>],
-                visible: false
-            }, {
-                name: 'In progress emergency works',
-                data: [<%=emergencyInprogressWorks%>],
-
-            }, {
-                name: 'Amount spent on emergency ',
-                data: [<%=emergencyAmountSpent%>],
-                visible: false
-            }]
-        });
-
-
     });
 </script>
 <div class="panel-footer" style="text-align: center; margin-top: 5em"> &#169 Hubballi-Dharwad Municipal Corporation 2016
 </div>
 </body>
 <%
-    System.out.println(System.currentTimeMillis() - initialTime);
+    System.out.println("Time taken to load : " + (System.currentTimeMillis() - initialTime));
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+    }
 %>
 </html>

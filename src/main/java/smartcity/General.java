@@ -1,7 +1,10 @@
 package smartcity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Locale;
 
 /**
  * Created by minchu on 15/04/16.
@@ -34,6 +37,7 @@ public class General {
             workDescriptionFinal = workDescriptionKannada;
         }
 
+        workDescriptionFinal = cleanText(workDescriptionFinal);
         return workDescriptionFinal;
     }
 
@@ -73,5 +77,32 @@ public class General {
             }
         }
         return (result+lastDigit);
+    }
+
+    public static Calendar createDate (String dateString){
+
+        dateString = dateString.replaceAll("-"," ");
+        dateString = dateString.substring(0,7) + "20" + dateString.substring(7);
+
+        Calendar date = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
+        try {
+            date.setTime(dateFormat.parse(dateString));
+        }
+        catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return date;
+
+    }
+
+    public static String cleanText (String text){
+        if (text.contains(",,")){
+            text = text.replaceAll(",,","");
+            text = text.substring(0,text.length()-1);
+        }
+        return text;
     }
 }

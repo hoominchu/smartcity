@@ -33,6 +33,7 @@ public class Work implements Comparable<Work> {
     public String statusColor;
     public String year;
     public boolean doWorkDetailsExist;
+    public boolean doBillDetailsExist;
 
     public static ArrayList<Work> allWorks = createWorkObjects(new BasicDBObject());
 
@@ -83,6 +84,7 @@ public class Work implements Comparable<Work> {
             } else {
                 this.doWorkDetailsExist = false;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + " : " + e.getMessage());
@@ -121,7 +123,6 @@ public class Work implements Comparable<Work> {
         if (query != null) {
             cursor = Database.allworks.find(query);
         }
-        int numberOfWorks = cursor.count();
 
         ArrayList<Work> works = new ArrayList<>();
         //int i = 0;
@@ -186,6 +187,14 @@ public class Work implements Comparable<Work> {
 
         //descending order
         //return compareQuantity - this.quantity;
+
+    }
+
+    public boolean checkIfBillDetailsExist (int workID) {
+        BasicDBObject query = new BasicDBObject("Recid",workID);
+        int numOfBills = Database.billspaid.find(query).count();
+
+        return (numOfBills>0);
 
     }
 }
