@@ -10,13 +10,13 @@
 %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.mongodb.BasicDBObject" %>
-<%@ page import="java.util.stream.Stream" %>
-<%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<jsp:include page="/trial" />
 <%
     long initialTime = System.currentTimeMillis();
 
+    String baseLink = "index.jsp?";
     String dynamicLink = General.genLink();
 
     String jumbotronParameter = request.getParameter("jumbotron");
@@ -61,8 +61,6 @@
 
     //System.out.println("Requests processed and query object generated");
 
-    String baseLink = "index.jsp?";
-
     //System.out.println("New link generated");
 
     ArrayList<Work> works = Work.createWorkObjects(query);
@@ -70,8 +68,6 @@
     Ward.createAllWardObjects(works);
     //System.out.println("Ward objects created");
 
-    Contractor.createContractors();
-    //System.out.println("Contractor objects created");
 
     try {
 %>
@@ -188,7 +184,7 @@
 
                 if (jumbotronParameter != null && jumbotronParameter.equals("wardsDashboard")) {
             %>
-            <form method="post" action="<%=dynamicLink%>">
+            <form method="post" action="">
                 <div class="checkbox">
                     <label class="margin-left big-checkbox" style="margin-left: 22%; font-size: 10pt">
                         <input type="checkbox" name="year" value="2014" onchange="this.form.submit()" <%=yearChecked.get(2014)%>> 2014
@@ -259,7 +255,7 @@
                     point: {
                         events: {
                             click: function () {
-                                window.location = "works.jsp?wardNumber=" + this.category;
+                                location.href = "works.jsp?wardNumber=" + this.category;
                             }
                         }
                     }

@@ -57,6 +57,7 @@ public class General {
 
         dynamicLink = dynamicLink.replaceAll("&&","&");
         dynamicLink = dynamicLink.replace("?&","?");
+
         return dynamicLink;
     }
 

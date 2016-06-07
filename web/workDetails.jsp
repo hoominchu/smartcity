@@ -360,6 +360,8 @@
         </tbody>
     </table>
 
+    <h4>Total amount spent is <%=totalSpent%></h4>
+
     <%
         }
         File imageDir = new File(imagePath).getCanonicalFile();

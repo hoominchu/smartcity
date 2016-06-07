@@ -174,10 +174,10 @@
     <div class="panel panel-default round-corner" style="text-align: center">
         <div class="panel-heading round-corner-top">Overview</div>
         <div class="panel-body round-corner">
-            Number of Works : <h4><b><%=numberOfWorksDisplayedString%>
+            Number of Works <h4><b><%=numberOfWorksDisplayedString%>
         </b></h4>
             <hr>
-            Amount Spent : <h4><b><%=amountSpentString%>
+            Amount Spent <h4><b><%=amountSpentString%>
         </b></h4>
         </div>
     </div>
@@ -216,7 +216,7 @@
         </ul>
     </div>
 
-    <table class="table table-responsive sortable" id="myTable"
+    <table class="table table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
 
         <thead>
@@ -250,7 +250,7 @@
                     String workType = works.get(i).workType;
 
                     Calendar completionDate = General.createDate(workCompletionDate);
-                    String rowBG = "";
+                    String dateColor = "";
 
                     String sourceOfIncome = works.get(i).sourceOfIncome;
 
@@ -272,13 +272,13 @@
 
                     boolean highlight;
                     if (today.after(completionDate) && status.equals("Inprogress") && !workCompletionDate.equals(workOrderDate)) {
-                        rowBG = "warning";
+                        dateColor = "red";
                         highlight = true;
                     }
 
                     workDescriptionFinal = General.setWorkDescriptionFinal(languageParameter, workDescriptionEnglish, workDescriptionKannada);
         %>
-        <tr class="<%=rowBG%>">
+        <tr>
             <td style="text-align: center; padding-left: 0.2em"><a
                     href="<%=baseLink%><%=dynamicLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%><br>
                 <% if (works.get(i).doWorkDetailsExist) { %>
@@ -299,7 +299,7 @@
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
-            <td style="text-align: center"><%=workCompletionDate%>
+            <td style="text-align: center; color: <%=dateColor%>"><%=workCompletionDate%>
             </td>
             <td style="text-align: center"><a
                     href="<%=baseLink%><%=dynamicLink%>workTypeID=<%=workTypeID%>"><%=workType%>
