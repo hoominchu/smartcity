@@ -63,6 +63,19 @@ public class General {
 
     public static String rupeeFormat(String value){
         value=value.replace(",","");
+        String decimal = "";
+        String negSign = "";
+
+        if (value.contains(".")) {
+            decimal = value.substring(value.lastIndexOf("."));
+            value = value.replace(decimal, "");
+        }
+
+        if (value.startsWith("-")) {
+            negSign = "-";
+            value = value.replaceFirst("-","");
+        }
+
         char lastDigit=value.charAt(value.length()-1);
         String result = "";
         int len = value.length()-1;
@@ -70,14 +83,57 @@ public class General {
 
         for (int i = len - 1; i >= 0; i--)
         {
-            result = value.charAt(i) + result;
-            nDigits++;
-            if (((nDigits % 2) == 0) && (i > 0))
-            {
-                result = "," + result;
+            if (i <= 8) {
+                result = value.charAt(i) + result;
+                nDigits++;
+                if (((nDigits % 2) == 0) && (i > 0)) {
+                    result = "," + result;
+                }
+            }
+
+            else {
+                continue;
             }
         }
-        return (result+lastDigit);
+        return (negSign+result+lastDigit+decimal);
+    }
+
+    public static String rupeeFormat(int number){
+        String value = new Integer(number).toString();
+        value=value.replace(",","");
+
+        String decimal = "";
+        String negSign = "";
+
+        if (value.contains(".")) {
+            decimal = value.substring(value.lastIndexOf("."));
+            value = value.replace(decimal, "");
+        }
+
+        if (value.startsWith("-")) {
+            negSign = "-";
+            value = value.replaceFirst("-","");
+        }
+
+        char lastDigit=value.charAt(value.length()-1);
+        String result = "";
+        int len = value.length()-1;
+        int nDigits = 0;
+
+        for (int i = len - 1; i >= 0; i--) {
+            if (i <= 8) {
+                result = value.charAt(i) + result;
+                nDigits++;
+                if (((nDigits % 2) == 0) && (i > 0)) {
+                    result = "," + result;
+                }
+            }
+
+            else {
+                continue;
+            }
+        }
+        return (negSign+result+lastDigit+decimal);
     }
 
     public static Calendar createDate (String dateString){
@@ -105,5 +161,30 @@ public class General {
             text = text.substring(0,text.length()-1);
         }
         return text;
+    }
+
+    public static String setBillPaidColor (int amountSanctioned, Integer billPaid) {
+        String billPaidColor = "green";
+
+        if (billPaid.intValue() > amountSanctioned) {
+            billPaidColor = "red";
+        }
+
+        else if (billPaid == 0) {
+            billPaidColor = "black";
+        }
+
+        return billPaidColor;
+    }
+
+    public static int[] convertToIntArray (String[] arrOfString) {
+
+        int[] intArray = new int[arrOfString.length];
+
+        for (int i = 0; i < arrOfString.length; i++) {
+            intArray[i] = Integer.parseInt(arrOfString[i]);
+        }
+
+        return intArray;
     }
 }

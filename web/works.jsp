@@ -55,6 +55,9 @@
     //System.out.println(searchResults.size());
 
     if (searchResults.size() != 0) {
+        String[] results = searchResults.toArray(new String[searchResults.size()]);
+        int[] resultsInt = General.convertToIntArray(results);
+        myQuery.put("Work ID", new BasicDBObject("$in", resultsInt));
         for (Work work : works) {
             //System.out.println(work.workID);
             for (String workID : searchResults) {
@@ -222,14 +225,16 @@
         <thead>
         <tr>
             <th style="width: 3%; padding: 2px; text-align: center">Ward</th>
-            <th style="width: 34%; padding: 2px; text-align: center">Work Description</th>
+            <th style="width: 30%; padding: 2px; text-align: left">Work Description</th>
             <th style="width: 6%; padding: 2px; text-align: center">Work Order Date</th>
             <th style="width: 6%; padding: 2px; text-align: center">Work Completion Date</th>
             <th style="width: 7%; padding: 2px; text-align: center">Work Type</th>
             <th style="width: 3%; padding: 2px; text-align: center">Year</th>
-            <th style="width: 14%; padding: 2px; text-align: center">Source Of Income</th>
-            <th style="width: 13%; padding: 2px; text-align: center">Contractor</th>
+            <th style="width: 10%; padding: 2px; text-align: center">Source Of Income</th>
+            <th style="width: 7%; padding: 2px; text-align: center">Contractor</th>
             <th style="width: 7%; padding: 2px; text-align: center">Amount Sanctioned</th>
+            <th style="width: 7%; padding: 2px; text-align: center">Bill Paid</th>
+            <th style="width: 7%; padding: 2px; text-align: center">Difference</th>
             <th style="width: 7%; padding: 2px; text-align: center">Status</th>
         </tr>
         </thead>
@@ -256,10 +261,13 @@
 
                     String contractor = works.get(i).contractor;
                     String amountSanctionedString = works.get(i).amountSanctionedString;
+                    int amountSanctioned = (int) works.get(i).amountSanctioned;
+                    Integer billPaid = new Integer(works.get(i).billPaid);
+
+                    int difference = amountSanctioned - billPaid;
+
                     String year = works.get(i).year;
 
-                    //Converting string to integer with commas
-                    int amountSanctioned = works.get(i).amountSanctioned;
                     String status = works.get(i).statusfirstLetterCapital;
                     String statusFirstLetterSmall = works.get(i).statusFirstLetterSmall;
 
@@ -269,6 +277,8 @@
                     String contractorID = works.get(i).contractorID;
                     String sourceOfIncomeID = works.get(i).sourceOfIncomeID;
                     String statusColor = works.get(i).statusColor;
+
+                    String billPaidColor = General.setBillPaidColor(amountSanctioned, billPaid);
 
                     boolean highlight;
                     if (today.after(completionDate) && status.equals("Inprogress") && !workCompletionDate.equals(workOrderDate)) {
@@ -281,14 +291,7 @@
         <tr>
             <td style="text-align: center; padding-left: 0.2em"><a
                     href="<%=baseLink%><%=dynamicLink%>wardNumber=<%=wardNumber%>"><%=wardNumber%><br>
-                <% if (works.get(i).doWorkDetailsExist) { %>
             </a>
-                <br>
-                <i class="fa fa-list-ul"
-                   style="font-size: 10pt;"
-                   aria-hidden="true" title="This work has more details"></i>
-                <% }
-                %>
 
             </td>
 
@@ -296,6 +299,14 @@
                 <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=billDetails">
                     <%=workDescriptionFinal%>
                 </a>
+                <% if (works.get(i).doWorkDetailsExist) { %>
+
+                <br>
+                <i class="fa fa-list-ul"
+                   style="font-size: 10pt; margin-top: 2px"
+                   aria-hidden="true" title="This work has more details"></i>
+                <% }
+                %>
             </td>
             <td style="text-align: center"><%=workOrderDate%>
             </td>
@@ -318,6 +329,35 @@
             </a>
             </td>
             <td style="text-align: center"><%=General.rupeeFormat(amountSanctionedString)%>
+            </td>
+            <td style="text-align: center; color: <%=billPaidColor%>">
+                <%
+                    if (billPaid > 0) {
+                %><%=General.rupeeFormat(billPaid.toString())%>
+                <%
+                } else {
+                %>
+                NA
+                <%
+                    }
+                %>
+            </td>
+            <td style="text-align: center; color: <%=billPaidColor%>">
+                <%
+                    if (difference != 0 && billPaid > 0) {
+                %><%=General.rupeeFormat(difference)%>
+                <%
+                } else if (difference == 0) {
+                    %>
+                Exact amount has been paid
+                <%
+                }
+                else if (billPaid == 0){
+                %>
+                NA
+                <%
+                    }
+                %>
             </td>
             <td style="text-align: left; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
                     href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>

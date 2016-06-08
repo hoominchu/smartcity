@@ -23,6 +23,7 @@
     String jumbotronParameter = request.getParameter("jumbotron");
 
     String baseLink = "workDetails.jsp";
+    String worksPage = "works.jsp?";
 
     String imagePath = "images/works/71108";
 
@@ -184,7 +185,8 @@
         <table>
             <tbody>
             <tr style="padding-bottom: 10px; text-align: center">
-            Total bill paid : <b>&#8377 <%=General.rupeeFormat(new Integer(totalBillPaid).toString())%></b>
+                Total bill paid : <b>&#8377 <%=General.rupeeFormat(new Integer(totalBillPaid).toString())%>
+            </b>
             </tr>
             </tbody>
         </table>
@@ -213,22 +215,29 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td> Ward : <b><%=work.get(0).wardNumber%>
+                            <td> Ward : <b><a
+                                    href="<%=worksPage%>wardNumber=<%=work.get(0).wardNumber%>"><%=work.get(0).wardNumber%>
+                            </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Type : <b><%=work.get(0).workType%>
+                            <td> Work Type : <b><a
+                                    href="<%=worksPage%>workTypeID=<%=work.get(0).workTypeID%>"><%=work.get(0).workType%>
+                            </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Source of Income : <b><%=work.get(0).sourceOfIncome%>
+                            <td> Source of Income : <b><a
+                                    href="<%=worksPage%>sourceOfIncomeID=<%=work.get(0).sourceOfIncomeID%>"><%=work.get(0).sourceOfIncome%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Year : <b><%=work.get(0).year%>
+                            <td> Year : <b><a
+                                    href="<%=worksPage%>year=<%=work.get(0).year%>"><%=work.get(0).year%>
+                            </a>
                             </b>
                             </td>
                         </tr>
@@ -243,7 +252,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <td> Contractor : <b><%=work.get(0).contractor%>
+                            <td> Contractor : <b><a
+                                    href="<%=worksPage%>contractorID=<%=work.get(0).contractorID%>"><%=work.get(0).contractor%>
+                            </a>
                             </b>
                             </td>
                         </tr>
@@ -360,7 +371,8 @@
         </tbody>
     </table>
 
-    <h4>Total amount spent is <%=totalSpent%></h4>
+    <h4>Total amount spent is &#8377 <%=General.rupeeFormat(new Long(totalSpent.longValue()).toString())%>
+    </h4>
 
     <%
         }

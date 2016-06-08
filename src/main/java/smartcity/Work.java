@@ -33,7 +33,7 @@ public class Work implements Comparable<Work> {
     public String statusColor;
     public String year;
     public boolean doWorkDetailsExist;
-    public boolean doBillDetailsExist;
+    public int billPaid;
 
     public static ArrayList<Work> allWorks = createWorkObjects(new BasicDBObject());
 
@@ -61,6 +61,8 @@ public class Work implements Comparable<Work> {
             Double temp = Double.parseDouble(amountSanctionedString);
             this.amountSanctioned = temp.intValue();
             // IndianCurrencyFormat.format(Double.parseDouble(amountSanctionedString));
+
+            this.billPaid = (int) workObject.get("Total bill amount paid");
 
             this.year = workObject.get("Year").toString();
 

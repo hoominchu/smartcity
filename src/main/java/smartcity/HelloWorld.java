@@ -15,6 +15,8 @@ public class HelloWorld extends HttpServlet {
 
         Contractor.createContractors();
         //System.out.println("Contractor objects created");
+
+        //EveryNightScripts.updateBillsPaidInDB();
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
