@@ -68,6 +68,8 @@
             on
             any work and discuss about it with fellow citizens thus creating a productive social network space.
         </p>
+
+        <p>If you are interested in working with us please email us at <b>inspection.hdmc@gmail.com</b>.</p>
     </div>
     <hr>
     <h2>Features</h2>
@@ -166,7 +168,7 @@
     <div style="margin: 2em">
         <div class="row>">
             <div class="col-sm-5">
-                <img src="images/about/ashoka-logo.png" height="80px" style="margin-bottom: 3em;">
+                <img src="images/about/TCPD-Logo.png" height="80px" style="margin-bottom: 3em;">
             </div>
         </div>
     </div>

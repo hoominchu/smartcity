@@ -158,7 +158,7 @@
                 <button type="submit" class="btn btn-primary round-corner-right pull-right"
                         style="display: inline-block; height: 39px"> See all works
                 </button>
-                <a href="works.jsp?year=2016" class="btn btn-primary round-corner-left pull-right"
+                <a href="works.jsp?recent=true" class="btn btn-primary round-corner-left pull-right"
                         style="display: inline-block; height: 39px"> See recent works
                 </a>
 

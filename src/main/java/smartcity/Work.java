@@ -43,8 +43,6 @@ public class Work implements Comparable<Work> {
     public Work(DBObject workObject) {
 
         try {
-            DecimalFormat IndianCurrencyFormat = new DecimalFormat("##,##,##,###.0");
-
             this.workObjectID = workObject.get("_id").toString();
 
             this.wardNumber = (int) workObject.get("Ward Number");
@@ -159,26 +157,12 @@ public class Work implements Comparable<Work> {
         @Override
         public int compare(Work w1, Work w2) {
 
-            Calendar date1 = General.createDate(w1.tenderApprovalDate);
-            Calendar date2 = General.createDate(w2.tenderApprovalDate);
-
-            /*
-            float compareQuantity1 = w1.amountSanctioned / 1000;
-            float compareQuantity2 = w2.amountSanctioned / 1000;
-
-            if (w1.statusfirstLetterCapital.equals("Inprogress")) {
-                compareQuantity1 = compareQuantity1 * 1000;
-            }
-
-            if (w2.statusfirstLetterCapital.equals("Inprogress")) {
-                compareQuantity2 = compareQuantity2 * 1000;
-            }
-            */
+            //Calendar date1 = General.createDate(w1.tenderApprovalDate);
+            //Calendar date2 = General.createDate(w2.tenderApprovalDate);
+            
             int val = 0;
-            if (date1.before(date2)) {
+            if (Integer.parseInt(w1.workID) < Integer.parseInt(w2.workID)) {
                 val = 1;
-            } else if (date2.before(date1)) {
-                val = -1;
             } else {
                 val = 0;
             }
@@ -205,5 +189,22 @@ public class Work implements Comparable<Work> {
 
         return (numOfBills>0);
 
+    }
+
+    public static ArrayList<Work> getRecentWorks () {
+        List<Work> works = new ArrayList<>();
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        BasicDBObject query = new BasicDBObject();
+        //query.put("Year",currentYear);
+        //query.put("Year",currentYear-1);
+        //query.put("Year",currentYear-2);
+
+        works = Work.createWorkObjects(query);
+
+        List<Work> recentWorksList = works.subList(0,500);
+
+        ArrayList<Work> recentWorks = new ArrayList<>(recentWorksList);
+
+        return recentWorks;
     }
 }

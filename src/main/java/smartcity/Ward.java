@@ -162,7 +162,7 @@ public class Ward {
         String allWardsPopulation = "";
         String allWardsPerCapitaExpenditure = "";
 
-        for (int i = 0; i < allwards.length; i++) {
+        for (int i = 0; i < 67; i++) {
             allWardNumbersString = allWardNumbersString + allwards[i].wardNumber + ",";
             allWardsAmountSpent = allWardsAmountSpent + allwards[i].amountSpent + ",";
             allWardsTotalWorks = allWardsTotalWorks + allwards[i].totalWorks + ",";

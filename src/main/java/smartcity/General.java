@@ -1,8 +1,10 @@
 package smartcity;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -138,11 +140,10 @@ public class General {
 
     public static Calendar createDate (String dateString){
 
-        dateString = dateString.replaceAll("-"," ");
         dateString = dateString.substring(0,7) + "20" + dateString.substring(7);
 
         Calendar date = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
         try {
             date.setTime(dateFormat.parse(dateString));
@@ -190,18 +191,22 @@ public class General {
 
     public static String customSortKeySortTableJS (String dateString) {
 
-        Calendar date = createDate(dateString);
+        dateString = dateString.substring(0,7) + "20" + dateString.substring(7);
 
-        String year = String.valueOf(date.YEAR);
-        String month = String.valueOf(date.MONTH);
-        String day = String.valueOf(date.DATE);
+        DateFormat originalFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        DateFormat targetFormat = new SimpleDateFormat("yyyyMMdd");
+        String retString = "";
 
-        if (month.length() == 1) {
-            month = "0" + month;
+        try {
+            Date date = originalFormat.parse(dateString);
+            String formattedDate = targetFormat.format(date);
+            retString = formattedDate+"000000";
         }
-
-        String retString = year+month+day+"000000";
-
-        return retString;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            return retString;
+        }
     }
 }

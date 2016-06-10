@@ -18,6 +18,8 @@
 
     String languageParameter = request.getParameter("language");
 
+    String showRecentParameter = request.getParameter("recent");
+
     String searchPlaceholder = "Enter your search query here...";
 
     String queryString = request.getParameter("queryString");
@@ -38,9 +40,15 @@
 
     //DBCursor cursor = Database.allworks.find(myQuery);
 
-    ArrayList<Work> works = Work.createWorkObjects(myQuery);
+    List<Work> works = new ArrayList<Work>();
     System.out.println("Work objects created");
 
+    if (showRecentParameter != null && showRecentParameter.equals("true")) {
+        works = Work.getRecentWorks();
+    }
+    else {
+        works = Work.createWorkObjects(myQuery);
+    }
     Set<Work> worksTODisplay = new HashSet<>();
 
     Set<String> searchResults = new HashSet<>();
@@ -310,9 +318,9 @@
                 <% }
                 %>
             </td>
-            <td style="text-align: center"><%=workOrderDate%>
+            <td sorttable_customkey="<%=General.customSortKeySortTableJS(workOrderDate)%>" style="text-align: center"><%=workOrderDate%>
             </td>
-            <td style="text-align: center; color: <%=dateColor%>"><%=workCompletionDate%>
+            <td sorttable_customkey="<%=General.customSortKeySortTableJS(workCompletionDate)%>" style="text-align: center; color: <%=dateColor%>"><%=workCompletionDate%>
             </td>
             <td style="text-align: center"><a
                     href="<%=baseLink%><%=dynamicLink%>workTypeID=<%=workTypeID%>"><%=workType%>
@@ -374,7 +382,7 @@
         %>
         </tbody>
     </table>
-    <a href="#" class="scrollup">Go to top</a>
+    <a href="#" class="scrollup round-corner">Go to top</a>
     <%
     } else {
     %>
