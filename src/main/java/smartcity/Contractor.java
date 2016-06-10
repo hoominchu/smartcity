@@ -56,10 +56,17 @@ public class Contractor {
 
         Set<Contractor> contractorsSet = new HashSet<Contractor>();
 
-        for (int i = 0; i < Work.allWorks.size(); i++){
-            //System.out.println("Contractor : " + i);
-            Contractor c = new Contractor(Work.allWorks.get(i).contractorID, Work.allWorks.get(i).contractor);
-            contractorsSet.add(c);
+        try {
+            for (int i = 0; i < Work.allWorks.size(); i++) {
+                //System.out.println("Contractor : " + i);
+                //System.out.println("Contractor: " + Work.allWorks.get(i).contractor);
+                //System.out.println("Work ID " + Work.allWorks.get(i).workID);
+                Contractor c = new Contractor(Work.allWorks.get(i).contractorID, Work.allWorks.get(i).contractor);
+                contractorsSet.add(c);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
         contractors = new ArrayList(contractorsSet);

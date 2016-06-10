@@ -215,7 +215,7 @@
         <ul class="dropdown-menu">
             <li><a href="#" onClick="$('#myTable').tableExport({type:'pdf',pdfFontSize:'7',escape:'false'});">PDF</a>
             </li>
-            <li><a href="#" onClick="$('#myTable').tableExport({type:'excel',escape:'false'});">MS Excel</a></li>
+            <li><a href="#" onClick="$('#myTable').tableExport({type:'csv',escape:'false'});">CSV</a></li>
         </ul>
     </div>
 
@@ -277,6 +277,8 @@
                     String contractorID = works.get(i).contractorID;
                     String sourceOfIncomeID = works.get(i).sourceOfIncomeID;
                     String statusColor = works.get(i).statusColor;
+                    //String tenderApprovalDate = works.get(i).tenderApprovalDate;
+                    //String customSortKeyTenderDate = General.customSortKeySortTableJS(tenderApprovalDate);
 
                     String billPaidColor = General.setBillPaidColor(amountSanctioned, billPaid);
 
@@ -337,7 +339,7 @@
                 <%
                 } else {
                 %>
-                NA
+                Not paid
                 <%
                     }
                 %>
@@ -396,7 +398,34 @@
     %>
 </div>
 
-<div class="panel-footer" style="text-align: center"> &#169 Hubballi-Dharwad Municipal Corporation 2016
+<div class="panel-footer" style="text-align: center; color: grey"> <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small><br>
+    <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
+</div>
+
+<div class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content round-corner">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+                <p><h5><b>For any queries or suggestions </b></h5></p>
+                Email us at &mdash; <b>inspection.hdmc@gmail.com</b><br>
+                Call us on &mdash; <b>+91 0836 2213888</b></p>
+                <hr>
+                <p><h5><b>Our Address</b></h5></p>
+                <p>MIS Cell, <br>
+                    Hubli-Dharwad Municipal Corporation, <br>
+                    Sir Siddappa Kambli Road, <br>
+                    Hubballi - 580028
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default round-corner" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

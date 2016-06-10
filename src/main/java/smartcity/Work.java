@@ -5,6 +5,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -34,6 +35,7 @@ public class Work implements Comparable<Work> {
     public String year;
     public boolean doWorkDetailsExist;
     public int billPaid;
+    public String tenderApprovalDate;
 
     public static ArrayList<Work> allWorks = createWorkObjects(new BasicDBObject());
 
@@ -74,6 +76,7 @@ public class Work implements Comparable<Work> {
             this.workTypeID = workObject.get("Work Type ID").toString();
             this.contractorID = workObject.get("Contractor ID").toString();
             this.sourceOfIncomeID = workObject.get("Source of Income ID").toString();
+            this.tenderApprovalDate = workObject.get("Tender Approval Date").toString();
 
             if (this.statusfirstLetterCapital.equals("Completed")) {
                 this.statusColor = "43ac6a";
@@ -143,7 +146,7 @@ public class Work implements Comparable<Work> {
 
         try {
             //ArrayList<Work> worksList = new ArrayList<Work>(Arrays.asList(works));
-            Collections.sort(works, compareWorks);
+            //Collections.sort(works, compareWorks);
             //Arrays.sort(works, compareWorks);
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,6 +159,10 @@ public class Work implements Comparable<Work> {
         @Override
         public int compare(Work w1, Work w2) {
 
+            Calendar date1 = General.createDate(w1.tenderApprovalDate);
+            Calendar date2 = General.createDate(w2.tenderApprovalDate);
+
+            /*
             float compareQuantity1 = w1.amountSanctioned / 1000;
             float compareQuantity2 = w2.amountSanctioned / 1000;
 
@@ -166,11 +173,11 @@ public class Work implements Comparable<Work> {
             if (w2.statusfirstLetterCapital.equals("Inprogress")) {
                 compareQuantity2 = compareQuantity2 * 1000;
             }
-
+            */
             int val = 0;
-            if (compareQuantity1 < compareQuantity2) {
+            if (date1.before(date2)) {
                 val = 1;
-            } else if (compareQuantity1 > compareQuantity2) {
+            } else if (date2.before(date1)) {
                 val = -1;
             } else {
                 val = 0;

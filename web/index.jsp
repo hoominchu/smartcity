@@ -90,6 +90,7 @@
     </script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
     <script>
         window.x = document.getElementById("demo");
@@ -105,9 +106,6 @@
                     "<br>Longitude: " + position.coords.longitude;
         }
     </script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
-
     <script>
         function initMap() {
             var mapDiv = document.getElementById('map');
@@ -139,8 +137,12 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px;"><a href="<%=baseLink%>language=kannada">ಕನ್ನಡ</a> | <a
-            href="<%=baseLink%>">English</a></div>
+    <div class="pull-right" style="margin-top:40px; text-align: right"><a href="<%=baseLink%>language=kannada">ಕನ್ನಡ</a> | <a
+            href="<%=baseLink%>">English</a><br><br>
+        <a href="about.jsp"> About </a> <br><br>
+            <a data-toggle="modal" data-target=".modal"> Contact</a>
+    </div>
+
 
         </span>
     <div style="margin-bottom: 2em">
@@ -148,14 +150,18 @@
             <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
                 <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
                        placeholder="Enter your search query here..."
-                       style="display: inline-block; width: 75%">
+                       style="display: inline-block; width: 68%">
                 <button type="submit" class="btn btn-primary round-corner-right"
-                        style="display: inline-block; margin-top: -4px; margin-left: -4px; height: 39px"><i
+                        style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px"><i
                         class="fa fa-search white-icon" aria-hidden="true"></i> Search
                 </button>
-                <button type="submit" class="btn btn-primary round-corner pull-right"
+                <button type="submit" class="btn btn-primary round-corner-right pull-right"
                         style="display: inline-block; height: 39px"> See all works
                 </button>
+                <a href="works.jsp?year=2016" class="btn btn-primary round-corner-left pull-right"
+                        style="display: inline-block; height: 39px"> See recent works
+                </a>
+
             </div>
         </form>
 
@@ -167,18 +173,18 @@
                 Contractors</a>
         </div>
 
-        <div class="jumbotron round-corner-bottom" style="height: 26em; padding: 0px; margin: 0px">
+        <div class="jumbotron round-corner-bottom" style="padding: 0px; margin: 0px">
 
             <%
                 if ((jumbotronParameter == null && workTypeParameter == null) || jumbotronParameter != null && jumbotronParameter.equals("map")) {
             %>
-            <div id="map" class="round-corner-bottom" style="width:100%; height: 100%; position: relative"></div>
+            <div id="map" class="round-corner-bottom" style="width:100%; height: 26em; position: relative"></div>
             <%
             } else if (jumbotronParameter != null && jumbotronParameter.equals("wardsDashboard")) { %>
-            <div id="wardsDashboardChart" style="width:100%; height:100%;"></div>
+            <div id="wardsDashboardChart" style="width:100%; height:26em;"></div>
             <%
             } else if ((jumbotronParameter != null && workTypeParameter == null) && jumbotronParameter.equals("topContractors")) { %>
-            <div id="topContractorsChart" style="width:100%; height:100%;"></div>
+            <div id="topContractorsChart" style="width:100%; height:26em;"></div>
             <%
                 }
 
@@ -312,6 +318,7 @@
             ]
         });
 
+
         $('#topContractorsChart').highcharts({
             chart: {
                 type: 'column'
@@ -352,8 +359,36 @@
 
     });
 </script>
-<div class="panel-footer" style="text-align: center; margin-top: 5em"> &#169 Hubballi-Dharwad Municipal Corporation 2016
+<div class="panel-footer" style="text-align: center; color: grey"> <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small><br>
+    <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>
+
+<div class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content round-corner">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+                <p><h5><b>For any queries or suggestions </b></h5></p>
+                    Email us at &mdash; <b>inspection.hdmc@gmail.com</b><br>
+                Call us on &mdash; <b>+91 0836 2213888</b></p>
+                <hr>
+                <p><h5><b>Our Address</b></h5></p>
+                <p>MIS Cell, <br>
+                    Hubli-Dharwad Municipal Corporation, <br>
+                    Sir Siddappa Kambli Road, <br>
+                    Hubballi - 580028
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default round-corner" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <%
     System.out.println("Time taken to load : " + (System.currentTimeMillis() - initialTime));

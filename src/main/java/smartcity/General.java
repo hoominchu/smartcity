@@ -187,4 +187,21 @@ public class General {
 
         return intArray;
     }
+
+    public static String customSortKeySortTableJS (String dateString) {
+
+        Calendar date = createDate(dateString);
+
+        String year = String.valueOf(date.YEAR);
+        String month = String.valueOf(date.MONTH);
+        String day = String.valueOf(date.DATE);
+
+        if (month.length() == 1) {
+            month = "0" + month;
+        }
+
+        String retString = year+month+day+"000000";
+
+        return retString;
+    }
 }

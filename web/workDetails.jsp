@@ -22,7 +22,7 @@
     String workIDParameter = request.getParameter("workID");
     String jumbotronParameter = request.getParameter("jumbotron");
 
-    String baseLink = "workDetails.jsp";
+    String baseLink = "workDetails.jsp?";
     String worksPage = "works.jsp?";
 
     String imagePath = "images/works/71108";
@@ -64,18 +64,6 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 
-    <style>
-        /* the slides */
-        .slick-slide {
-            margin: 0 10px;
-        }
-
-        /* the parent */
-        .slick-list {
-            margin: 0 -10px;
-        }
-    </style>
-
 </head>
 <body>
 
@@ -99,10 +87,10 @@
     </div>
 
     <div class="btn-group btn-group-justified">
-        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=billDetails"
+        <a href="<%=baseLink%>workID=<%=workIDParameter%>&jumbotron=billDetails"
            class="btn btn-default round-corner-top-left">Billing Details</a>
-        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=map" class="btn btn-default round-corner-top-left">Map</a>
-        <a href="<%=baseLink%>?workID=<%=workIDParameter%>&jumbotron=info"
+        <a href="<%=baseLink%>workID=<%=workIDParameter%>&jumbotron=map" class="btn btn-default round-corner-top-left">Map</a>
+        <a href="<%=baseLink%>workID=<%=workIDParameter%>&jumbotron=info"
            class="btn btn-default round-corner-top-right">Work Info</a>
     </div>
 
@@ -207,52 +195,52 @@
         %>
         <div id="workInfo" style="width: 100%; position: relative;">
             <div class="panel panel-default">
-                <div class="panel-body" style=" text-align: center">
+                <div class="panel-body">
 
-                    <table class="table table-striped table-hover" style="font-size: 10pt; text-align: center">
+                    <table class="table table-striped table-hover" style="font-size: 10pt;">
                         <thead>
 
                         </thead>
                         <tbody>
                         <tr>
-                            <td> Ward : <b><a
+                            <td style="text-align: right; width: 50%"> Ward : </td><td style="text-align: left"><b><a
                                     href="<%=worksPage%>wardNumber=<%=work.get(0).wardNumber%>"><%=work.get(0).wardNumber%>
                             </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Type : <b><a
+                            <td style="text-align: right; width: 50%"> Work Type : </td><td style="text-align: left"><b><a
                                     href="<%=worksPage%>workTypeID=<%=work.get(0).workTypeID%>"><%=work.get(0).workType%>
                             </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Source of Income : <b><a
+                            <td style="text-align: right; width: 50%"> Source of Income : </td><td style="text-align: left"><b><a
                                     href="<%=worksPage%>sourceOfIncomeID=<%=work.get(0).sourceOfIncomeID%>"><%=work.get(0).sourceOfIncome%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Year : <b><a
+                            <td style="text-align: right; width: 50%"> Year : </td><td style="text-align: left"><b><a
                                     href="<%=worksPage%>year=<%=work.get(0).year%>"><%=work.get(0).year%>
                             </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Order Date : <b><%=work.get(0).workOrderDate%>
+                            <td style="text-align: right; width: 50%"> Work Order Date : </td><td style="text-align: left"><b><%=work.get(0).workOrderDate%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Work Completion Date : <b><%=work.get(0).workCompletionDate%>
+                            <td style="text-align: right; width: 50%"> Work Completion Date : </td><td style="text-align: left"><b><%=work.get(0).workCompletionDate%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td> Contractor : <b><a
+                            <td style="text-align: right; width: 50%"> Contractor : </td><td style="text-align: left"><b><a
                                     href="<%=worksPage%>contractorID=<%=work.get(0).contractorID%>"><%=work.get(0).contractor%>
                             </a>
                             </b>
@@ -260,19 +248,19 @@
                         </tr>
 
                         <tr>
-                            <td> Contractor's contact : <b>+91 93 22 323213</b>
+                            <td style="text-align: right; width: 50%"> Contractor's contact : </td><td style="text-align: left"><b>+91 93 22 323213</b>
                             </td>
                         </tr>
 
                         <tr>
-                            <td> Amount Sanctioned : <b>
+                            <td style="text-align: right; width: 50%"> Amount Sanctioned : </td><td style="text-align: left"><b>
                                 &#8377 <%=General.rupeeFormat(work.get(0).amountSanctionedString)%>
                             </b>
                             </td>
                         </tr>
 
                         <tr>
-                            <td> Amount Paid : <b><%
+                            <td style="text-align: right; width: 50%"> Amount Paid : </td><td style="text-align: left"><b><%
                                 if (totalBillPaid != 0) { %>
                                 &#8377 <%=General.rupeeFormat(new Integer(totalBillPaid).toString())%>
                                 <%
@@ -287,11 +275,18 @@
                         </tr>
 
                         <tr class="<%=statusColorParameter%>">
-                            <td> Status : <b
+                            <td style="text-align: right; width: 50%"> Status : </td><td style="text-align: left"><b
                                     style="color: <%=work.get(0).statusColor%>"><%=work.get(0).statusfirstLetterCapital%>
                             </b>
                             </td>
                         </tr>
+                        <%
+                            if (work.get(0).statusfirstLetterCapital.equals("Completed")) {
+                        %>
+                        <tr><td style="padding-top: 12px; height: 2em; text-align: center; font-size: 10pt">If you are unsatisfied with the quality of this work or have any other complaints, <a href="http://www.mrc.gov.in/janahita/LoadGrievanceForm"> click here.</a></td></tr>
+                        <%
+                            }
+                        %>
                         </tbody>
                     </table>
                 </div>
@@ -388,7 +383,7 @@
         <%
             for (int i = 0; i < 4; i++) {
         %>
-        <div class="slick-slide"><img src="images/works/71108/<%=i%>.jpg" style="height: 18em"></div>
+        <div class="slick-slide"><img src="images/works/71108/<%=i%>.jpg" style="height: 18em; opacity: 0.4"><h4>Add photos here</h4></div>
         <%
             }
         %>
@@ -402,12 +397,12 @@
          * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
          * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
          */
-        /*
+
          var disqus_config = function () {
-         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
-         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         //this.page.url = URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = <%=workIDParameter%>; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
          };
-         */
+
         (function () { // DON'T EDIT BELOW THIS LINE
             var d = document, s = d.createElement('script');
 
@@ -453,6 +448,34 @@
     });
 </script>
 
-<div class="panel-footer" style="text-align: center"> &#169 Hubballi-Dharwad Municipal Corporation 2016</div>
+<div class="panel-footer" style="text-align: center; color: grey"> <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small><br>
+    <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
+</div>
+
+<div class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content round-corner">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+                <p><h5><b>For any queries or suggestions </b></h5></p>
+                Email us at &mdash; <b>inspection.hdmc@gmail.com</b><br>
+                Call us on &mdash; <b>+91 0836 2213888</b></p>
+                <hr>
+                <p><h5><b>Our Address</b></h5></p>
+                <p>MIS Cell, <br>
+                    Hubli-Dharwad Municipal Corporation, <br>
+                    Sir Siddappa Kambli Road, <br>
+                    Hubballi - 580028
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default round-corner" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

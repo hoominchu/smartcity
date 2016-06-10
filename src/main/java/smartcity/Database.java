@@ -9,7 +9,7 @@ public class Database {
 
     public static MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017));
     public static Mongo mongo = new Mongo();
-    public static DB db = mongo.getDB("smartcitydb");
+    public static DB db = mongo.getDB("scdb");
 
     public static DBCollection allworks = db.getCollection("allworks");
     public static DBCollection workDetailsCollection = db.getCollection("workdetails");

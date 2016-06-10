@@ -102,3 +102,43 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     width: 30px;
     height: 30px;
 }
+.about-slide {
+    z-index: -100;
+    background-color: white;
+}
+.about-description {
+    position: relative;
+    left: 20px;
+    z-index: 0;
+    background-color: white;
+
+}
+/* the slides */
+.slick-slide {
+    margin: 0 10px;
+}
+
+/* the parent */
+.slick-list {
+    margin: 0 -10px;
+}
+
+.name {
+    margin: 0.7em;
+    font-weight: bold;
+    margin-top: 1.2em;
+}
+.designation {
+    margin: 0.7em;
+    font-weight: lighter;
+}
+#about-project {
+    margin: 3em;
+}
+.about-images {
+    margin-bottom: 6em;
+    margin-top: 3em;
+}
+.about-person {
+    margin: 0.7em;
+}
