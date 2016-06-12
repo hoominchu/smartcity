@@ -78,6 +78,32 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
+    <div class="pull-right" style="margin-top:40px; text-align: right">
+        <a href="about.jsp"> About </a> <br><br>
+        <a data-toggle="modal" data-target=".modal"> Contact</a>
+    </div>
+
+    <div style="margin-bottom: 2em">
+        <form method="post" action="works.jsp">
+            <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
+                <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
+                       placeholder="Enter your search query here..."
+                       style="display: inline-block; width: 65%">
+                <button type="submit" class="btn btn-primary round-corner-right"
+                        style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px">
+                    <i
+                            class="fa fa-search white-icon" aria-hidden="true"></i> Search
+                </button>
+                <button type="submit" class="btn btn-primary round-corner-right pull-right"
+                        style="display: inline-block; height: 39px"> See all works
+                </button>
+                <a href="works.jsp?recent=true" class="btn btn-primary round-corner-left pull-right"
+                   style="display: inline-block; height: 39px"> See recent works
+                </a>
+
+            </div>
+        </form>
+    </div>
 
     <div class="panel panel-default round-corner" style="text-align: center">
         <div class="panel-heading round-corner-top">Description</div>
@@ -203,44 +229,51 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Ward : </td><td style="text-align: left"><b><a
+                            <td style="text-align: right; width: 50%"> Ward :</td>
+                            <td style="text-align: left"><b><a
                                     href="<%=worksPage%>wardNumber=<%=work.get(0).wardNumber%>"><%=work.get(0).wardNumber%>
                             </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Work Type : </td><td style="text-align: left"><b><a
+                            <td style="text-align: right; width: 50%"> Work Type :</td>
+                            <td style="text-align: left"><b><a
                                     href="<%=worksPage%>workTypeID=<%=work.get(0).workTypeID%>"><%=work.get(0).workType%>
                             </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Source of Income : </td><td style="text-align: left"><b><a
+                            <td style="text-align: right; width: 50%"> Source of Income :</td>
+                            <td style="text-align: left"><b><a
                                     href="<%=worksPage%>sourceOfIncomeID=<%=work.get(0).sourceOfIncomeID%>"><%=work.get(0).sourceOfIncome%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Year : </td><td style="text-align: left"><b><a
+                            <td style="text-align: right; width: 50%"> Year :</td>
+                            <td style="text-align: left"><b><a
                                     href="<%=worksPage%>year=<%=work.get(0).year%>"><%=work.get(0).year%>
                             </a>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Work Order Date : </td><td style="text-align: left"><b><%=work.get(0).workOrderDate%>
+                            <td style="text-align: right; width: 50%"> Work Order Date :</td>
+                            <td style="text-align: left"><b><%=work.get(0).workOrderDate%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Work Completion Date : </td><td style="text-align: left"><b><%=work.get(0).workCompletionDate%>
+                            <td style="text-align: right; width: 50%"> Work Completion Date :</td>
+                            <td style="text-align: left"><b><%=work.get(0).workCompletionDate%>
                             </b>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 50%"> Contractor : </td><td style="text-align: left"><b><a
+                            <td style="text-align: right; width: 50%"> Contractor :</td>
+                            <td style="text-align: left"><b><a
                                     href="<%=worksPage%>contractorID=<%=work.get(0).contractorID%>"><%=work.get(0).contractor%>
                             </a>
                             </b>
@@ -248,19 +281,22 @@
                         </tr>
 
                         <tr>
-                            <td style="text-align: right; width: 50%"> Contractor's contact : </td><td style="text-align: left"><b>+91 93 22 323213</b>
+                            <td style="text-align: right; width: 50%"> Contractor's contact :</td>
+                            <td style="text-align: left"><b>+91 93 22 323213</b>
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="text-align: right; width: 50%"> Amount Sanctioned : </td><td style="text-align: left"><b>
+                            <td style="text-align: right; width: 50%"> Amount Sanctioned :</td>
+                            <td style="text-align: left"><b>
                                 &#8377 <%=General.rupeeFormat(work.get(0).amountSanctionedString)%>
                             </b>
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="text-align: right; width: 50%"> Amount Paid : </td><td style="text-align: left"><b><%
+                            <td style="text-align: right; width: 50%"> Amount Paid :</td>
+                            <td style="text-align: left"><b><%
                                 if (totalBillPaid != 0) { %>
                                 &#8377 <%=General.rupeeFormat(new Integer(totalBillPaid).toString())%>
                                 <%
@@ -275,7 +311,8 @@
                         </tr>
 
                         <tr class="<%=statusColorParameter%>">
-                            <td style="text-align: right; width: 50%"> Status : </td><td style="text-align: left"><b
+                            <td style="text-align: right; width: 50%"> Status :</td>
+                            <td style="text-align: left"><b
                                     style="color: <%=work.get(0).statusColor%>"><%=work.get(0).statusfirstLetterCapital%>
                             </b>
                             </td>
@@ -283,7 +320,11 @@
                         <%
                             if (work.get(0).statusfirstLetterCapital.equals("Completed")) {
                         %>
-                        <tr><td style="padding-top: 12px; height: 2em; text-align: center; font-size: 10pt">If you are unsatisfied with the quality of this work or have any other complaints, <a href="http://www.mrc.gov.in/janahita/LoadGrievanceForm"> click here.</a></td></tr>
+                        <tr>
+                            <td style="padding-top: 12px; height: 2em; text-align: center; font-size: 10pt">If you are
+                                unsatisfied with the quality of this work or have any other complaints, <a
+                                        href="http://www.mrc.gov.in/janahita/LoadGrievanceForm"> click here.</a></td>
+                        </tr>
                         <%
                             }
                         %>
@@ -383,7 +424,8 @@
         <%
             for (int i = 0; i < 4; i++) {
         %>
-        <div class="slick-slide"><img src="images/works/71108/<%=i%>.jpg" style="height: 18em; opacity: 0.4"><h4>Add photos here</h4></div>
+        <div class="slick-slide"><img src="images/works/71108/<%=i%>.jpg" style="height: 18em; opacity: 0.4"><h4>Add
+            photos here</h4></div>
         <%
             }
         %>
@@ -398,10 +440,10 @@
          * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
          */
 
-         var disqus_config = function () {
-         //this.page.url = URL; // Replace PAGE_URL with your page's canonical URL variable
-         this.page.identifier = <%=workIDParameter%>; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-         };
+        var disqus_config = function () {
+            //this.page.url = URL; // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = <%=workIDParameter%>; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
 
         (function () { // DON'T EDIT BELOW THIS LINE
             var d = document, s = d.createElement('script');
@@ -448,7 +490,9 @@
     });
 </script>
 
-<div class="panel-footer" style="text-align: center; color: grey"> <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small><br>
+<div class="panel-footer" style="text-align: center; color: grey">
+    <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small>
+    <br>
     <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>
 
@@ -468,7 +512,9 @@
                 <p>MIS Cell, <br>
                     Hubli-Dharwad Municipal Corporation, <br>
                     Sir Siddappa Kambli Road, <br>
-                    Hubballi - 580028
+                    Hubballi - 580028,
+                    Karnataka,
+                    India
                 </p>
             </div>
             <div class="modal-footer">

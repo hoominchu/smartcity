@@ -12,6 +12,7 @@
 <%@ page import="com.mongodb.BasicDBObject" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="smartcity.Filter" %>
 <jsp:include page="/trial" />
 <%
     long initialTime = System.currentTimeMillis();
@@ -143,14 +144,13 @@
             <a data-toggle="modal" data-target=".modal"> Contact</a>
     </div>
 
-
         </span>
     <div style="margin-bottom: 2em">
         <form method="post" action="works.jsp">
             <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
                 <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
                        placeholder="Enter your search query here..."
-                       style="display: inline-block; width: 68%">
+                       style="display: inline-block; width: 65%">
                 <button type="submit" class="btn btn-primary round-corner-right"
                         style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px"><i
                         class="fa fa-search white-icon" aria-hidden="true"></i> Search
@@ -268,7 +268,7 @@
                 }
             },
             title: {
-                text: 'Ward wise dashboard'
+                text: '<%=smartcity.Filter.getFiltersApplied()%>'
             },
             credits: {
                 enabled: true
@@ -285,11 +285,11 @@
             series: [{
                 name: 'Total works',
                 data: [<%=allWardsWorks%>],
-                visible: false
+                visible: true
             }, {
                 name: 'Completed works',
                 data: [<%=allWardsCompletedWorks%>],
-                visible: false
+                visible: true
             }, {
                 name: 'In progress works',
                 data: [<%=allWardsInprogressWorks%>],
@@ -379,7 +379,9 @@
                 <p>MIS Cell, <br>
                     Hubli-Dharwad Municipal Corporation, <br>
                     Sir Siddappa Kambli Road, <br>
-                    Hubballi - 580028
+                    Hubballi - 580028,
+                    Karnataka,
+                    India
                 </p>
             </div>
             <div class="modal-footer">

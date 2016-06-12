@@ -21,6 +21,13 @@
     <link rel="stylesheet" type="text/css" href="commonfiles/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="commonfiles/slick/slick-theme.css"/>
 
+    <style>
+        .slick-prev:before, .slick-next:before {
+            color:black !important;
+            z-index: 100;
+        }
+    </style>
+
 </head>
 <body>
 <script type="text/javascript" src="commonfiles/slick/slick.min.js"></script>
@@ -187,7 +194,8 @@
             zindex: -100,
             adaptiveHeight: true,
             autoplaySpeed: 6500,
-            centerPadding: '80px'
+            centerPadding: '80px',
+            pauseOnHover: false
         });
     });
 </script>
@@ -214,7 +222,9 @@
                 <p>MIS Cell, <br>
                     Hubli-Dharwad Municipal Corporation, <br>
                     Sir Siddappa Kambli Road, <br>
-                    Hubballi - 580028
+                    Hubballi - 580028,
+                    Karnataka,
+                    India
                 </p>
             </div>
             <div class="modal-footer">

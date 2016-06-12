@@ -173,7 +173,7 @@ public class Ward {
             allWatdsMaintenanceWorks = allWatdsMaintenanceWorks + allwards[i].maintenanceWorks + ",";
             allWardsEmergencyWorks = allWardsEmergencyWorks + allwards[i].emergencyWorks + ",";
 
-            if (allwards[i].population >0) {
+            if (allwards[i].population > 0) {
                 allWardsPerCapitaExpenditure = allWardsPerCapitaExpenditure + (allwards[i].amountSpent / allwards[i].population) + ",";
             }
 
@@ -190,6 +190,10 @@ public class Ward {
         wardDetails[4] = allWardsInprogressWorks;
         wardDetails[5] = allWardsPopulation;
         wardDetails[6] = allWardsPerCapitaExpenditure;
+
+        for (int i = 0; i < 7; i++) {
+            wardDetails[i] = wardDetails[i].substring(0,wardDetails[i].length()-1);
+        }
 
         return wardDetails;
     }

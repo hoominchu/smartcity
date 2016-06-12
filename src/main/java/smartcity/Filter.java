@@ -1,9 +1,11 @@
 package smartcity;
 
 import com.mongodb.*;
+import com.sun.tools.javac.jvm.Gen;
 import searchpack.Search;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -124,5 +126,24 @@ public class Filter {
         finally {
             return workIDS;
         }
+    }
+
+    public static String getFiltersApplied () {
+        Iterator filtersApplied = smartcity.Filter.FILTERS.iterator();
+
+        String filters = "";
+
+        while (filtersApplied.hasNext()) {
+            Filter click = (Filter) filtersApplied.next();
+            filters = filters + click.parameterPresentable + " : " + click.parameterValuePresentable + " ";
+            break;
+        }
+
+        while (filtersApplied.hasNext()) {
+            Filter click = (Filter) filtersApplied.next();
+            filters = filters + " & " + click.parameterPresentable + " : " + click.parameterValuePresentable + " ";
+        }
+
+        return filters;
     }
 }

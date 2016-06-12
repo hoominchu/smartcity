@@ -142,3 +142,14 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .about-person {
     margin: 0.7em;
 }
+.shadow-box {
+    -webkit-box-shadow: 9px 9px 53px -14px rgba(0,0,0,0.8);
+    -moz-box-shadow: 9px 9px 53px -14px rgba(0,0,0,0.8);
+    box-shadow: 9px 9px 53px -14px rgba(0,0,0,0.8);
+}
+.loading-chart-gif {
+    background-image: url("chart-loading.gif");
+    z-index: 10;
+    padding-top: 13em;
+    background-position: center;
+}
