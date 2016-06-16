@@ -66,43 +66,67 @@
 
 </head>
 <body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="about.jsp">Brand</a>
+        </div>
 
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="works.jsp?recent=true">Recent Works</a></li>
+                <li><a href="works.jsp">All Works</a></li>
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="about.jsp">About</a></li>
+                <li><a data-toggle="modal" data-target=".modal">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <script type="text/javascript" src="commonfiles/slick/slick.min.js"></script>
 
 <div class="container">
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
 
-    <h2 style="text-align:center; display:inline-block;"><a href="index.jsp">Hubballi Dharwad Smart
-        Cities Project</a></h2>
+    <div id="title-subtitle" style=" display:inline-block;">
+        <h2 style="text-align:center;"><a href="index.jsp">Hubballi Dharwad Smart
+            Cities Project</a></h2>
+        <h6 style="text-align: right">BETA</h6>
+    </div>
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px; text-align: right">
-        <a href="about.jsp"> About </a> <br><br>
-        <a data-toggle="modal" data-target=".modal"> Contact</a>
-    </div>
 
     <div style="margin-bottom: 2em">
+        <!--
         <form method="post" action="works.jsp">
             <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
+
                 <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
                        placeholder="Enter your search query here..."
                        style="display: inline-block; width: 65%">
                 <button type="submit" class="btn btn-primary round-corner-right"
-                        style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px">
-                    <i
-                            class="fa fa-search white-icon" aria-hidden="true"></i> Search
+                        style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px"><i
+                        class="fa fa-search white-icon" aria-hidden="true"></i> Search
                 </button>
+
                 <button type="submit" class="btn btn-primary round-corner-right pull-right"
                         style="display: inline-block; height: 39px"> See all works
                 </button>
                 <a href="works.jsp?recent=true" class="btn btn-primary round-corner-left pull-right"
-                   style="display: inline-block; height: 39px"> See recent works
+                        style="display: inline-block; height: 39px; margin-bottom: 2em"> See recent works
                 </a>
 
             </div>
         </form>
+
+
+        <div class="btn-group btn-group-justified round-corner" style="margin-bottom: 2em; margin-top: 1em">
+            <a href="works.jsp?recent=true" class="btn btn-primary round-corner-left">See recent works</a>
+            <a href="works.jsp" class="btn btn-primary round-corner-right">See all works</a>
+        </div>
+        -->
     </div>
 
     <div class="panel panel-default round-corner" style="text-align: center">
@@ -491,7 +515,8 @@
 </script>
 
 <div class="panel-footer" style="text-align: center; color: grey">
-    <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small>
+    <small> Data last refreshed on 10th June 2016<br>
+        &#169 Hubballi-Dharwad Municipal Corporation 2016</small>
     <br>
     <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>
@@ -505,8 +530,11 @@
             </div>
             <div class="modal-body">
                 <p><h5><b>For any queries or suggestions </b></h5></p>
-                Email us at &mdash; <b>inspection.hdmc@gmail.com</b><br>
-                Call us on &mdash; <b>+91 0836 2213888</b></p>
+                <b>Email us</b> <br>
+                Mrinalini Kalkeri &mdash; <b>inspection.hdmc@gmail.com</b><br>
+                Minchu Kulkarni &mdash; <b>chaitanyashareef.kulkarni@ashoka.edu.in</b><br><br>
+                <b>Call us</b> <br>
+                HDMC Control Room &mdash; <b>+91 0836 2213888</b></p>
                 <hr>
                 <p><h5><b>Our Address</b></h5></p>
                 <p>MIS Cell, <br>

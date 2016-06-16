@@ -23,21 +23,41 @@
 
     <style>
         .slick-prev:before, .slick-next:before {
-            color:black !important;
+            color: black !important;
             z-index: 100;
         }
     </style>
 
 </head>
 <body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="about.jsp">Brand</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="works.jsp?recent=true">Recent Works</a></li>
+                <li><a href="works.jsp">All Works</a></li>
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="about.jsp">About</a></li>
+                <li><a data-toggle="modal" data-target=".modal">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <script type="text/javascript" src="commonfiles/slick/slick.min.js"></script>
 <div class="container">
     <span>
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
 
-    <h2 style="text-align:center; display:inline-block;"><a href="index.jsp">Hubballi Dharwad Smart
-        Cities Project</a></h2>
+    <div id="title-subtitle" style=" display:inline-block;">
+        <h2 style="text-align:center;"><a href="index.jsp">Hubballi Dharwad Smart
+            Cities Project</a></h2>
+        <h6 style="text-align: right">BETA</h6>
+    </div>
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
@@ -64,19 +84,20 @@
             contractors and see if the citizens are satisfied by looking at their comments on the works.</p>
 
         <p>Second component aims at making this a portal for Hubli-Dharwad citizens to track what is happening around
-            them
-            in them in the city. This will help people in becoming more responsible and participate actively in the
-            development of their city. The contact information of the corporators/concerned persons will also be made
-            public
-            and easily accessible. It will be of great help if any citizen, who experiences inconvenience due to some
-            civic
-            work going on in his/her area, can get to know the details of the work such as who is the contractor, when
+            them in the city. This will help people participate actively in the development of their city and thus
+            become responsible citizens. The contact information of the corporators/concerned persons will also be made
+            public and easily accessible. It will be of great help if any citizen, who experiences inconvenience due to
+            some
+            civic work going on in his/her area, can get to know the details of the work such as who is the contractor,
+            when
             should it be completed, how much is the amount sanctioned for the project and so on. People can also comment
             on
             any work and discuss about it with fellow citizens thus creating a productive social network space.
         </p>
 
         <p>If you are interested in working with us please email us at <b>inspection.hdmc@gmail.com</b>.</p>
+
+        <p>This project was started as a part of <a href="http://hack4hd.org">hack4hd.org</a>. </p>
     </div>
     <hr>
     <h2>Features</h2>
@@ -107,70 +128,70 @@
     </div>
 
     <hr style="margin-top: 3em">
-
-    <h2>People</h2>
-    <div style="margin-top: 3em">
-        <div class="row">
-            <div class="col-sm-4">
-                <img src="images/about/minchu.jpg" class="img-circle" height="160px" width="160px"
-                     style="margin-left: 25%">
-                <div class="name">Minchu Kulkarni</div>
-                <div class="designation">Designer and Developer</div>
-                <div class="about-person text-muted">
-                    <small>
-                        We gathered data relating to all the works going on under the municipal corporation and their
-                        details
-                        such as stages of completion, source of funding and expenditures etc. from the municipality.
-                        This data
-                        was put on a website in an understandable manner.
-                    </small>
+    <!--
+        <h2>People</h2>
+        <div style="margin-top: 3em">
+            <div class="row">
+                <div class="col-sm-4">
+                    <img src="images/about/minchu.jpg" class="img-circle" height="160px" width="160px"
+                         style="margin-left: 25%">
+                    <div class="name">Minchu Kulkarni</div>
+                    <div class="designation">Designer and Developer</div>
+                    <div class="about-person text-muted">
+                        <small>
+                            We gathered data relating to all the works going on under the municipal corporation and their
+                            details
+                            such as stages of completion, source of funding and expenditures etc. from the municipality.
+                            This data
+                            was put on a website in an understandable manner.
+                        </small>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <img src="images/about/hangal.jpg" class="img-circle" height="160px" width="160px"
-                     style="margin-left: 25%">
-                <div class="name">Sudheendra Hangal</div>
-                <div class="designation">Advisor</div>
-                <div class="about-person text-muted">
-                    <small>
-                        Prof. Hangal got his Ph.D. in Computer Science at Stanford University, where he worked on social
-                        computing and human-computer interaction in the Mobisocial and HCI Labs.His thesis explored
-                        novel
-                        applications for the digital life-logs that millions of consumers are collecting. Prof. Hangal
-                        has also
-                        worked on multiprocessor computer architecture, virtual machine compilers, software engineering
-                        and
-                        debugging tools. During his tenure in the microprocessor division of Sun Microsystems, he led a
-                        team
-                        that was recognized with the Chairman’s Award for Innovation, the highest recognition for
-                        technical
-                        leadership.
-                    </small>
+                <div class="col-sm-4">
+                    <img src="images/about/hangal.jpg" class="img-circle" height="160px" width="160px"
+                         style="margin-left: 25%">
+                    <div class="name">Sudheendra Hangal</div>
+                    <div class="designation">Advisor</div>
+                    <div class="about-person text-muted">
+                        <small>
+                            Prof. Hangal got his Ph.D. in Computer Science at Stanford University, where he worked on social
+                            computing and human-computer interaction in the Mobisocial and HCI Labs.His thesis explored
+                            novel
+                            applications for the digital life-logs that millions of consumers are collecting. Prof. Hangal
+                            has also
+                            worked on multiprocessor computer architecture, virtual machine compilers, software engineering
+                            and
+                            debugging tools. During his tenure in the microprocessor division of Sun Microsystems, he led a
+                            team
+                            that was recognized with the Chairman’s Award for Innovation, the highest recognition for
+                            technical
+                            leadership.
+                        </small>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <img src="images/about/mrinalini.jpg" class="img-circle" height="160px" width="160px"
-                     style="margin-left: 25%">
-                <div class="name">Mrinalini Kalkeri</div>
-                <div class="designation">Project Head</div>
-                <div class="about-person text-muted">
-                    <small>
-                        Prof. Hangal got his Ph.D. in Computer Science at Stanford University, where he worked on social
-                        computing and human-computer interaction in the Mobisocial and HCI Labs.His thesis explored
-                        novel
-                        applications for the digital life-logs that millions of consumers are collecting. Prof. Hangal
-                        has also
-                        worked on multiprocessor computer architecture, virtual machine compilers, software engineering
-                        and
-                        debugging tools.
-                    </small>
+                <div class="col-sm-4">
+                    <img src="images/about/mrinalini.jpg" class="img-circle" height="160px" width="160px"
+                         style="margin-left: 25%">
+                    <div class="name">Mrinalini Kalkeri</div>
+                    <div class="designation">Project Head</div>
+                    <div class="about-person text-muted">
+                        <small>
+                            Prof. Hangal got his Ph.D. in Computer Science at Stanford University, where he worked on social
+                            computing and human-computer interaction in the Mobisocial and HCI Labs.His thesis explored
+                            novel
+                            applications for the digital life-logs that millions of consumers are collecting. Prof. Hangal
+                            has also
+                            worked on multiprocessor computer architecture, virtual machine compilers, software engineering
+                            and
+                            debugging tools.
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <hr>
-
+        <hr>
+    -->
     <h2>In collaboration with</h2>
     <div style="margin: 2em">
         <div class="row>">
@@ -201,7 +222,8 @@
 </script>
 
 <div class="panel-footer" style="text-align: center; color: grey">
-    <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small>
+    <small> Data last refreshed on 10th June 2016<br>
+        &#169 Hubballi-Dharwad Municipal Corporation 2016</small>
     <br>
     <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>
@@ -215,8 +237,11 @@
             </div>
             <div class="modal-body">
                 <p><h5><b>For any queries or suggestions </b></h5></p>
-                Email us at &mdash; <b>inspection.hdmc@gmail.com</b><br>
-                Call us on &mdash; <b>+91 0836 2213888</b></p>
+                <b>Email us</b> <br>
+                Mrinalini Kalkeri &mdash; <b>inspection.hdmc@gmail.com</b><br>
+                Minchu Kulkarni &mdash; <b>chaitanyashareef.kulkarni@ashoka.edu.in</b><br><br>
+                <b>Call us</b> <br>
+                HDMC Control Room &mdash; <b>+91 0836 2213888</b></p>
                 <hr>
                 <p><h5><b>Our Address</b></h5></p>
                 <p>MIS Cell, <br>

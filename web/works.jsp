@@ -125,43 +125,71 @@
 
 </head>
 <body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="about.jsp">Brand</a>
+        </div>
 
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="works.jsp?recent=true">Recent Works</a></li>
+                <li><a href="works.jsp">All Works</a></li>
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="about.jsp">About</a></li>
+                <li><a data-toggle="modal" data-target=".modal">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <div class="container">
     <span>
     <img src="images/hdmc-logo.png" width="140em" height="140em"
          style="display:inline-block; margin-right:1em; margin-left:7em;">
 
-    <h2 style="text-align:center; display:inline-block;"><a href="index.jsp">Hubballi Dharwad Smart
-        Cities Project</a></h2>
+    <div id="title-subtitle" style=" display:inline-block;">
+        <h2 style="text-align:center;"><a href="index.jsp">Hubballi Dharwad Smart
+            Cities Project</a></h2>
+        <h6 style="text-align: right">BETA</h6>
+    </div>
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px; text-align: right"><a href="<%=baseLink%>language=kannada">ಕನ್ನಡ</a>
-        | <a href="<%=baseLink%>">English</a><br><br>
-        <a href="about.jsp"> About </a> <br><br>
-        <a data-toggle="modal" data-target=".modal"> Contact</a>
+    <div class="pull-right" style="margin-top:40px; text-align: right"><a href="<%=baseLink%><%=dynamicLink%>language=kannada">ಕನ್ನಡ</a>
+        | <a href="<%=baseLink%><%=dynamicLink%>">English</a><br><br>
+
     </div>
 
         </span>
     <div style="margin-bottom: 2em">
+        <!--
         <form method="post" action="works.jsp">
             <div class="form-group" style="margin-left: auto; margin-right: auto; width: 100%;">
+
                 <input name="queryString" class="form-control round-corner-left" id="focusedInput" type="text"
-                       placeholder="<%=searchPlaceholder%>"
+                       placeholder="Enter your search query here..."
                        style="display: inline-block; width: 65%">
                 <button type="submit" class="btn btn-primary round-corner-right"
-                        style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px">
-                    <i class="fa fa-search white-icon" aria-hidden="true"></i> Search
+                        style="display: inline-block; margin-top: -4px; margin-left: -4px; margin-right: 0px; height: 39px"><i
+                        class="fa fa-search white-icon" aria-hidden="true"></i> Search
                 </button>
+
                 <button type="submit" class="btn btn-primary round-corner-right pull-right"
                         style="display: inline-block; height: 39px"> See all works
                 </button>
                 <a href="works.jsp?recent=true" class="btn btn-primary round-corner-left pull-right"
-                   style="display: inline-block; height: 39px"> See recent works
+                        style="display: inline-block; height: 39px; margin-bottom: 2em"> See recent works
                 </a>
 
             </div>
         </form>
+
+
+        <div class="btn-group btn-group-justified round-corner" style="margin-bottom: 2em; margin-top: 1em">
+            <a href="works.jsp?recent=true" class="btn btn-primary round-corner-left">See recent works</a>
+            <a href="works.jsp" class="btn btn-primary round-corner-right">See all works</a>
+        </div>
+        -->
         <%
             if (((numberOfWorksDisplayed > 0) && (searchResults.size() > 0)) || (queryString.equals(""))) {
         %>
@@ -322,13 +350,13 @@
             <thead>
             <tr>
                 <th style="width: 3%; padding: 2px; text-align: center">Ward</th>
-                <th style="width: 30%; padding: 2px; text-align: left">Work Description</th>
-                <th style="width: 6%; padding: 2px; text-align: center">Work Order Date</th>
-                <th style="width: 6%; padding: 2px; text-align: center">Work Completion Date</th>
+                <th style="width: 25%; padding: 2px; text-align: left">Work Description</th>
+                <th style="width: 8%; padding: 2px; text-align: center">Work Order Date</th>
+                <th style="width: 8%; padding: 2px; text-align: center">Work Completion Date</th>
                 <th style="width: 7%; padding: 2px; text-align: center">Work Type</th>
                 <th style="width: 3%; padding: 2px; text-align: center">Year</th>
                 <th style="width: 10%; padding: 2px; text-align: center">Source Of Income</th>
-                <th style="width: 7%; padding: 2px; text-align: center">Contractor</th>
+                <th style="width: 8%; padding: 2px; text-align: center">Contractor</th>
                 <th style="width: 7%; padding: 2px; text-align: center">Amount Sanctioned</th>
                 <th style="width: 7%; padding: 2px; text-align: center">Bill Paid</th>
                 <th style="width: 7%; padding: 2px; text-align: center">Difference</th>
@@ -380,7 +408,7 @@
                         String billPaidColor = General.setBillPaidColor(amountSanctioned, billPaid);
 
                         boolean highlight;
-                        if (today.after(completionDate) && status.equals("Inprogress") && !workCompletionDate.equals(workOrderDate)) {
+                        if (today.after(completionDate) && status.equals("Inprogress")) {
                             dateColor = "red";
                             highlight = true;
                         }
@@ -394,17 +422,23 @@
 
                 </td>
 
-                <td style="padding: 1.5em">
+                <td>
                     <a href="workDetails.jsp?<%=dynamicLink%>workID=<%=workID%>&jumbotron=billDetails">
                         <%=workDescriptionFinal%>
                     </a>
-                    <% if (works.get(i).doWorkDetailsExist) { %>
-
                     <br>
+                    <% if (works.get(i).doWorkDetailsExist) { %>
                     <i class="fa fa-list-ul"
                        style="font-size: 10pt; margin-top: 2px"
                        aria-hidden="true" title="This work has more details"></i>
                     <% }
+                        if (billPaid > 0) {
+                    %>
+                    <i class="fa fa-money"
+                       style="font-size: 10pt; margin-top: 2px; margin-left: 5px"
+                       aria-hidden="true" title="This work has details of bills paid"></i>
+                    <%
+                        }
                     %>
                 </td>
                 <td sorttable_customkey="<%=General.customSortKeySortTableJS(workOrderDate)%>"
@@ -497,7 +531,8 @@
     </div>
 </div>
 <div class="panel-footer" style="text-align: center; color: grey">
-    <small>&#169 Hubballi-Dharwad Municipal Corporation 2016</small>
+    <small> Data last refreshed on 10th June 2016<br>
+        &#169 Hubballi-Dharwad Municipal Corporation 2016</small>
     <br>
     <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>
@@ -511,8 +546,11 @@
             </div>
             <div class="modal-body">
                 <p><h5><b>For any queries or suggestions </b></h5></p>
-                Email us at &mdash; <b>inspection.hdmc@gmail.com</b><br>
-                Call us on &mdash; <b>+91 0836 2213888</b></p>
+                <b>Email us</b> <br>
+                Mrinalini Kalkeri &mdash; <b>inspection.hdmc@gmail.com</b><br>
+                Minchu Kulkarni &mdash; <b>chaitanyashareef.kulkarni@ashoka.edu.in</b><br><br>
+                <b>Call us</b> <br>
+                HDMC Control Room &mdash; <b>+91 0836 2213888</b></p>
                 <hr>
                 <p><h5><b>Our Address</b></h5></p>
                 <p>MIS Cell, <br>
@@ -529,6 +567,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

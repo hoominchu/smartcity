@@ -153,3 +153,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     padding-top: 13em;
     background-position: center;
 }
+
+.link-text-white.a {
+    color: white;
+    text-decoration: none;
+}
+

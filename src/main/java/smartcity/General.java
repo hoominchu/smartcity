@@ -209,4 +209,18 @@ public class General {
             return retString;
         }
     }
+
+    public static String setStatusLabelColor (String status) {
+        String statusLabelColor  = "";
+
+        if (status.equals("Completed")) {
+            statusLabelColor = "label-success";
+        }
+
+        else {
+            statusLabelColor = "label-danger";
+        }
+
+        return statusLabelColor;
+    }
 }
