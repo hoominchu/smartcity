@@ -444,7 +444,9 @@
     %>
     <hr>
     <h4><b>Photos submitted by the contractor</b></h4>
+    <p class="text-warning">Photos yet to be uploaded</p>
     <div class="work-images" style="height: 18em; margin-top: 1.5em; margin-bottom: 1.5em">
+
         <%
             for (int i = 0; i < 4; i++) {
         %>
