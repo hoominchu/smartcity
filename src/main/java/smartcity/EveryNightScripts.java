@@ -32,6 +32,29 @@ public class EveryNightScripts {
 
             Database.allworks.update(workQuery,newDocument);
         }
+    }
 
+    public static void updateDoWorkDetailsExist() {
+        DBCursor allWorks = Database.allworks.find();
+
+        while (allWorks.hasNext()) {
+            DBObject work = allWorks.next();
+            int workID = (int) work.get("Work ID");
+
+            BasicDBObject query = new BasicDBObject("Work ID", workID);
+
+            DBCursor workdetails = Database.workDetailsCollection.find(query);
+
+            BasicDBObject newDoc = new BasicDBObject();
+
+            if (workdetails.size() > 0) {
+                newDoc.append("$set", new BasicDBObject().append("Do work details exist","TRUE"));
+            }
+            else {
+                newDoc.append("$set", new BasicDBObject().append("Do work details exist","FALSE"));
+            }
+
+            Database.allworks.update(query,newDoc);
+        }
     }
 }

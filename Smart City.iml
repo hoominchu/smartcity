@@ -82,22 +82,11 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/Scalable-Cleanup" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/Scalable-Cleanup/src" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="analyzers-common" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/web/WEB-INF/lib/Cleanup" />
+          <root url="jar://$MODULE_DIR$/lib/Cleanup.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -106,7 +95,16 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/web/WEB-INF/lib/Cleanup.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/org.apache.commons.io.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/org.json.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

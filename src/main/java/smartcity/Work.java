@@ -82,7 +82,7 @@ public class Work implements Comparable<Work> {
                 this.statusColor = "f04124";
             }
 
-            if (this.workType.equals("Capital") || this.workType.equals("Maintenance") || this.workType.equals("Under 22.75%")) {
+            if (workObject.get("Do work details exist").equals("TRUE")) {
                 this.doWorkDetailsExist = true;
             } else {
                 this.doWorkDetailsExist = false;

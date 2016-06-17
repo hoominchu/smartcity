@@ -8,10 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.BasicDBObject"
 %>
-<%@ page import="smartcity.Contractor" %>
-<%@ page import="smartcity.General" %>
-<%@ page import="smartcity.Ward" %>
-<%@ page import="smartcity.Work" %>
+<%@ page import="smartcity.*" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
@@ -123,6 +120,14 @@
                 url: 'http://hack4hd.org/data/HD-ward-boundaries.kml',
                 map: map
             });
+            var landmarks = new google.maps.KmlLayer({
+                url: 'http://hack4hd.org/data/HD-landmarks.kml',
+                map: map
+            })
+            var hoardings = new google.maps.KmlLayer({
+                url: 'http://hack4hd.org/data/HD-hoardings.kml',
+                map: map
+            })
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
@@ -257,6 +262,31 @@
 
         </div>
     </div>
+
+    <div class="row" style="height: 20em">
+        <%
+            for (int year = 2013; year < 2017; year++) {
+        %>
+        <div class="col-sm-3">
+            <div id="13thfinance<%=year%>" class="piechart"></div>
+        </div>
+        <%
+            }
+        %>
+    </div>
+
+    <div class="row" style="height: 20em">
+        <%
+            for (int year = 2016; year < 2017; year++) {
+        %>
+        <div class="col-sm-3">
+            <div id="14thfinance<%=year%>" class="piechart"></div>
+        </div>
+        <%
+            }
+        %>
+    </div>
+
 </div>
 
 <%
@@ -394,9 +424,119 @@
 
     });
 </script>
+
+<script>
+    <%
+    for (int year = 2013; year < 2017; year++) {
+    BasicDBObject finance13 = new BasicDBObject("Source of Income ID", 43);
+    finance13.append("Year",year);
+    String[] finance13Details = Dashboard.workStatusPieChart(finance13);
+    %>
+    $(function () {
+
+        $(document).ready(function () {
+
+            // Build the chart
+            $('#13thfinance<%=year%>').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: '13th Finance (General Basic) <%=year%>'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Number of works',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Completed',
+                        y: <%=finance13Details[0]%>
+                    }, {
+                        name: 'In progress',
+                        y: <%=finance13Details[1]%>
+                    }]
+                }]
+            });
+        });
+    });
+    <%
+    }
+    %>
+</script>
+
+<script>
+    <%
+    for (int year = 2016; year < 2017; year++) {
+    BasicDBObject finance14 = new BasicDBObject("Source of Income ID", 51);
+    finance14.append("Year",year);
+    String[] finance14Details = Dashboard.workStatusPieChart(finance14);
+    %>
+    $(function () {
+
+        $(document).ready(function () {
+
+            // Build the chart
+            $('#14thfinance<%=year%>').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: '14th Finance (General Basic) <%=year%>'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Number of works',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Completed',
+                        y: <%=finance14Details[0]%>
+                    }, {
+                        name: 'In progress',
+                        y: <%=finance14Details[1]%>
+                    }]
+                }]
+            });
+        });
+    });
+    <%
+    }
+    %>
+</script>
+
 <div class="panel-footer" style="text-align: center; color: grey">
     <small> Data last refreshed on 10th June 2016<br>
-        &#169 Hubballi-Dharwad Municipal Corporation 2016</small>
+        &#169 Hubballi-Dharwad Municipal Corporation 2016
+    </small>
     <br>
     <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>

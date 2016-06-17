@@ -1,4 +1,4 @@
-<%--
+<%@ page import="smartcity.GeoJSON" %><%--
   Created by IntelliJ IDEA.
   User: minchu
   Date: 08/04/16

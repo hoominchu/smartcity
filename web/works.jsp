@@ -455,7 +455,7 @@
                         href="<%=baseLink%><%=dynamicLink%>year=<%=year%>"><%=year%>
                 </a>
                 </td>
-                <td style="text-align: center"><a
+                <td style="text-align: center; overflow: hidden"><a
                         href="<%=baseLink%><%=dynamicLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
                 </a>
                 </td>
