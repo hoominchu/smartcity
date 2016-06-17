@@ -363,7 +363,7 @@
     </div>
 
     <%
-        if (Database.workDetailsCollection.find(workIDQuery).size() > 0) {
+        if (Database.workDetails.find(workIDQuery).size() > 0) {
     %>
     <table class="table-striped table-responsive sortable" id="myTable"
            style="margin-top:2em; width: 100%; table-layout: fixed">
@@ -386,7 +386,7 @@
         <%
             //WorkResults wr = mymethod(request);
             Double totalSpent = 0.0;
-            DBCursor workDetailsCursor = Database.workDetailsCollection.find(workIDQuery);
+            DBCursor workDetailsCursor = Database.workDetails.find(workIDQuery);
 
             try {
                 while (workDetailsCursor.hasNext()) {

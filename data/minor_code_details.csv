@@ -1,0 +1,100 @@
+Code,Meaning
+1,Roads:Asphalting
+2,Roads:Metalling
+3,Roads:Formation of Roads
+4,Roads:Bridges and Culverts
+5,Roads:Foot paths
+6,Drains:
+7,Drains:UGD lines
+8,Buildings
+9,Electrical:High Mast Lamps
+10,Electrical:Street Lights
+11,Roads:Asphalt Patch
+12,Roads:Metal Patch
+13,Roads:Earth Removal
+14,"Roads:Painting (Zebra Painting, Grill Painting, Curb Stone Painting)"
+15,Roads:Road Dividers
+16,Roads:Road Reflectors
+17,Roads:Road Name Boards
+18,Roads:Foot Paths
+19,Drains:Drain Repairs
+20,Drains:Silt Removal
+21,Drains:CD Repairs
+22,Building:Corporation Building-Residential
+23,Building:Corporation Building-Non Residential
+24,Building:Corporation Building-Public Toilet
+25,Building:Corporation Building-Burial Ground
+26,Building:Corporation Building-Hospital
+27,Electrical : Street Lights
+28,Electrical:Corporation Buildings
+29,Electrical:Parks and Gardens
+30,Parks and Gardens:Fencing
+31,Parks and Gardens:Maintenance of Parks and Gardens
+32,Drains:Manholes-Repairs and Construction
+33,Drains:Slab Over Drains
+34,Drains:Repair to UGD Lines
+35,Borewell and Pumpset
+36,Roads : Formation of Roads
+37,Borewell and Pumpset
+38,Officers
+39,JCB
+40,Tractors
+41,Water Spray
+42,Human Resource
+43,"Rent,Rates,Taxes and Insurance"
+44,Printing and stationary
+45,Travelling and conveyence
+46,Council related expenses
+47,Professional and other fees
+48,Advertisement and publicity
+49,Office expenses
+50,Other general expenses
+51,Power and fuel
+52,Consumtion of stores
+53,Other operating expenses
+54,Interest and finance charges
+55,Election expenses
+56,Programme expenses
+57,Scheme/Project expenses
+58,Advance
+59,Advance adjustment
+60,Outsourced operating expenses
+61,"Suspence-Govt. dues,emd,sd other refunds"
+62,Education programmes 40%
+63,Economics programmes 40%
+64,Others programmes 20%
+65,Below proverty line (OBC)
+66,Miscellaneous
+67,Water : Water Supply
+68, -
+69,Sanitation and Ward Cleaning
+70,Operation and maintenance expenses
+71,Rain Water Harvesting
+72,Parks and Gardens
+73,Amount Transfer bank to bank
+74,Office And Other Equipments
+75,"Land:Land, Ground and Others"
+76,Development-45%
+77,Others-55%
+78,Developments Of Lakes & Gardens
+79,Play Ground
+80,Public Tiolets
+81,Statue
+82,Nala Repair Works
+83,Others-55%
+84,T5 Lights
+85,High Mast Maintenance
+86,Development 60%
+87,Others 40%
+88,Water:Water Supply
+89,Night Shelter related works
+90,Water Supply
+91,Swm-equipments
+92,Others 3%
+93,Under 40%
+94,Under 60%
+95,Cemetries-Development
+96,24.10%-Others
+97,60%-Development
+98,40% individual Benifits
+99,Under 3%(60%)

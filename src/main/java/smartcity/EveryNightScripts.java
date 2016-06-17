@@ -43,7 +43,7 @@ public class EveryNightScripts {
 
             BasicDBObject query = new BasicDBObject("Work ID", workID);
 
-            DBCursor workdetails = Database.workDetailsCollection.find(query);
+            DBCursor workdetails = Database.workDetails.find(query);
 
             BasicDBObject newDoc = new BasicDBObject();
 

@@ -21,6 +21,8 @@
 
     String showRecentParameter = request.getParameter("recent");
 
+    String wardNumberParameter = request.getParameter("wardNumber");
+
     String searchPlaceholder = "Enter your search query here...";
 
     String queryString = request.getParameter("queryString");
@@ -193,7 +195,42 @@
         <%
             if (((numberOfWorksDisplayed > 0) && (searchResults.size() > 0)) || (queryString.equals(""))) {
         %>
+        <%
+            if (wardNumberParameter != null) {
 
+                String[] wardinfo = Ward.getWardInfo(Integer.parseInt(wardNumberParameter));
+                String corporatorEnglish = wardinfo[1];
+                String corporatorKannada = wardinfo[2];
+                String wardMeaning = wardinfo[3];
+                String population2011 = wardinfo[4];
+        %>
+
+            <div class="panel panel-default round-corner" style="text-align: center">
+                <div class="panel-heading">Ward Info</div>
+                <div class="panel-body"><h4>
+                    Ward Number : <%=wardNumberParameter%>
+                    <%
+                        if (Integer.parseInt(wardNumberParameter)>67) {
+                    %>| Ward meaning : <%=wardMeaning%>
+                    <%
+                        }
+                        else {
+                    %>
+                    | Population <small>(2011)</small> : <%=General.rupeeFormat(population2011)%>
+                    <br>
+                    <hr>
+                    Corporator : <%=corporatorKannada%> | <%=corporatorEnglish%>
+                    <%
+                        }
+                    %>
+
+                </h4>
+                </div>
+            </div>
+
+        <%
+            }
+        %>
         <div class="row">
             <div class="panel panel-default round-corner"
                  style="text-align: center; width: 20%; display: inline-block; margin-right: -5em; margin-left: 1em">

@@ -198,4 +198,22 @@ public class Ward {
         return wardDetails;
     }
 
+    public static String[] getWardInfo (int wardNumber) {
+        String[] wardInfo = new String[5];
+
+        BasicDBObject query = new BasicDBObject("ID",wardNumber);
+        DBCursor cursor = Database.wardmaster.find(query);
+
+        while (cursor.hasNext()) {
+            DBObject ward = cursor.next();
+            wardInfo[0] = ward.get("ID").toString();
+            wardInfo[1] = ward.get("Corporator Name English").toString();
+            wardInfo[2] = ward.get("Corporator Name Kannada").toString();
+            wardInfo[3] = ward.get("Explanation_Optional").toString();
+            wardInfo[4] = ward.get("Population_2011").toString();
+        }
+
+        return wardInfo;
+    }
+
 }

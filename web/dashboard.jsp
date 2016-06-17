@@ -262,7 +262,8 @@
 
         </div>
     </div>
-
+    <hr>
+    <h3>13th Finance Summary</h3>
     <div class="row" style="height: 20em">
         <%
             for (int year = 2013; year < 2017; year++) {
@@ -274,7 +275,8 @@
             }
         %>
     </div>
-
+    <hr>
+    <h3>14th Finance Summary</h3>
     <div class="row" style="height: 20em">
         <%
             for (int year = 2016; year < 2017; year++) {
@@ -286,7 +288,6 @@
             }
         %>
     </div>
-
 </div>
 
 <%
