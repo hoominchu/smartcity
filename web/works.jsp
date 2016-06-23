@@ -8,10 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
          import="com.mongodb.BasicDBObject"
 %>
+<%@ page import="smartcity.*" %>
 <%@ page import="smartcity.Filter" %>
-<%@ page import="smartcity.General" %>
-<%@ page import="smartcity.Ward" %>
-<%@ page import="smartcity.Work" %>
 <%@ page import="java.util.*" %>
 
 <%
@@ -130,7 +128,7 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="about.jsp">Brand</a>
+            <a class="navbar-brand" href="about.jsp">CityForum HD</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -157,7 +155,8 @@
 
     <img src="images/smartcitylogo.jpg" width="150em" height="150em"
          style="display:inline-block; margin-left:1em; margin-top:1.2em;">
-    <div class="pull-right" style="margin-top:40px; text-align: right"><a href="<%=baseLink%><%=dynamicLink%>language=kannada">ಕನ್ನಡ</a>
+    <div class="pull-right" style="margin-top:40px; text-align: right"><a
+            href="<%=baseLink%><%=dynamicLink%>language=kannada">ಕನ್ನಡ</a>
         | <a href="<%=baseLink%><%=dynamicLink%>">English</a><br><br>
 
     </div>
@@ -203,30 +202,55 @@
                 String corporatorKannada = wardinfo[2];
                 String wardMeaning = wardinfo[3];
                 String population2011 = wardinfo[4];
+
+                String[] corporatorDetails = Corporator.getCorporatorDetails(Integer.parseInt(wardNumberParameter));
+                String contactNumber = corporatorDetails[2];
+                String partyEnglish = corporatorDetails[3];
+                String partyKannada = corporatorDetails[4];
+                String imgURL = corporatorDetails[5];
         %>
 
-            <div class="panel panel-default round-corner" style="text-align: center">
-                <div class="panel-heading">Ward Info</div>
-                <div class="panel-body"><h4>
-                    Ward Number : <%=wardNumberParameter%>
+        <div class="panel panel-default round-corner" style="text-align: center">
+            <div class="panel-heading round-corner-top">Ward Info</div>
+            <div class="panel-body">
+
+                <div class="pull-left" id="corporatorImage" style=" width: 20%; display: inline-block">
                     <%
-                        if (Integer.parseInt(wardNumberParameter)>67) {
-                    %>| Ward meaning : <%=wardMeaning%>
+                        if (imgURL.length() > 1) {
+                    %>
+                    <img class="round-corner" src="<%=imgURL%>">
+                    <%
+                        } else {
+                    %>
+                    <img class="round-corner" height="160em" src="https://pixabay.com/static/uploads/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
                     <%
                         }
-                        else {
                     %>
-                    | Population <small>(2011)</small> : <%=General.rupeeFormat(population2011)%>
+                </div>
+
+                <h4>
+                    Ward Number : <%=wardNumberParameter%>
+                    <%
+                        if (Integer.parseInt(wardNumberParameter) > 67) {
+                    %>| Ward meaning : <%=wardMeaning%>
+                    <%
+                    } else {
+                    %>
+                    | Population
+                    <small>(Census of 2011)</small>
+                    : <%=General.rupeeFormat(population2011)%>
                     <br>
                     <hr>
-                    Corporator : <%=corporatorKannada%> | <%=corporatorEnglish%>
+
+                    Corporator : <%=corporatorKannada%> | <%=corporatorEnglish%> <b> | </b> Party : <%=partyKannada%> | <%=partyEnglish%> <br><br>
+                    <i class="fa fa-phone" aria-hidden="true"></i> <%=contactNumber%>
                     <%
                         }
                     %>
 
                 </h4>
-                </div>
             </div>
+        </div>
 
         <%
             }
@@ -387,17 +411,16 @@
             <thead>
             <tr>
                 <th style="width: 3%; padding: 2px; text-align: center">Ward</th>
-                <th style="width: 25%; padding: 2px; text-align: left">Work Description</th>
+                <th style="width: 30%; padding: 2px; text-align: left">Work Description</th>
                 <th style="width: 8%; padding: 2px; text-align: center">Work Order Date</th>
                 <th style="width: 8%; padding: 2px; text-align: center">Work Completion Date</th>
-                <th style="width: 7%; padding: 2px; text-align: center">Work Type</th>
+                <th style="width: 9%; padding: 2px; text-align: center">Work Type</th>
+                <th style="width: 11%; padding: 2px; text-align: center">Minor Work Type</th>
                 <th style="width: 3%; padding: 2px; text-align: center">Year</th>
-                <th style="width: 10%; padding: 2px; text-align: center">Source Of Income</th>
-                <th style="width: 8%; padding: 2px; text-align: center">Contractor</th>
+                <th style="width: 8%; padding: 2px; text-align: center">Source Of Income</th>
                 <th style="width: 7%; padding: 2px; text-align: center">Amount Sanctioned</th>
-                <th style="width: 7%; padding: 2px; text-align: center">Bill Paid</th>
+                <th style="width: 6%; padding: 2px; text-align: center">Bill Paid</th>
                 <th style="width: 7%; padding: 2px; text-align: center">Difference</th>
-                <th style="width: 7%; padding: 2px; text-align: center">Status</th>
             </tr>
             </thead>
             <tbody>
@@ -415,6 +438,7 @@
                         String workOrderDate = works.get(i).workOrderDate;
                         String workCompletionDate = works.get(i).workCompletionDate;
                         String workType = works.get(i).workType;
+                        String minorIDMeaning = works.get(i).minorIDMeaning;
 
                         Calendar completionDate = General.createDate(workCompletionDate);
                         String dateColor = "";
@@ -439,6 +463,7 @@
                         String contractorID = works.get(i).contractorID;
                         String sourceOfIncomeID = works.get(i).sourceOfIncomeID;
                         String statusColor = works.get(i).statusColor;
+                        String minorID = works.get(i).minorWorkTypeID;
                         //String tenderApprovalDate = works.get(i).tenderApprovalDate;
                         //String customSortKeyTenderDate = General.customSortKeySortTableJS(tenderApprovalDate);
 
@@ -477,6 +502,12 @@
                     <%
                         }
                     %>
+                    <br>
+                    Contractor : <a href="<%=baseLink%><%=dynamicLink%>contractorID=<%=contractorID%>"><%=contractor%>
+                    </a>
+                    <br>
+                    Status : <a href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>
+                    </a>
                 </td>
                 <td sorttable_customkey="<%=General.customSortKeySortTableJS(workOrderDate)%>"
                     style="text-align: center"><%=workOrderDate%>
@@ -487,17 +518,16 @@
                 <td style="text-align: center"><a
                         href="<%=baseLink%><%=dynamicLink%>workTypeID=<%=workTypeID%>"><%=workType%>
                 </a>
+                <td style="text-align: center; padding-left: 0.2em"><a
+                        href="<%=baseLink%><%=dynamicLink%>minorID=<%=minorID%>"><%=minorIDMeaning%>
+                </a>
                 </td>
                 <td style="text-align: center"><a
                         href="<%=baseLink%><%=dynamicLink%>year=<%=year%>"><%=year%>
                 </a>
                 </td>
-                <td style="text-align: center; overflow: hidden"><a
+                <td style="text-align: center;"><a
                         href="<%=baseLink%><%=dynamicLink%>sourceOfIncomeID=<%=sourceOfIncomeID%>"><%=sourceOfIncome%>
-                </a>
-                </td>
-                <td style="text-align: center"><a
-                        href="<%=baseLink%><%=dynamicLink%>contractorID=<%=contractorID%>"><%=contractor%>
                 </a>
                 </td>
                 <td style="text-align: center"><%=General.rupeeFormat(amountSanctionedString)%>
@@ -529,10 +559,6 @@
                     <%
                         }
                     %>
-                </td>
-                <td style="text-align: left; padding-right: 0.2em; color: <%=statusColor%>; text-decoration: none"><a
-                        href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>
-                </a>
                 </td>
             </tr>
             <%
@@ -569,7 +595,8 @@
 </div>
 <div class="panel-footer" style="text-align: center; color: grey">
     <small> Data last refreshed on 10th June 2016<br>
-        &#169 Hubballi-Dharwad Municipal Corporation 2016</small>
+        &#169 Hubballi-Dharwad Municipal Corporation 2016
+    </small>
     <br>
     <small><a href="about.jsp"> About </a> | <a data-toggle="modal" data-target=".modal"> Contact</a></small>
 </div>

@@ -57,4 +57,25 @@ public class EveryNightScripts {
             Database.allworks.update(query,newDoc);
         }
     }
+
+    public static void writeMinorWorkTypeInDB () {
+        DBCursor works = Database.allworks.find();
+        while (works.hasNext()) {
+            DBObject work = works.next();
+
+            String minorWorkTypeID = work.get("Minor ID").toString();
+            int workID = (int) work.get("Work ID");
+
+            BasicDBObject query = new BasicDBObject("Code",Integer.parseInt(minorWorkTypeID));
+
+            DBCursor minorIDs = Database.minorWorkTypes.find(query);
+            DBObject minorID = minorIDs.next();
+            String minorIDMeaning = minorID.get("Meaning").toString();
+
+            BasicDBObject IDMeaning = new BasicDBObject();
+            IDMeaning.append("$set", new BasicDBObject().append("Minor ID Meaning",minorIDMeaning));
+
+            Database.allworks.update(new BasicDBObject("Work ID", workID),IDMeaning);
+        }
+    }
 }

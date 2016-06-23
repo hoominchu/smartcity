@@ -138,7 +138,7 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="about.jsp">Brand</a>
+            <a class="navbar-brand" href="about.jsp">CityForum HD</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

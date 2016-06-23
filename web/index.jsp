@@ -1,4 +1,5 @@
-<%@ page import="smartcity.GeoJSON" %><%--
+<%@ page import="smartcity.GeoJSON" %>
+<%@ page import="smartcity.EveryNightScripts" %><%--
   Created by IntelliJ IDEA.
   User: minchu
   Date: 08/04/16
@@ -8,6 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 
 <%
+    //EveryNightScripts.writeMinorWorkTypeInDB();
     String redirectURL = "works.jsp?recent=true";
     response.sendRedirect(redirectURL);
 %>

@@ -36,6 +36,8 @@ public class Work implements Comparable<Work> {
     public boolean doWorkDetailsExist;
     public int billPaid;
     public String tenderApprovalDate;
+    public String minorWorkTypeID;
+    public String minorIDMeaning;
 
     public static ArrayList<Work> allWorks = createWorkObjects(new BasicDBObject());
 
@@ -75,6 +77,8 @@ public class Work implements Comparable<Work> {
             this.contractorID = workObject.get("Contractor ID").toString();
             this.sourceOfIncomeID = workObject.get("Source of Income ID").toString();
             this.tenderApprovalDate = workObject.get("Tender Approval Date").toString();
+            this.minorWorkTypeID = workObject.get("Minor ID").toString();
+            this.minorIDMeaning = workObject.get("Minor ID Meaning").toString();
 
             if (this.statusfirstLetterCapital.equals("Completed")) {
                 this.statusColor = "43ac6a";
