@@ -262,6 +262,14 @@
 
         </div>
     </div>
+
+    <div class="panel panel-default round-corner">
+        <div class="panel-heading round-corner-top" style="text-align: center">Category-wise Dashboard</div>
+        <div class="panel-body round-corner-bottom">
+            <div id="minorWorkTypeChart" style="width: 100%; height: 40em"></div>
+        </div>
+    </div>
+
     <hr>
     <h3>13th Finance Summary</h3>
     <div class="row" style="height: 20em">
@@ -306,6 +314,15 @@
     String top50contractorsTotalWorks = Contractor.getTop50ContractorsTotalWorks();
     String top50contractorsInprogressWorks = Contractor.getTop50ContractorsInprogressWorks();
     String top50contractorsCompletedWorks = Contractor.getTop50ContractorsCompletedWorks();
+
+    String[] minorWorkTypeDetails = MinorWorkType.getMinorWorkTypeDetails(MinorWorkType.createMinorWorkTypes());
+    String minorWorkTypeMeanings = minorWorkTypeDetails[0];
+    String minorWorkTypeCompletedWorks = minorWorkTypeDetails[1];
+    String minorWorkTypeInprogressWorks = minorWorkTypeDetails[2];
+    String minorWorkTypeTotalWorks = minorWorkTypeDetails[3];
+    String minorWorkTypeAmountSpent = minorWorkTypeDetails[4];
+
+    System.out.println(minorWorkTypeAmountSpent.replaceAll(",","\n"));
 
 %>
 <script>
@@ -419,6 +436,49 @@
             }, {
                 name: 'In progress works',
                 data: [<%=top50contractorsInprogressWorks%>],
+                visible: false
+            }]
+        });
+
+        $('#minorWorkTypeChart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            tooltip: {
+                borderRadius: 12,
+                animation: true,
+            },
+            credits: {
+                enabled: true
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: [<%=minorWorkTypeMeanings%>],
+                text: 'Wards'
+            },
+            yAxis: {
+                title: {
+                    text: 'Magnitude'
+                }
+            },
+            series: [{
+                name: 'Total works',
+                data: [<%=minorWorkTypeTotalWorks%>],
+                visible: true
+            }, {
+                name: 'Completed works',
+                data: [<%=minorWorkTypeCompletedWorks%>],
+                visible: true
+            }, {
+                name: 'In progress works',
+                data: [<%=minorWorkTypeInprogressWorks%>],
+                visible: true
+
+            }, {
+                name: 'Total amount spent',
+                data: [<%=minorWorkTypeAmountSpent%>],
                 visible: false
             }]
         });

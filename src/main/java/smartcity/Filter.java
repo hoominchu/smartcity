@@ -1,14 +1,15 @@
 package smartcity;
 
-import com.mongodb.*;
-import com.sun.tools.javac.jvm.Gen;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import searchpack.Search;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by minchu on 15/04/16.
@@ -19,7 +20,7 @@ public class Filter {
     public String parameterPresentable;
     public String parameterValuePresentable;
 
-    public static Set<Filter> FILTERS= new LinkedHashSet<>();
+    public static Set<Filter> FILTERS = new LinkedHashSet<>();
 
     public Filter(String p, String pV, String pP, String queryKey) {
         this.parameter = p;
@@ -28,11 +29,10 @@ public class Filter {
 
         BasicDBObject parameterValuePresentableObject = new BasicDBObject();
         boolean isNumeric = pV.matches("[0-9]+");
-        if(isNumeric) {
+        if (isNumeric) {
             parameterValuePresentableObject.put(queryKey, Integer.parseInt(pV));
-        }
-        else if (!isNumeric){
-            parameterValuePresentableObject.put(queryKey,pV);
+        } else if (!isNumeric) {
+            parameterValuePresentableObject.put(queryKey, pV);
         }
         DBCursor cursor = Database.allworks.find(parameterValuePresentableObject);
 
@@ -45,10 +45,11 @@ public class Filter {
 
     /**
      * Generates filters hash set given the http request.
+     *
      * @param request
      * @return
      */
-    public static BasicDBObject generateFiltersHashset(HttpServletRequest request){
+    public static BasicDBObject generateFiltersHashset(HttpServletRequest request) {
 
         String wardNumberParameter = request.getParameter("wardNumber");
         String statusParameter = request.getParameter("status");
@@ -57,6 +58,7 @@ public class Filter {
         String sourceOfIncomeIDParameter = request.getParameter("sourceOfIncomeID");
         String languageParameter = request.getParameter("language");
         String yearParameter = request.getParameter("year");
+        String minorIDParameter = request.getParameter("minorID");
 
         FILTERS.clear();
         BasicDBObject myQuery = new BasicDBObject();
@@ -103,32 +105,37 @@ public class Filter {
             FILTERS.add(click);
         }
 
+        if (minorIDParameter != null) {
+            myQuery.put("Minor ID", Integer.parseInt(minorIDParameter));
+
+            Filter click = new Filter("minorID", minorIDParameter, "Minor ID Meaning", "Minor ID");
+            FILTERS.add(click);
+        }
+
         return myQuery;
     }
 
     /**
      * Gets the relevant work IDs based on the search query entered.
+     *
      * @param query
      * @return
      */
-    public static Set<String> searchResults (String query){
+    public static Set<String> searchResults(String query) {
 
         Set<String> workIDS = new HashSet<>();
 
-        try{
+        try {
             workIDS = Search.search(query);
 
-        }
-
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             return workIDS;
         }
     }
 
-    public static String getFiltersApplied () {
+    public static String getFiltersApplied() {
         Iterator filtersApplied = smartcity.Filter.FILTERS.iterator();
 
         String filters = "";

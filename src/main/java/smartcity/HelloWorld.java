@@ -19,7 +19,7 @@ public class HelloWorld extends HttpServlet {
         //EveryNightScripts.updateBillsPaidInDB();
         //EveryNightScripts.updateDoWorkDetailsExist();
 
-        EveryNightScripts.writeMinorWorkTypeInDB();
+        //EveryNightScripts.writeMinorWorkTypeInDB();
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
