@@ -13,6 +13,8 @@
 <%@ page import="java.util.*" %>
 
 <%
+    try {
+
     Calendar today = Calendar.getInstance();
 
     String languageParameter = request.getParameter("language");
@@ -279,7 +281,7 @@
                 <div class="panel-heading round-corner-top">Dashboard</div>
                 <div class="panel-body round-corner">
                     <div id="loading-chart-gif" style="height: 10em; width: 100%;">
-                        <small>Please wait while the chart loads...</small>
+                        <small><i class="fa fa-bar-chart fa-2" aria-hidden="true"></i> &nbsp;Please wait while the chart loads...</small>
                     </div>
                     <div id="dashboard" style="width:100%; height:23em; z-index: 100; margin-top: -10em"></div>
                 </div>
@@ -502,12 +504,20 @@
                     <%
                         }
                     %>
+                    <i class="fa fa-picture-o"
+                       style="font-size: 10pt; margin-top: 2px; margin-left: 5px"
+                       aria-hidden="true" title="Images of this work are available"></i>
+                    <i class="fa fa-map"
+                       style="font-size: 10pt; margin-top: 2px; margin-left: 5px"
+                       aria-hidden="true" title="Map of this work is available"></i>
                     <br>
                     Contractor : <a href="<%=baseLink%><%=dynamicLink%>contractorID=<%=contractorID%>"><%=contractor%>
                     </a>
                     <br>
                     Status : <a href="<%=baseLink%><%=dynamicLink%>status=<%=statusFirstLetterSmall%>"><%=status%>
                     </a>
+                    &nbsp;
+                    <i class="fa fa-circle" style="color: <%=statusColor%>;" aria-hidden="true"></i>
                 </td>
                 <td sorttable_customkey="<%=General.customSortKeySortTableJS(workOrderDate)%>"
                     style="text-align: center"><%=workOrderDate%>
@@ -631,5 +641,14 @@
         </div>
     </div>
 </div>
+<%
+    } catch (Exception e) {
+        System.out.println("Error" + e.getMessage());
+        System.out.println("Stacktrace -- ");
+        e.printStackTrace();
+        String redirectURL = "error.jsp";
+        response.sendRedirect(redirectURL);
+    }
+%>
 </body>
 </html>

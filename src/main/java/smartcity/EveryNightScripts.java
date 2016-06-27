@@ -69,6 +69,7 @@ public class EveryNightScripts {
             BasicDBObject query = new BasicDBObject("Code",Integer.parseInt(minorWorkTypeID));
 
             DBCursor minorIDs = Database.minorWorkTypes.find(query);
+
             DBObject minorID = minorIDs.next();
             String minorIDMeaning = minorID.get("Meaning").toString();
 

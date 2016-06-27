@@ -14,6 +14,8 @@
 <%@ page import="java.util.Map" %>
 <jsp:include page="trial"/>
 <%
+    try {
+
     long initialTime = System.currentTimeMillis();
 
     String baseLink = "dashboard.jsp?";
@@ -321,8 +323,6 @@
     String minorWorkTypeInprogressWorks = minorWorkTypeDetails[2];
     String minorWorkTypeTotalWorks = minorWorkTypeDetails[3];
     String minorWorkTypeAmountSpent = minorWorkTypeDetails[4];
-
-    System.out.println(minorWorkTypeAmountSpent.replaceAll(",","\n"));
 
 %>
 <script>
@@ -638,6 +638,15 @@
         System.out.println("Time taken to load : " + (System.currentTimeMillis() - initialTime));
     } catch (Exception e) {
         e.printStackTrace();
+    }
+%>
+<%
+    } catch (Exception e) {
+        System.out.println("Error" + e.getMessage());
+        System.out.println("Stacktrace -- ");
+        e.printStackTrace();
+        String redirectURL = "error.jsp";
+        response.sendRedirect(redirectURL);
     }
 %>
 </html>

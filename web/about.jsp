@@ -6,6 +6,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    try {
+%>
 <html>
 <head>
     <title>HDMC Smart City Project</title>
@@ -258,5 +261,14 @@
         </div>
     </div>
 </div>
+<%
+    } catch (Exception e) {
+        System.out.println("Error" + e.getMessage());
+        System.out.println("Stacktrace -- ");
+        e.printStackTrace();
+        String redirectURL = "error.jsp";
+        response.sendRedirect(redirectURL);
+    }
+%>
 </body>
 </html>

@@ -19,6 +19,8 @@
 <%@ page import="java.util.ArrayList" %>
 
 <%
+    try {
+
     String workIDParameter = request.getParameter("workID");
     String jumbotronParameter = request.getParameter("jumbotron");
 
@@ -553,5 +555,14 @@
         </div>
     </div>
 </div>
+<%
+    } catch (Exception e) {
+        System.out.println("Error" + e.getMessage());
+        System.out.println("Stacktrace -- ");
+        e.printStackTrace();
+        String redirectURL = "error.jsp";
+        response.sendRedirect(redirectURL);
+    }
+%>
 </body>
 </html>
